@@ -26,7 +26,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ColorSensorSubsystem m_colorSubsystem = new ColorSensorSubsystem();
 
-  private final DriveUntilColor m_autoCommand = new DriveUntilColor(m_exampleSubsystem);
+  private final DriveUntilColor m_autoCommand = new DriveUntilColor(m_colorSubsystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
