@@ -5,10 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot;
 
 /**
  * Add your docs here.
  */
-public class Climber {
+public class OI {
 }
