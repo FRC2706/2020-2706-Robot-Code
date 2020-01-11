@@ -24,11 +24,10 @@ public class ColorSensorSubsystem extends SubsystemBase {
    * Copied values from RevRobotic's ColorMatch example
    * https://github.com/REVrobotics/Color-Sensor-v3-Examples/blob/master/Java/Color%20Match/src/main/java/frc/robot/Robot.java
    */
-  private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-  private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-  private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-  private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-  private final Color kWhiteTarget = ColorMatch.makeColor(0.26, 0.25, 0.48);
+  public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+  public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+  public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+  public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
   public ColorSensorSubsystem() {
     // Add the target values to the ColorMatch class
@@ -36,7 +35,6 @@ public class ColorSensorSubsystem extends SubsystemBase {
     colorMatch.addColorMatch(kGreenTarget);
     colorMatch.addColorMatch(kRedTarget);
     colorMatch.addColorMatch(kYellowTarget);
-    colorMatch.addColorMatch(kWhiteTarget);
   }
 
   /**
