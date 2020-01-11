@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="de77d136-231a-48bc-9223-a2fa906316c1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ColorSensorSubsystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ColorSensorSubsystem.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="2020-2706-Robot-Code" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="2020-2706-Robot-Code" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="2020-2706-Robot-Code" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="embeddedtools" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="2020-2706-Robot-Code" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1WFxHQCP8FmbzniQypySRxApvob" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="show.unlinked.gradle.project.popup" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Deploy Robot Code" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="deployFrcJavaRoborio" />
+          </list>
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.Deploy Robot Code" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="de77d136-231a-48bc-9223-a2fa906316c1" name="Default Changelist" comment="" />
+      <created>1578759055148</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1578759055148</updated>
+      <workItem from="1578759063608" duration="7896000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="254" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578759386671">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="254" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.870@0.0.1600.870" timestamp="1578759386671" />
+    <state x="648" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578764293052">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="648" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1600.870@0.0.1600.870" timestamp="1578764293052" />
+    <state x="380" y="90" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor" timestamp="1578759534359">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="380" y="90" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.0.1600.870@0.0.1600.870" timestamp="1578759534359" />
+    <state x="580" y="190" key="FileChooserDialogImpl" timestamp="1578759530578">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="580" y="190" key="FileChooserDialogImpl/0.0.1600.870@0.0.1600.870" timestamp="1578759530578" />
+    <state width="1557" height="226" key="GridCell.Tab.0.bottom" timestamp="1578769014183">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="226" key="GridCell.Tab.0.bottom/0.0.1600.870@0.0.1600.870" timestamp="1578769014183" />
+    <state width="1557" height="226" key="GridCell.Tab.0.center" timestamp="1578769014182">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="226" key="GridCell.Tab.0.center/0.0.1600.870@0.0.1600.870" timestamp="1578769014182" />
+    <state width="1557" height="226" key="GridCell.Tab.0.left" timestamp="1578769014181">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="226" key="GridCell.Tab.0.left/0.0.1600.870@0.0.1600.870" timestamp="1578769014181" />
+    <state width="1557" height="226" key="GridCell.Tab.0.right" timestamp="1578769014183">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="226" key="GridCell.Tab.0.right/0.0.1600.870@0.0.1600.870" timestamp="1578769014183" />
+    <state width="1557" height="280" key="GridCell.Tab.1.bottom" timestamp="1578766778756">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="280" key="GridCell.Tab.1.bottom/0.0.1600.870@0.0.1600.870" timestamp="1578766778756" />
+    <state width="1557" height="280" key="GridCell.Tab.1.center" timestamp="1578766778754">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="280" key="GridCell.Tab.1.center/0.0.1600.870@0.0.1600.870" timestamp="1578766778754" />
+    <state width="1557" height="280" key="GridCell.Tab.1.left" timestamp="1578766778753">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="280" key="GridCell.Tab.1.left/0.0.1600.870@0.0.1600.870" timestamp="1578766778753" />
+    <state width="1557" height="280" key="GridCell.Tab.1.right" timestamp="1578766778755">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state width="1557" height="280" key="GridCell.Tab.1.right/0.0.1600.870@0.0.1600.870" timestamp="1578766778755" />
+    <state x="280" y="10" key="SettingsEditor" timestamp="1578766034136">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="280" y="10" key="SettingsEditor/0.0.1600.870@0.0.1600.870" timestamp="1578766034136" />
+    <state x="463" y="182" width="672" height="678" key="search.everywhere.popup" timestamp="1578767291461">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="463" y="182" width="672" height="678" key="search.everywhere.popup/0.0.1600.870@0.0.1600.870" timestamp="1578767291461" />
+  </component>
+</project>

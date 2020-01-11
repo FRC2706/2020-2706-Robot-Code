@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorSensorV3.RawColor;
 
@@ -17,112 +18,146 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ColorSensorSubsystem extends SubsystemBase {
-  private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-  private final ColorMatch colorMatch = new ColorMatch();
+    private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+    private final ColorMatch colorMatch = new ColorMatch();
 
-  /**
-   * Copied values from RevRobotic's ColorMatch example
-   * https://github.com/REVrobotics/Color-Sensor-v3-Examples/blob/master/Java/Color%20Match/src/main/java/frc/robot/Robot.java
-   */
-  public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-  public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-  public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-  public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+    /**
+     * Enum with all the colors we want to detect with the color sensor
+     */
+    public enum ColorTarget {
+        BLUE("Blue", 0.143, 0.427, 0.429),
+        GREEN("Green", 0.197, 0.561, 0.240),
+        RED("Red", 0.412, 0.398, 0.188),
+        YELLOW("Yellow", 0.361, 0.524, 0.113),
+        WHITE("White", 0.26, 0.47, 0.26),
+        UNKNOWN("Unknown", 0, 0, 0);
 
-  public ColorSensorSubsystem() {
-    // Add the target values to the ColorMatch class
-    colorMatch.addColorMatch(kBlueTarget);
-    colorMatch.addColorMatch(kGreenTarget);
-    colorMatch.addColorMatch(kRedTarget);
-    colorMatch.addColorMatch(kYellowTarget);
-  }
+        String name;
+        Color col;
 
-  /**
-   * Returns the red value of the sensed color
-   * 
-   * @return Red value
-   */
-  public int getRed() {
-    return colorSensor.getRed();
-  }
+        ColorTarget(String name, double r, double g, double b) {
+            this.col = ColorMatch.makeColor(r, g, b);
+            this.name = name;
+        }
 
-  /**
-   * Returns the blue value of the sensed color
-   * 
-   * @return Blue value
-   */
-  public int getBlue() {
-    return colorSensor.getBlue();
-  }
+        public static ColorTarget fromColor(Color col) {
+            for (ColorTarget tar : ColorTarget.values()) {
+                if (tar.col == col)
+                    return tar;
+            }
+            return ColorTarget.UNKNOWN;
+        }
+    }
 
-  /**
-   * Returns the green value of the sensed color
-   * 
-   * @return Green value
-   */
-  public int getGreen() {
-    return colorSensor.getGreen();
-  }
+    public class ColorMatchResult {
+        public Color rawColor;
+        public ColorTarget matchedColor;
+        double confidence;
+    }
 
-  /**
-   * Returns the IR value of the sensor
-   * 
-   * @return IR value
-   */
-  public int getIR() {
-    return colorSensor.getIR();
-  }
+    public ColorSensorSubsystem() {
+        // Add the target values to the ColorMatch class
+        for (ColorTarget target : ColorTarget.values())
+            colorMatch.addColorMatch(target.col);
+    }
 
-  /**
-   * Returns the sensed proximoty of the sensor
-   * 
-   * @return Proximity value
-   */
-  public int getProximity() {
-    return colorSensor.getProximity();
-  }
+    /**
+     * Returns the red value of the sensed color
+     *
+     * @return Red value
+     */
+    public int getRed() {
+        return colorSensor.getRed();
+    }
 
-  /**
-   * Returns a Color object representing the sensed color
-   * 
-   * @return Color value
-   */
-  public Color getColor() {
-    return colorSensor.getColor();
-  }
+    /**
+     * Returns the blue value of the sensed color
+     *
+     * @return Blue value
+     */
+    public int getBlue() {
+        return colorSensor.getBlue();
+    }
 
-  /**
-   * Returns a raw color value
-   * 
-   * @return Raw color
-   */
-  public RawColor getRawColor() {
-    return colorSensor.getRawColor();
-  }
+    /**
+     * Returns the green value of the sensed color
+     *
+     * @return Green value
+     */
+    public int getGreen() {
+        return colorSensor.getGreen();
+    }
 
-  /**
-   * Sets the confidence threshold for color matching
-   */
-  public void setColorMatchConfidence(double confidence) {
-    colorMatch.setConfidenceThreshold(confidence);
-  }
+    /**
+     * Returns the IR value of the sensor
+     *
+     * @return IR value
+     */
+    public int getIR() {
+        return colorSensor.getIR();
+    }
 
-  /**
-   * Reads the current color value from the sensor and returns the closest match
-   * 
-   * @return The exact color value of the closest match
-   */
-  public Color getClosestColor() {
-    return colorMatch.matchClosestColor(getColor()).color;
-  }
+    /**
+     * Returns the sensed proximoty of the sensor
+     *
+     * @return Proximity value
+     */
+    public int getProximity() {
+        return colorSensor.getProximity();
+    }
 
-  /**
-   * Reads the current color value from the sensor and returns the closest match
-   * 
-   * @return The exact color value of the closest match
-   */
-  public Color getClosestColor(double confidence) {
-    colorMatch.setConfidenceThreshold(confidence);
-    return colorMatch.matchClosestColor(getColor()).color;
-  }
+    /**
+     * Returns a Color object representing the sensed color
+     *
+     * @return Color value
+     */
+    public Color getColor() {
+        return colorSensor.getColor();
+    }
+
+    /**
+     * Returns a raw color value
+     *
+     * @return Raw color
+     */
+    public RawColor getRawColor() {
+        return colorSensor.getRawColor();
+    }
+
+    /**
+     * Sets the confidence threshold for color matching
+     */
+    public void setColorMatchConfidence(double confidence) {
+        colorMatch.setConfidenceThreshold(confidence);
+    }
+
+    /**
+     * Reads the current color value from the sensor and returns the closest match
+     *
+     * @return The exact color value of the closest match
+     */
+    public ColorMatchResult getClosestColor() {
+        ColorMatchResult result = new ColorMatchResult();
+        Color c = getColor();
+        result.rawColor = c;
+        result.matchedColor = ColorTarget.fromColor(colorMatch.matchClosestColor(getColor()).color);
+        return result;
+    }
+
+    /**
+     * Reads the current color value from the sensor and returns the closest match
+     *
+     * @return The exact color value of the closest match
+     */
+    public Color getClosestColor(double confidence) {
+        colorMatch.setConfidenceThreshold(confidence);
+        return colorMatch.matchClosestColor(getColor()).color;
+    }
+
+    @Override
+    public void periodic() {
+        ColorMatchResult c = getClosestColor();
+        SmartDashboard.putString("Detected Color", c.matchedColor.name);
+        SmartDashboard.putString("Raw values:", String.format("R: %f, G: %f, B: %f", c.rawColor.red, c.rawColor.green, c.rawColor.blue));
+    }
 }
