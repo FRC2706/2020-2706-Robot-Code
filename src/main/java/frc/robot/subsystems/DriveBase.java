@@ -1,12 +1,11 @@
-import ca.team2706.frc.robot.Sendables;
+//package ca.team2706.frc.robot.subsystems;
+package frc.robot.subsystems;
 
-import ca.team2706.frc.robot.SubsystemStatus;
-
-import ca.team2706.frc.robot.config.Config;
-
-import ca.team2706.frc.robot.logging.Log;
-
-import ca.team2706.frc.robot.sensors.AnalogSelector;
+//import frc.robot.Sendables;
+//import frc.robot.SubsystemStatus;
+//import frc.robot.config.Config;
+//import frc.robot.logging.Log;
+//import frc.robot.sensors.AnalogSelector;
 
 import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 
@@ -28,6 +27,9 @@ import edu.wpi.first.wpilibj.Notifier;
 
 import edu.wpi.first.wpilibj.PWM;
 
+//Not currently working since class "Subsystem" has not been established
+//import edu.wpi.first.wpilibj.command.Subsystem;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -43,8 +45,8 @@ import java.util.Arrays;
  * 
  */
 
-public class DriveBase extends Subsystem {
-
+// public class DriveBase extends Subsystem {
+    public class DriveBase {
     private static DriveBase currentInstance;
 
     public static DriveBase getInstance() {
