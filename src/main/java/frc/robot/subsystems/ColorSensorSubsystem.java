@@ -127,29 +127,4 @@ public class ColorSensorSubsystem extends SubsystemBase {
     colorMatch.setConfidenceThreshold(confidence);
     return colorMatch.matchClosestColor(getColor()).color;
   }
-
-  @Override
-  public void periodic() {
-    Color c = getColor();
-    SmartDashboard.putNumber("Red", c.red);
-    SmartDashboard.putNumber("Green", c.green);
-    SmartDashboard.putNumber("Blue", c.blue);
-
-    Color foo = getClosestColor(0.1);
-    String colorName;
-    if (foo == kRedTarget)
-      colorName = "red";
-    else if (foo == kGreenTarget)
-      colorName = "green";
-    else if (foo == kBlueTarget)
-      colorName = "blue";
-    else if (foo == kYellowTarget)
-      colorName = "yellow";
-    else if (foo == kWhiteTarget)
-      colorName = "white";
-    else
-      colorName = "unknown";
-
-    SmartDashboard.putString("Detected Color", colorName);
-  }
 }
