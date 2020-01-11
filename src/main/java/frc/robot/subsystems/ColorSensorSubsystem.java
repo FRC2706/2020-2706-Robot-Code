@@ -53,6 +53,12 @@ public class ColorSensorSubsystem extends SubsystemBase {
         public Color rawColor;
         public ColorTarget matchedColor;
         double confidence;
+
+        public ColorMatchResult(Color rawColor, ColorTarget matchedColor, double confidence) {
+            this.rawColor = rawColor;
+            this.matchedColor = matchedColor;
+            this.confidence = confidence;
+        }
     }
 
     public ColorSensorSubsystem() {
@@ -137,11 +143,9 @@ public class ColorSensorSubsystem extends SubsystemBase {
      * @return The exact color value of the closest match
      */
     public ColorMatchResult getClosestColor() {
-        ColorMatchResult result = new ColorMatchResult();
-        Color c = getColor();
-        result.rawColor = c;
-        result.matchedColor = ColorTarget.fromColor(colorMatch.matchClosestColor(getColor()).color);
-        return result;
+        Color sensed = getColor();
+        com.revrobotics.ColorMatchResult r = colorMatch.matchClosestColor(sensed);
+        return new ColorMatchResult(sensed, ColorTarget.fromColor(r.color), r.confidence);
     }
 
     /**
