@@ -13,17 +13,18 @@ public class Config {
     /**
      * Instructions for set up of robot.conf file on robot
      * <p>
-     * 1. Using a tool like Git Bash or putty, ssh into admin@roboRIO-2706-FRC.local
+     * 1. Using a tool like Git Bash or putty, ssh into admin@roboRIO-2706-FRC.local (ssh admin@roboRIO-2706-FRC.local)
      * a. There is no password on a freshly flashed roboRIO
      * 2. Go up a directory (cd ..)
-     * 3. Create a new file called robot.conf (touch robot.conf)
-     * 4. Open the file with vi (vi robot.conf)
-     * 5. Press i to enter insert mode
-     * 6. Add an integer denoting the robot id. If it's the first robot, use 0, second use 1 etc.
-     * 7. Press [ESC] followed by typing :wq in order to save and quit
-     * 8. To verify this worked type: more robot.conf
-     * 9. If it displays the value you entered, it was successful
-     * 10. Type exit to safely exit the ssh session
+     * 3. cd into lvuser/ (cd lvuser/)
+     * 4. Create a new file called robot.conf (touch robot.conf)
+     * 5. Open the file with vi (vi robot.conf)
+     * 6. Press i to enter insert mode
+     * 7. Add an integer denoting the robot id. If it's the first robot, use 0, second use 1 etc.
+     * 8. Press [ESC] followed by typing :wq in order to save and quit
+     * 9. To verify this worked type: more robot.conf
+     * 10. If it displays the value you entered, it was successful
+     * 11. Type exit to safely exit the ssh session
      */
 
     private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
