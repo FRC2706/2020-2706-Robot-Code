@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,31 +7,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/**
- * An example command that uses an example subsystem.
- */
-public class ExampleCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-   private final ExampleSubsystem m_subsystem;
-
-   public ExampleCommand(ExampleSubsystem subsystem){
-     m_subsystem = subsystem;
-     addRequirements(subsystem);
-   }
-
+public class ArcadeDriveWithJoystick extends ArcadeDrive {
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new ArcadeDriveWithJoystick.
    */
-  // public ExampleCommand(ExampleSubsystem subsystem) {
-  //   // m_subsystem = subsystem;
-  //   // Use addRequirements() here to declare subsystem dependencies.
-  //   addRequirements(subsystem);
-  // }
+  public ArcadeDriveWithJoystick(Joystick joy1, int axis1, boolean invert1, Joystick joy2, int axis2, boolean invert2) {
+    super(() -> sign(joy1.getRawAxis(axis1), invert1), () -> sign(joy2.getRawAxis(axis2),invert2), false);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public ArcadeDriveWithJoystick(Joystick joy, int axis1, boolean invert1, int axis2, boolean invert2){
+    this(joy, axis1, invert1, joy, axis2, invert2);
+
+  }
 
   // Called when the command is initially scheduled.
   @Override
@@ -52,5 +43,15 @@ public class ExampleCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  private static double sign(double number, boolean sign){
+    if(sign){
+      return -number;
+    }
+    else{
+      return number;
+    }
+
   }
 }

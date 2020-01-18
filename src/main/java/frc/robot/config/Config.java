@@ -43,6 +43,14 @@ public class Config {
 
     }
 
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3);
+
+    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4);
+
+    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1);
+
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2);
+
     /**
      * Returns one of the values passed based on the robot ID
      *
