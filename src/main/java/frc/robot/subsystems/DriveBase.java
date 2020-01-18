@@ -41,15 +41,19 @@ public class DriveBase extends SubsystemBase {
    // private static DriveBase getInstance(){
 
    // }
+
+   private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
+
+   private SpeedControllerGroup left, right;
    private DriveBase(){
 
-      WPI_TalonSRX leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
-      WPI_TalonSRX leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
-      WPI_TalonSRX rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
-      WPI_TalonSRX rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
+      leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
+      leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
+      rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
+      rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
-      SpeedControllerGroup left = new SpeedControllerGroup(leftFrontTalon, leftRearTalon);
-      SpeedControllerGroup right = new SpeedControllerGroup(rightFrontTalon, rightRearTalon);
+      left = new SpeedControllerGroup(leftFrontTalon, leftRearTalon);
+      right = new SpeedControllerGroup(rightFrontTalon, rightRearTalon);
 
       robotDriveBase = new DifferentialDrive(left, right);
 
@@ -58,7 +62,18 @@ public class DriveBase extends SubsystemBase {
    public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs){
       
       robotDriveBase.arcadeDrive(forwardVal,rotateVal,squareInputs);
-      
+
+
+   }
+
+   public void stop(){
+      left.stopMotor();
+      right.stopMotor();
+   }
+   
+   private void selectEncoderStandard(){
+
+      leftFrontTalon.config
 
    }
 

@@ -57,9 +57,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
-    driveCommand = new ArcadeDriveWithJoystick(driverStick, 0, false, 1, false);
 
-  DriveBase.getInstance().setDefaultCommand(driveCommand);
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, 1, false, 4, false);
+
+    DriveBase.getInstance().setDefaultCommand(driveCommand);
+    
   
   }
 
