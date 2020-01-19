@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
 public class AnalogSelector implements Sendable {
 
+    private static final double MODE_ZERO_LOW_VOLTAGE = 0;
+    private static final double MODE_ZERO_HIGH_VOLTAGE = 2.5;
+
     private static final double MODE_ONE_LOW_VOLTAGE = 2.5;
     private static final double MODE_ONE_HIGH_VOLTAGE = 2.75;
 
@@ -44,7 +47,7 @@ public class AnalogSelector implements Sendable {
     private static final double MODE_TWELVE_HIGH_VOLTAGE = 5;
 
     private static final Range[] VOLTAGE_RANGES = {
-        new Range(0, 2.5),
+        new Range(MODE_ZERO_LOW_VOLTAGE, MODE_ZERO_HIGH_VOLTAGE),
         new Range(MODE_ONE_LOW_VOLTAGE, MODE_ONE_HIGH_VOLTAGE), 
         new Range(MODE_TWO_LOW_VOLTAGE, MODE_TWO_HIGH_VOLTAGE),
         new Range(MODE_THREE_LOW_VOLTAGE, MODE_THREE_HIGH_VOLTAGE), 
@@ -56,8 +59,7 @@ public class AnalogSelector implements Sendable {
         new Range(MODE_NINE_LOW_VOLTAGE, MODE_NINE_HIGH_VOLTAGE), 
         new Range(MODE_TEN_LOW_VOLTAGE, MODE_TEN_HIGH_VOLTAGE), 
         new Range(MODE_ELEVEN_LOW_VOLTAGE, MODE_ELEVEN_HIGH_VOLTAGE),
-        new Range(MODE_TWELVE_LOW_VOLTAGE, MODE_TWELVE_HIGH_VOLTAGE), 
-        //new Range(4.6, 5)
+        new Range(MODE_TWELVE_LOW_VOLTAGE, MODE_TWELVE_HIGH_VOLTAGE),
     };
     private final AnalogInput analogInput;
 
