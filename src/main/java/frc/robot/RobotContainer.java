@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.ArcadeDrive;
@@ -58,7 +59,7 @@ public class RobotContainer {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
 
-    driveCommand = new ArcadeDriveWithJoystick(driverStick, 1, false, 4, false);
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
 
     DriveBase.getInstance().setDefaultCommand(driveCommand);
     
@@ -74,4 +75,6 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return m_autoCommand;
   }
+
+
 }

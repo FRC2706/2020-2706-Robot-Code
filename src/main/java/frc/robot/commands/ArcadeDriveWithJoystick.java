@@ -9,29 +9,22 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.config.Config;
 
 public class ArcadeDriveWithJoystick extends ArcadeDrive {
   /**
    * Creates a new ArcadeDriveWithJoystick.
    */
   public ArcadeDriveWithJoystick(Joystick joy1, int axis1, boolean invert1, Joystick joy2, int axis2, boolean invert2) {
-    super(() -> sign(joy1.getRawAxis(axis1), invert1), () -> sign(joy2.getRawAxis(axis2),invert2), false);
-    // Use addRequirements() here to declare subsystem dependencies.
+    super(() -> sign(Config.removeJoystickDeadband(joy1.getRawAxis(axis1)), invert1), () -> sign(Config.removeJoystickDeadband(joy1.getRawAxis(axis2)), invert2), false, true);
   }
 
+  /**
+   * Creates a new ArcadeDriveWithJoystick with only one Joystick
+   */
   public ArcadeDriveWithJoystick(Joystick joy, int axis1, boolean invert1, int axis2, boolean invert2){
     this(joy, axis1, invert1, joy, axis2, invert2);
 
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
   }
 
   // Called once the command ends or is interrupted.
@@ -41,10 +34,15 @@ public class ArcadeDriveWithJoystick extends ArcadeDrive {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    return false;
-  }
+  public boolean isFinished() { return false; }
 
+  /**
+   * Inverts a given double
+   *
+   * @param number The original number
+   * @param sign Weather or not to invert it
+   * @return The inverted value
+   */
   private static double sign(double number, boolean sign){
     if(sign){
       return -number;
