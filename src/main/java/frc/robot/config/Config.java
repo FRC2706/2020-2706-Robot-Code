@@ -37,11 +37,36 @@ public class Config {
     /**
      * PLACE IDS OF ROBOTS HERE
      **/
-
     // Mergio is has the ID 2
+
+    // This is a static class which should not be instantiated
     private Config() {
 
     }
+
+    // Static Constants
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3);
+    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4);
+    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1);
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2);
+
+    public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
+
+    public static Double JOYSTICK_AXIS_DEADBAND = 0.1;
+
+    public static int LEFT_CONTROL_STICK_Y = 1;
+    public static int LEFT_CONTROL_STICK_X = 0;
+
+    public static int RIGHT_CONTROL_STICK_Y = 5;
+    public static int RIGHT_CONTROL_STICK_X = 4;
+
+    public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
+    public static boolean INVERT_SIDE= robotSpecific(false, false, false);
+
+
+    // Timeouts for sending CAN bus commands
+    public static final int CAN_TIMEOUT_SHORT = 10;
+    public static final int CAN_TIMEOUT_LONG = 100;
 
     /**
      * Returns one of the values passed based on the robot ID
@@ -61,6 +86,11 @@ public class Config {
     }
 
 
+    /**
+     * Obtain the robot id found in the robot.conf file
+     *
+     * @return The id of the robot
+     */
     private static int getRobotId() {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
@@ -71,6 +101,21 @@ public class Config {
             }
         }
         return robotId;
+    }
+
+    /**
+     *
+     * @param value The raw axis value from the control stick
+     * @return The filtered value defined by the acceptable dead band
+     */
+    public static double removeJoystickDeadband(double value) {
+        if(value <= JOYSTICK_AXIS_DEADBAND && value >= 0) {
+            return 0;
+        } else if(value >= -JOYSTICK_AXIS_DEADBAND && value <= 0) {
+            return 0;
+        } else {
+            return value;
+        }
     }
 
 }

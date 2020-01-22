@@ -8,10 +8,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.commands.*;
+import frc.robot.config.Config;
+import frc.robot.subsystems.DriveBase;
+import frc.robot.commands.ArcadeDriveWithJoystick;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -23,9 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -37,6 +36,12 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  private Joystick driverStick;
+  private Joystick controlStick;
+
+  private Command driveCommand;
+
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link GenericHID} or one of its subclasses
@@ -44,6 +49,14 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverStick = new Joystick(0);
+    controlStick = new Joystick(1);
+
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
+
+    DriveBase.getInstance().setDefaultCommand(driveCommand);
+    
+  
   }
 
   /**
@@ -53,6 +66,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
+
+
 }
