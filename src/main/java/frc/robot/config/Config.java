@@ -65,9 +65,8 @@ public class Config {
 
 
     // Timeouts for sending CAN bus commands
-    public static final int
-            CAN_SHORT = 10,
-            CAN_LONG = 100;
+    public static final int CAN_TIMEOUT_SHORT = 10;
+    public static final int CAN_TIMEOUT_LONG = 100;
 
     /**
      * Returns one of the values passed based on the robot ID

@@ -135,15 +135,15 @@ public class DriveBase extends SubsystemBase {
      * Reset the talons to factory default
      */
     private void resetTalons() {
-        leftRearTalon.configFactoryDefault(Config.CAN_LONG);
-        leftFrontTalon.configFactoryDefault(Config.CAN_LONG);
-        rightFrontTalon.configFactoryDefault(Config.CAN_LONG);
-        rightRearTalon.configFactoryDefault(Config.CAN_LONG);
+        leftRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        leftFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        rightFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        rightRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
 
-        leftRearTalon.configPeakCurrentLimit(2, Config.CAN_LONG);
-        leftFrontTalon.configPeakCurrentLimit(2, Config.CAN_LONG);
-        rightRearTalon.configPeakCurrentLimit(2, Config.CAN_LONG);
-        rightFrontTalon.configPeakCurrentLimit(2, Config.CAN_LONG);
+        leftRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        leftFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        rightRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        rightFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
     }
 
 
