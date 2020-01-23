@@ -8,42 +8,42 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 public class AnalogSelector implements Sendable {
 
     private static final double MODE_ZERO_LOW_VOLTAGE = 0;
-    private static final double MODE_ZERO_HIGH_VOLTAGE = 2.5;
+    private static final double MODE_ZERO_HIGH_VOLTAGE = 2.4;
 
-    private static final double MODE_ONE_LOW_VOLTAGE = 2.5;
-    private static final double MODE_ONE_HIGH_VOLTAGE = 2.75;
+    private static final double MODE_ONE_LOW_VOLTAGE = 2.4;
+    private static final double MODE_ONE_HIGH_VOLTAGE = 2.8;
 
-    private static final double MODE_TWO_LOW_VOLTAGE = 2.75;
+    private static final double MODE_TWO_LOW_VOLTAGE = 2.8;
     private static final double MODE_TWO_HIGH_VOLTAGE = 3.1;
 
     private static final double MODE_THREE_LOW_VOLTAGE = 3.1;
-    private static final double MODE_THREE_HIGH_VOLTAGE = 3.5;
+    private static final double MODE_THREE_HIGH_VOLTAGE = 3.4;
 
-    private static final double MODE_FOUR_LOW_VOLTAGE = 3.5;
-    private static final double MODE_FOUR_HIGH_VOLTAGE = 3.75;
+    private static final double MODE_FOUR_LOW_VOLTAGE = 3.4;
+    private static final double MODE_FOUR_HIGH_VOLTAGE = 3.7;
 
-    private static final double MODE_FIVE_LOW_VOLTAGE = 3.75;
-    private static final double MODE_FIVE_HIGH_VOLTAGE = 3.95;
+    private static final double MODE_FIVE_LOW_VOLTAGE = 3.7;
+    private static final double MODE_FIVE_HIGH_VOLTAGE = 3.9;
 
-    private static final double MODE_SIX_LOW_VOLTAGE = 3.95;
-    private static final double MODE_SIX_HIGH_VOLTAGE = 4.1;
+    private static final double MODE_SIX_LOW_VOLTAGE = 3.9;
+    private static final double MODE_SIX_HIGH_VOLTAGE = 4.05;
 
-    private static final double MODE_SEVEN_LOW_VOLTAGE = 4.1;
-    private static final double MODE_SEVEN_HIGH_VOLTAGE = 4.2;
+    private static final double MODE_SEVEN_LOW_VOLTAGE = 4.05;
+    private static final double MODE_SEVEN_HIGH_VOLTAGE = 4.15;
 
-    private static final double MODE_EIGHT_LOW_VOLTAGE = 4.2;
-    private static final double MODE_EIGHT_HIGH_VOLTAGE = 4.3;
+    private static final double MODE_EIGHT_LOW_VOLTAGE = 4.15;
+    private static final double MODE_EIGHT_HIGH_VOLTAGE = 4.24;
     
-    private static final double MODE_NINE_LOW_VOLTAGE = 4.3;
-    private static final double MODE_NINE_HIGH_VOLTAGE = 4.4;
+    private static final double MODE_NINE_LOW_VOLTAGE = 4.24;
+    private static final double MODE_NINE_HIGH_VOLTAGE = 4.34;
 
-    private static final double MODE_TEN_LOW_VOLTAGE = 4.4;
-    private static final double MODE_TEN_HIGH_VOLTAGE = 4.5;
+    private static final double MODE_TEN_LOW_VOLTAGE = 4.34;
+    private static final double MODE_TEN_HIGH_VOLTAGE = 4.4;
 
-    private static final double MODE_ELEVEN_LOW_VOLTAGE = 4.5;
-    private static final double MODE_ELEVEN_HIGH_VOLTAGE = 4.6;
+    private static final double MODE_ELEVEN_LOW_VOLTAGE = 4.4;
+    private static final double MODE_ELEVEN_HIGH_VOLTAGE = 4.49;
 
-    private static final double MODE_TWELVE_LOW_VOLTAGE = 4.6;
+    private static final double MODE_TWELVE_LOW_VOLTAGE = 4.49;
     private static final double MODE_TWELVE_HIGH_VOLTAGE = 5;
 
     private static final Range[] VOLTAGE_RANGES = {
