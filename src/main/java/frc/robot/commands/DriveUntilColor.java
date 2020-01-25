@@ -7,25 +7,17 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ColorSensorSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
 public class DriveUntilColor extends CommandBase {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final ColorSensorSubsystem m_ColorSensorSubsystem;
 
     /**
      * Creates a new ExampleCommand.
-     *
-     * @param subsystem The subsystem used by this command.
      */
-    public DriveUntilColor(ColorSensorSubsystem subsystem) {
-        m_ColorSensorSubsystem = subsystem;
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(subsystem);
+    public DriveUntilColor() {
     }
 
     // Called when the command is initially scheduled.

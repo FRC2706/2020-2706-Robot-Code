@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="de77d136-231a-48bc-9223-a2fa906316c1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="68cf1f3a-f1ef-4d4c-8b57-095f503603a6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ColorSensorSubsystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ColorSensorSubsystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/DriveUntilColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/DriveUntilColor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ColorSensorSubsystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/sensors/ColorSensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ExampleSubsystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ExampleSubsystem.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,6 +68,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1WFxHQCP8FmbzniQypySRxApvob" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -88,18 +92,6 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="Deploy Robot Code" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -126,6 +118,18 @@
         <item itemvalue="Gradle.Deploy Robot Code" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -164,10 +168,10 @@
       <screen x="0" y="0" width="1600" height="870" />
     </state>
     <state x="254" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.870@0.0.1600.870" timestamp="1578759386671" />
-    <state x="648" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578764293052">
+    <state x="648" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1579962643838">
       <screen x="0" y="0" width="1600" height="870" />
     </state>
-    <state x="648" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1600.870@0.0.1600.870" timestamp="1578764293052" />
+    <state x="648" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1600.870@0.0.1600.870" timestamp="1579962643838" />
     <state x="380" y="90" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor" timestamp="1578759534359">
       <screen x="0" y="0" width="1600" height="870" />
     </state>

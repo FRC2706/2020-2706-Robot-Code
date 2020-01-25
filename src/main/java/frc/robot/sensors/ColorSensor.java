@@ -5,21 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.sensors;
 
 import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ColorSensorSubsystem extends SubsystemBase {
-    private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-    private final ColorMatch colorMatch = new ColorMatch();
+public class ColorSensor {
+    private static final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+    private static final ColorMatch colorMatch = new ColorMatch();
 
     /**
      * Enum with all the colors we want to detect with the color sensor
@@ -49,7 +46,11 @@ public class ColorSensorSubsystem extends SubsystemBase {
         }
     }
 
-    public class ColorMatchResult {
+    /**
+     * Class to represent the result of a colorMatch.
+     * Should be a STRUCT but OH WAIT JAVA DOESN'T HAVE THOSE
+     */
+    public static class ColorMatchResult {
         public Color rawColor;
         public ColorTarget matchedColor;
         double confidence;
@@ -61,7 +62,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
         }
     }
 
-    public ColorSensorSubsystem() {
+    static {
         // Add the target values to the ColorMatch class
         for (ColorTarget target : ColorTarget.values())
             colorMatch.addColorMatch(target.col);
@@ -72,7 +73,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return Red value
      */
-    public int getRed() {
+    public static int getRed() {
         return colorSensor.getRed();
     }
 
@@ -81,7 +82,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return Blue value
      */
-    public int getBlue() {
+    public static int getBlue() {
         return colorSensor.getBlue();
     }
 
@@ -90,7 +91,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return Green value
      */
-    public int getGreen() {
+    public static int getGreen() {
         return colorSensor.getGreen();
     }
 
@@ -99,7 +100,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return IR value
      */
-    public int getIR() {
+    public static int getIR() {
         return colorSensor.getIR();
     }
 
@@ -108,7 +109,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return Proximity value
      */
-    public int getProximity() {
+    public static int getProximity() {
         return colorSensor.getProximity();
     }
 
@@ -117,7 +118,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return Color value
      */
-    public Color getColor() {
+    public static Color getColor() {
         return colorSensor.getColor();
     }
 
@@ -126,15 +127,8 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return Raw color
      */
-    public RawColor getRawColor() {
+    public static RawColor getRawColor() {
         return colorSensor.getRawColor();
-    }
-
-    /**
-     * Sets the confidence threshold for color matching
-     */
-    public void setColorMatchConfidence(double confidence) {
-        colorMatch.setConfidenceThreshold(confidence);
     }
 
     /**
@@ -142,7 +136,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return The exact color value of the closest match
      */
-    public ColorMatchResult getClosestColor() {
+    public static ColorMatchResult getClosestColor() {
         Color sensed = getColor();
         com.revrobotics.ColorMatchResult r = colorMatch.matchClosestColor(sensed);
         return new ColorMatchResult(sensed, ColorTarget.fromColor(r.color), r.confidence);
@@ -153,15 +147,8 @@ public class ColorSensorSubsystem extends SubsystemBase {
      *
      * @return The exact color value of the closest match
      */
-    public Color getClosestColor(double confidence) {
+    public static Color getClosestColor(double confidence) {
         colorMatch.setConfidenceThreshold(confidence);
         return colorMatch.matchClosestColor(getColor()).color;
-    }
-
-    @Override
-    public void periodic() {
-        ColorMatchResult c = getClosestColor();
-        SmartDashboard.putString("Detected Color", c.matchedColor.name);
-        SmartDashboard.putString("Raw values:", String.format("R: %f, G: %f, B: %f", c.rawColor.red, c.rawColor.green, c.rawColor.blue));
     }
 }
