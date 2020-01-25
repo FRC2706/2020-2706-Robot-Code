@@ -32,7 +32,7 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
+    public WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
 
     private DriveBase() {
 
@@ -80,6 +80,12 @@ public class DriveBase extends SubsystemBase {
         robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
         follow();
 
+    }
+
+    public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
+        setOpenLoopVoltage();
+        robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
+        follow();
     }
 
     public void stop() {
