@@ -81,6 +81,11 @@ public class DriveBase extends SubsystemBase {
         follow();
 
     }
+    public void tankDrive(double leftSpeed, double rightSpeed, boolean squareInputs){
+       setOpenLoopVoltage();
+       robotDriveBase.tankDrive(leftSpeed, rightSpeed, squareInputs);
+       follow();
+    }
 
     public void stop() {
         leftFrontTalon.stopMotor();
