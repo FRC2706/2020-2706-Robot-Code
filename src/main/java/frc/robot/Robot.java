@@ -1,83 +1,46 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.config.Config;
-import frc.robot.subsystems.DriveBase;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.cameraserver.CameraServer;
+//import edu.wpi.first.wpilibj.controller.PIDController;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
-  private RobotContainer m_robotContainer;
-
+  private final Joystick joystick = new Joystick(0);
+  //private double kP = 0.5;  // This was for a pid that is currently not finished...
+  //private double kI = 0.5;
+  //private double kD = 0.5;
+  //private int setpoint = 0;
+  
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * This function is run when the robot is first started up and should be
+   * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    DriveBase.init();
-
-    m_robotContainer = new RobotContainer();
-
+  CameraServer.getInstance().startAutomaticCapture();
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
-
-    CommandScheduler.getInstance().run();
-  }
-
-  /**
-   * This function is called once each time the robot enters Disabled mode.
-   */
-  @Override
-  public void disabledInit() {
-  }
-
-  @Override
-  public void disabledPeriodic() {
-  }
-
-  /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * This function is run once each time the robot enters autonomous mode.
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
   }
 
   /**
@@ -85,31 +48,91 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-  }
 
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
   }
 
   /**
-   * This function is called periodically during operator control.
+   * This function is called once each time the robot enters teleoperated mode.
+   */
+  @Override
+  public void teleopInit() {
+  }
+
+  /**
+   * This function is called periodically during teleoperated mode.
    */
   @Override
   public void teleopPeriodic() {
+
+   //PIDController pid = new PIDController(kP, kI, kD); // This was for a pid that is currently not finished...
+   //pid.setTolerance(5, 10);
+   //pid.atSetpoint();
+   //pid.setIntegratorRange(-0.5, 0.5);
+   //pid.enableContinuousInput(-180, 180);
+   //SmartDashboard.putNumber("PID Graph Test", (pid.calculate(encoder.getDistance(), setpoint)));
+
+   boolean buttonValueA; // A is 1
+   boolean buttonValueB; // B is 2
+   boolean buttonValueX; // X is 3
+   boolean buttonValueY; // Y is 4
+   
+   SmartDashboard.putNumber("Joystick X Value", joystick.getX());
+   SmartDashboard.putNumber("Joystick Y Value", joystick.getY()* -1);
+   SmartDashboard.putBoolean("X Too Slow?", joystick.getX() < -0.9);
+   SmartDashboard.putBoolean("X Too Fast?", joystick.getX() > 0.9);
+   SmartDashboard.putBoolean("Y Too Fast?", joystick.getY() < -0.9);
+   SmartDashboard.putBoolean("Y Too Slow?", joystick.getY() > 0.9);
+
+  if (joystick.getX() < -0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
   }
 
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+  if (joystick.getX() > 0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
   }
+
+  if (joystick.getY() < -0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
+  }
+
+  if (joystick.getY() > 0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
+  }
+
+  buttonValueA = joystick.getRawButton(1); // Button A
+  if(buttonValueA) {SmartDashboard.putBoolean("A", buttonValueA);
+  }
+  buttonValueB = joystick.getRawButton(2); // Button B
+  if (buttonValueB) {SmartDashboard.putBoolean("B", buttonValueB);
+  }
+  buttonValueX = joystick.getRawButton(3); // Button X
+  if (buttonValueX) {SmartDashboard.putBoolean("X", buttonValueX);
+  } 
+  buttonValueY = joystick.getRawButton(4); // Button Y
+  if (buttonValueY) {SmartDashboard.putBoolean("Y", buttonValueY);
+  }
+  
+}
 
   /**
    * This function is called periodically during test mode.
@@ -118,3 +141,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 }
+
