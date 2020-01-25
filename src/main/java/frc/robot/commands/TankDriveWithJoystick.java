@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 
-public class TankDriveWithJoystick extends CommandBase {
+public class TankDriveWithJoystick extends TankDrive {
   /**
    * Creates a new TankDriveWithJoystick.
    */
