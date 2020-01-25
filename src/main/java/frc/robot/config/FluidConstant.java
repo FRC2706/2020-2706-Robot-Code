@@ -9,8 +9,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
+/**
+ * FluidConstants are 'constant' values which can be changed over NetworkTables while the robot is disabled.
+ * This can be used to tune PID and other values which we may want to update without re-deploying the code.
+ * @param <T> The type of the value
+ */
 public class FluidConstant<T> {
     private T value;
+    private NetworkTableEntry ntEntry;
     private final T initialValue;
     private final String name;
     private final ArrayList<BiConsumer<T, T>> updateActions = new ArrayList<>();
@@ -34,9 +40,9 @@ public class FluidConstant<T> {
      */
     public FluidConstant<T> registerToTable(NetworkTable table) {
         // Register the entry and set the value if it doesn't exist
-        NetworkTableEntry ntEntry = table.getEntry(name);
-        if (!ntEntry.exists()) ntEntry.setValue(this.value);
-        ntEntry.addListener(this::entryUpdated, EntryListenerFlags.kUpdate);
+        this.ntEntry = table.getEntry(name);
+        if (!this.ntEntry.exists()) this.ntEntry.setValue(this.value);
+        this.ntEntry.addListener(this::entryUpdated, EntryListenerFlags.kUpdate);
         // Return the instance to make one-line declarations possible
         return this;
     }
@@ -72,9 +78,15 @@ public class FluidConstant<T> {
      */
     private void entryUpdated(EntryNotification notification) {
         // Only allow the value to be updated while the robot is disabled
-        if (DriverStation.getInstance().isDisabled()) return;
+        if (DriverStation.getInstance().isDisabled()) {
+            // Revert the change made by the user while the robot isn't disabled
+            this.ntEntry.setValue(this.value);
+            return;
+        }
+
         // This is a safe cast because NetworkTables already prevents assigning different types to NTEntries
         T newValue = (T) notification.value.getValue();
+
         // Send the update to all the registered actions
         this.updateActions.forEach(a -> a.accept(this.value, newValue));
         this.value = newValue;
