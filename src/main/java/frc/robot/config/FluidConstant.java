@@ -71,6 +71,16 @@ public class FluidConstant<T> {
     public T getInitialValue() {
         return this.initialValue;
     }
+    
+    /**
+     * Updates the value of this constant
+     * @param newValue the new value to use
+     */
+    public void setValue(T newValue) {
+        // Send the update to all the registered actions
+        this.updateActions.forEach(a -> a.accept(this.value, newValue));
+        this.value = newValue;
+    }
 
     /**
      * Private NetworkTableEntry listener method for when the entry is updated
@@ -86,9 +96,6 @@ public class FluidConstant<T> {
 
         // This is a safe cast because NetworkTables already prevents assigning different types to NTEntries
         T newValue = (T) notification.value.getValue();
-
-        // Send the update to all the registered actions
-        this.updateActions.forEach(a -> a.accept(this.value, newValue));
-        this.value = newValue;
+        this.setValue(newValue);
     }
 }
