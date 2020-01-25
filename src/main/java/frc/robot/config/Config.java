@@ -63,13 +63,18 @@ public class Config {
     public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
     public static boolean INVERT_SIDE= robotSpecific(false, false, false);
 
-    public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = false;
-    public static final boolean TELEOP_BRAKE = true;
+	public static double CONTROLLER_DEADBAND =  0.05;
+
+	public static double CURVATURE_OVERRIDE = 0.25;
 
 
     // Timeouts for sending CAN bus commands
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
+
+	public static final boolean TELEOP_BRAKE = false;
+
+	public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
 
     /**
      * Returns one of the values passed based on the robot ID
