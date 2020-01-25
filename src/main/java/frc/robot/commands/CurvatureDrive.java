@@ -80,10 +80,20 @@ public abstract class CurvatureDrive extends CommandBase {
     public abstract boolean isFinished();
 
     @Override
+<<<<<<< HEAD
     public void end(boolean interrupted) {
       DriveBase.getInstance().setDisabledMode();
     }
   
 
 
+=======
+    public void end() {
+        // Go back to disabled mode
+        DriveBase.getInstance().setDisabledMode();
+
+        // Ensure brake mode is same as when starting command since it may have been changed
+        DriveBase.getInstance().setBrakeMode(initBrake);
+    }
+>>>>>>> AlexDifferentialDriveTest
 }
