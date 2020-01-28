@@ -11,79 +11,74 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.cameraserver.CameraServer;
-//import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
+
 public class Robot extends TimedRobot {
   private final Joystick joystick = new Joystick(0);
-  //private double kP = 0.5;  // This was for a pid that is currently not finished...
-  //private double kI = 0.5;
-  //private double kD = 0.5;
-  //private int setpoint = 0;
-  
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
+  private final Timer m_timer = new Timer();
+  private int SecondsLeft = 150;
+ 
+
   @Override
   public void robotInit() {
   CameraServer.getInstance().startAutomaticCapture();
+  m_timer.start();
+  SmartDashboard.putNumber("Time Left", SecondsLeft);
   }
 
-  /**
-   * This function is run once each time the robot enters autonomous mode.
-   */
+
   @Override
   public void autonomousInit() {
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
+
   @Override
   public void autonomousPeriodic() {
 
   }
 
-  /**
-   * This function is called once each time the robot enters teleoperated mode.
-   */
+
   @Override
   public void teleopInit() {
   }
 
-  /**
-   * This function is called periodically during teleoperated mode.
-   */
+
   @Override
   public void teleopPeriodic() {
 
-   //PIDController pid = new PIDController(kP, kI, kD); // This was for a pid that is currently not finished...
-   //pid.setTolerance(5, 10);
-   //pid.atSetpoint();
-   //pid.setIntegratorRange(-0.5, 0.5);
-   //pid.enableContinuousInput(-180, 180);
-   //SmartDashboard.putNumber("PID Graph Test", (pid.calculate(encoder.getDistance(), setpoint)));
-
+  if (SecondsLeft > -1) {
+   SmartDashboard.putNumber("Timer", m_timer.get());
+   if (m_timer.get() > 1) {
+     m_timer.stop();
+     m_timer.reset();
+     SmartDashboard.putNumber("Time Left", SecondsLeft);
+     SecondsLeft = SecondsLeft - 1;
+     m_timer.start();
+   }
+     SmartDashboard.putBoolean("ENDGAME", SecondsLeft < 30);
+     SmartDashboard.putBoolean("GAME OVER", SecondsLeft < 1);
+  
    boolean buttonValueA; // A is 1
    boolean buttonValueB; // B is 2
    boolean buttonValueX; // X is 3
    boolean buttonValueY; // Y is 4
    
-   SmartDashboard.putNumber("Joystick X Value", joystick.getX());
-   SmartDashboard.putNumber("Joystick Y Value", joystick.getY()* -1);
-   SmartDashboard.putBoolean("X Too Slow?", joystick.getX() < -0.9);
-   SmartDashboard.putBoolean("X Too Fast?", joystick.getX() > 0.9);
-   SmartDashboard.putBoolean("Y Too Fast?", joystick.getY() < -0.9);
-   SmartDashboard.putBoolean("Y Too Slow?", joystick.getY() > 0.9);
+   double XvalueL = joystick.getRawAxis(0);
+   double YvalueL = joystick.getRawAxis(1);
+   double XvalueR = joystick.getRawAxis(4);
+   double YvalueR = joystick.getRawAxis(5);
 
-  if (joystick.getX() < -0.9) {
+
+   //Left Joystick
+   SmartDashboard.putNumber("Joystick XL Value", XvalueL);
+   SmartDashboard.putNumber("Joystick YL Value", YvalueL * -1);
+   SmartDashboard.putBoolean("XL Too Slow?", XvalueL < -0.9);
+   SmartDashboard.putBoolean("XL Too Fast?", XvalueL > 0.9);
+   SmartDashboard.putBoolean("YL Too Fast?", YvalueL < -0.9);
+   SmartDashboard.putBoolean("YL Too Slow?", YvalueL > 0.9);
+   
+  if (XvalueL < -0.9) {
     joystick.setRumble(RumbleType.kLeftRumble, 1);
     joystick.setRumble(RumbleType.kRightRumble, 1);
     }
@@ -92,7 +87,7 @@ public class Robot extends TimedRobot {
     joystick.setRumble(RumbleType.kRightRumble, 0);
   }
 
-  if (joystick.getX() > 0.9) {
+  if (XvalueL > 0.9) {
     joystick.setRumble(RumbleType.kLeftRumble, 1);
     joystick.setRumble(RumbleType.kRightRumble, 1);
     }
@@ -101,7 +96,7 @@ public class Robot extends TimedRobot {
     joystick.setRumble(RumbleType.kRightRumble, 0);
   }
 
-  if (joystick.getY() < -0.9) {
+  if (XvalueL < -0.9) {
     joystick.setRumble(RumbleType.kLeftRumble, 1);
     joystick.setRumble(RumbleType.kRightRumble, 1);
     }
@@ -110,7 +105,52 @@ public class Robot extends TimedRobot {
     joystick.setRumble(RumbleType.kRightRumble, 0);
   }
 
-  if (joystick.getY() > 0.9) {
+  if (XvalueL > 0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
+  }
+
+
+   //Right Joystick
+   SmartDashboard.putNumber("Joystick XR Value", XvalueR);
+   SmartDashboard.putNumber("Joystick YR Value", YvalueR * -1);
+   SmartDashboard.putBoolean("XR Too Slow?", XvalueR < -0.9);
+   SmartDashboard.putBoolean("XR Too Fast?", XvalueR > 0.9);
+   SmartDashboard.putBoolean("YR Too Fast?", YvalueR < -0.9);
+   SmartDashboard.putBoolean("YR Too Slow?", YvalueR > 0.9);
+
+  if (XvalueR < -0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
+  }
+
+  if (XvalueR > 0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
+  }
+
+  if (XvalueR < -0.9) {
+    joystick.setRumble(RumbleType.kLeftRumble, 1);
+    joystick.setRumble(RumbleType.kRightRumble, 1);
+    }
+    else {
+    joystick.setRumble(RumbleType.kLeftRumble, 0);
+    joystick.setRumble(RumbleType.kRightRumble, 0);
+  }
+
+  if (XvalueR > 0.9) {
     joystick.setRumble(RumbleType.kLeftRumble, 1);
     joystick.setRumble(RumbleType.kRightRumble, 1);
     }
@@ -120,25 +160,22 @@ public class Robot extends TimedRobot {
   }
 
   buttonValueA = joystick.getRawButton(1); // Button A
-  if(buttonValueA) {SmartDashboard.putBoolean("A", buttonValueA);
-  }
+  SmartDashboard.putBoolean("A", buttonValueA);
   buttonValueB = joystick.getRawButton(2); // Button B
-  if (buttonValueB) {SmartDashboard.putBoolean("B", buttonValueB);
-  }
+  SmartDashboard.putBoolean("B", buttonValueB);
   buttonValueX = joystick.getRawButton(3); // Button X
-  if (buttonValueX) {SmartDashboard.putBoolean("X", buttonValueX);
-  } 
+  SmartDashboard.putBoolean("X", buttonValueX);
   buttonValueY = joystick.getRawButton(4); // Button Y
-  if (buttonValueY) {SmartDashboard.putBoolean("Y", buttonValueY);
-  }
+  SmartDashboard.putBoolean("Y", buttonValueY);
   
+  }
+  else {
+    //game over signal can be added here
+  }
 }
 
-  /**
-   * This function is called periodically during test mode.
-   */
+
   @Override
   public void testPeriodic() {
   }
 }
-
