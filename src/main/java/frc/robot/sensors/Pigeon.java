@@ -1,6 +1,5 @@
 package frc.robot.sensors;
 import com.ctre.phoenix.sensors.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveBase;
 
 public class Pigeon {

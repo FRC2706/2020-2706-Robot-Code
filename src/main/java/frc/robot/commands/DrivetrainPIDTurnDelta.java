@@ -8,18 +8,17 @@
 package frc.robot.commands;
 
 import java.util.function.Supplier;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.sensors.Pigeon;
 import frc.robot.subsystems.DriveBase;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
-
     //Delcare PD variables
-    private double kPgain = 0.01;
-    private double kDgain = 0.0016;
+    private Supplier<Double> pGain = Config.DRIVETRAIN_P;
+    private Supplier<Double> dGain = Config.DRIVETRAIN_D;
 
     //get the drivebase and pigeon
     private final DriveBase drivebase;
@@ -31,13 +30,12 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     private double currentAngle = Pigeon.getCurrentAngle();
 
     public DrivetrainPIDTurnDelta(double deltaDegree) {
-
         //Get the supplied delta
         this.deltaDegree = deltaDegree;
 
         //Set the drivebase
         addRequirements(DriveBase.getInstance());
-        this.drivebase  = DriveBase.getInstance();
+        this.drivebase = DriveBase.getInstance();
     }
 
     @Override
@@ -48,7 +46,6 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
     @Override
     public void execute() {
-
         //Set starting throttle
         double turnThrottle = 0;
 
@@ -62,14 +59,9 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         currentAngle = Pigeon.getCurrentAngle();
 
         //Do PD
-        turnThrottle = (targetAngle - currentAngle) * kPgain - (currentAngularRate) * kDgain;
+        turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();
 
-        //Drive
+        //Run motors according to the output of PD
         drivebase.tankDrive(-turnThrottle, turnThrottle, false);
     }
-
-    @Override
-    public void end(boolean interrupted) {
-    }
-
 }

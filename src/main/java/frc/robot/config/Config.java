@@ -1,5 +1,7 @@
 package frc.robot.config;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import java.io.BufferedReader;
@@ -63,11 +65,16 @@ public class Config {
     public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
     public static boolean INVERT_SIDE= robotSpecific(false, false, false);
 
-
     // Timeouts for sending CAN bus commands
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
+    static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.01d)
+            .registerToTable(constantsTable);
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.005d)
+            .registerToTable(constantsTable);
     /**
      * Returns one of the values passed based on the robot ID
      *
