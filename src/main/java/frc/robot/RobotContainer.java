@@ -61,7 +61,7 @@ public class RobotContainer {
     
     // Instantiate the intake command and bind it
     intakeCommand = new IntakeCommand();
-    (new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value)).whenHeld(intakeCommand);
+    new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
   }
 
   /**

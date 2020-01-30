@@ -97,7 +97,7 @@ public class FluidConstant<T> implements Supplier<T> {
      */
     private void entryUpdated(EntryNotification notification) {
         // Only allow the value to be updated while the robot is disabled
-        if (!DriverStation.getInstance().isDisabled()) {
+        if (DriverStation.getInstance().isEnabled()) {
             // Revert the change made by the user while the robot isn't disabled
             this.ntEntry.setValue(this.value);
             return;
