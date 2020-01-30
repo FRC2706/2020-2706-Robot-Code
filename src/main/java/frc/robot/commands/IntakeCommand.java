@@ -13,13 +13,14 @@ public class IntakeCommand extends CommandBase {
         addRequirements(intakeSubsystem);
         
         // Initialize the subsystem with this condition
-        intakeSubsystem.setCondition("button", false);
+        intakeSubsystem.setCondition("buttonPressed", false);
+        intakeSubsystem.setConditionActive("buttonPressed", IntakeSubsystem.ConditionActive.ONLY_TELEOP);
     }
     
     @Override
     public void initialize() {
         // When the command starts, tell the intake it can go
-        intakeSubsystem.setCondition("button", true);
+        intakeSubsystem.setCondition("buttonPressed", true);
     }
     
     @Override
@@ -35,6 +36,6 @@ public class IntakeCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         // When the command stops, tell the intake to not go
-        intakeSubsystem.setCondition("button", false);
+        intakeSubsystem.setCondition("buttonPressed", false);
     }
 }

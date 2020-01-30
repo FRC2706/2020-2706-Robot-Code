@@ -72,10 +72,8 @@ public class Config {
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
-    // Fluid constants
-    static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-    public static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.25d)
-            .registerToTable(constantsTable);
+    // Define a global constants table for subsystems to use
+    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
     
     /**
      * Returns one of the values passed based on the robot ID
