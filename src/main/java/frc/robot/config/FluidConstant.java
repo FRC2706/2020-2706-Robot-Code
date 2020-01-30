@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * FluidConstants are 'constant' values which can be changed over NetworkTables while the robot is disabled.
  * This can be used to tune PID and other values which we may want to update without re-deploying the code.
  * @param <T> The type of the value
  */
-public class FluidConstant<T> {
+public class FluidConstant<T> implements Supplier<T> {
     private T value;
     private NetworkTableEntry ntEntry;
     private final T initialValue;
@@ -64,7 +65,15 @@ public class FluidConstant<T> {
     public T getValue() {
         return this.value;
     }
-
+    
+    /**
+     * Get method for implementing the Supplier interface
+     * @return The current value of this constant
+     */
+    public T get() {
+        return this.value;
+    }
+    
     /**
      * @return The initial value of this constant (at compile-time)
      */
@@ -88,7 +97,7 @@ public class FluidConstant<T> {
      */
     private void entryUpdated(EntryNotification notification) {
         // Only allow the value to be updated while the robot is disabled
-        if (DriverStation.getInstance().isDisabled()) {
+        if (!DriverStation.getInstance().isDisabled()) {
             // Revert the change made by the user while the robot isn't disabled
             this.ntEntry.setValue(this.value);
             return;
