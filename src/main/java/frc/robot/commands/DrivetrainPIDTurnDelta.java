@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
-import frc.robot.sensors.Pigeon;
 import frc.robot.subsystems.DriveBase;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
@@ -22,12 +21,12 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
     //get the drivebase and pigeon
     private final DriveBase drivebase;
-    private PigeonIMU _pidgey = Pigeon.getPigeon();
+    private PigeonIMU _pidgey;
 
     //Initiate/get angle variables
     private double deltaDegree;
     private double targetAngle;
-    private double currentAngle = Pigeon.getCurrentAngle();
+    private double currentAngle;
 
     public DrivetrainPIDTurnDelta(double deltaDegree) {
         //Get the supplied delta
@@ -36,12 +35,15 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         //Set the drivebase
         addRequirements(DriveBase.getInstance());
         this.drivebase = DriveBase.getInstance();
+        _pidgey = drivebase.getPigeon();
+        double currentAngle = drivebase.getCurrentAngle();
+
     }
 
     @Override
     public void initialize() {
         //Get the target angle
-        targetAngle = Pigeon.getCurrentAngle() + deltaDegree;
+        targetAngle = drivebase.getCurrentAngle() + deltaDegree;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         double currentAngularRate = xyz_dps[2];
 
         //Get current angle
-        currentAngle = Pigeon.getCurrentAngle();
+        currentAngle = drivebase.getCurrentAngle();
 
         //Do PD
         turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();

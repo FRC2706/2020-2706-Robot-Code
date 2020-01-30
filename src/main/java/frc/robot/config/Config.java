@@ -71,9 +71,9 @@ public class Config {
 
     static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
-    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.01d)
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
             .registerToTable(constantsTable);
-    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.005d)
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
             .registerToTable(constantsTable);
     /**
      * Returns one of the values passed based on the robot ID

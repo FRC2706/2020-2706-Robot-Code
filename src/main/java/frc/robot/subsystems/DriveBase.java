@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
@@ -32,7 +33,9 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    public WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
+    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
+
+    private PigeonIMU _pidgey;
 
     private DriveBase() {
 
@@ -43,6 +46,9 @@ public class DriveBase extends SubsystemBase {
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
+        _pidgey = new PigeonIMU(leftFrontTalon);
+
+        _pidgey.setFusedHeading(0.0, 30);
 
     }
 
@@ -55,6 +61,17 @@ public class DriveBase extends SubsystemBase {
     public static DriveBase getInstance() {
         init();
         return currentInstance;
+    }
+
+    public PigeonIMU getPigeon() {
+        return _pidgey;
+    }
+
+    public double getCurrentAngle(){
+        //Gets the current angle
+        PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+        _pidgey.getFusedHeading(fusionStatus);
+        return fusionStatus.heading;
     }
 
     /**
