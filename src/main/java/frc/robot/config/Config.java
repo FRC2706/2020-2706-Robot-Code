@@ -47,10 +47,10 @@ public class Config {
     }
 
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3);
-    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4);
-    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2);
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2);
+    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4);
+    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1);
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3);
 
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
 

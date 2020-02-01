@@ -56,7 +56,6 @@ public class RobotContainer {
     controlStick = new Joystick(1);
 
     driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
-
     DriveBase.getInstance().setDefaultCommand(driveCommand);
   }
 

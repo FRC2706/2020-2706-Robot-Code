@@ -28,9 +28,20 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     private double targetAngle;
     private double currentAngle;
 
-    public DrivetrainPIDTurnDelta(double deltaDegree) {
+    //Initiate forwardSpeed
+    private double forwardSpeed;
+
+    /**
+     * Allows the robot to turn and move forward or back by itself
+     * @param deltaDegree The degree you want the robot to turn, negative is left, positive is right
+     * @param forwardSpeed The speed you want the robot to move, (-1 to 1) negative being backwards and positive being forwards
+     */
+    public DrivetrainPIDTurnDelta(double deltaDegree, double forwardSpeed) {
         //Get the supplied delta
         this.deltaDegree = deltaDegree;
+
+        //Get supplied forwardspeed
+        this.forwardSpeed = forwardSpeed;
 
         //Set the drivebase
         addRequirements(DriveBase.getInstance());
@@ -64,6 +75,6 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();
 
         //Run motors according to the output of PD
-        drivebase.tankDrive(-turnThrottle, turnThrottle, false);
+        drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);
     }
 }
