@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
@@ -40,6 +42,7 @@ public class RobotContainer {
   private Joystick controlStick;
 
   private Command driveCommand;
+  private Command intakeCommand;
 
 
   /**
@@ -52,11 +55,13 @@ public class RobotContainer {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
 
+    // Instantiate the drive command and bind it
     driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
-
     DriveBase.getInstance().setDefaultCommand(driveCommand);
     
-  
+    // Instantiate the intake command and bind it
+    intakeCommand = new OperatorIntakeCommand();
+    new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
   }
 
   /**
