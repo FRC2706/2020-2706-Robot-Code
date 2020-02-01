@@ -24,7 +24,7 @@ public class TankDrive extends CommandBase {
   /**
    * Creates a new TankDrive.
    */
-  public TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed, boolean squareInputs, boolean initBrake) {
+  protected TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed, boolean squareInputs, boolean initBrake) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveBase.getInstance());
 
@@ -54,6 +54,8 @@ public class TankDrive extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     DriveBase.getInstance().setDisabledMode();
+
+  
   }
 
   // Returns true when the command should end.
