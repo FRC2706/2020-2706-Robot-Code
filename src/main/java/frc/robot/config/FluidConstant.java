@@ -75,7 +75,15 @@ public class FluidConstant<T> implements Supplier<T> {
     public T getValue() {
         return this.value;
     }
-
+    
+    /**
+     * Get method for implementing the Supplier interface
+     * @return The current value of this constant
+     */
+    public T get() {
+        return this.value;
+    }
+    
     /**
      * @return The initial value of this constant (at compile-time)
      */
@@ -99,7 +107,7 @@ public class FluidConstant<T> implements Supplier<T> {
      */
     private void entryUpdated(EntryNotification notification) {
         // Only allow the value to be updated while the robot is disabled
-        if (DriverStation.getInstance().isDisabled()) {
+        if (DriverStation.getInstance().isEnabled()) {
             // Revert the change made by the user while the robot isn't disabled
             this.ntEntry.setValue(this.value);
             return;

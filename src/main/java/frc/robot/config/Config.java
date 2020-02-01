@@ -40,6 +40,7 @@ public class Config {
      * PLACE IDS OF ROBOTS HERE
      **/
     // Mergio is has the ID 2
+    // Mergonaut is ID 3
 
     // This is a static class which should not be instantiated
     private Config() {
@@ -51,6 +52,7 @@ public class Config {
     public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4);
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1);
     public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3);
+    public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6);
 
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
 
@@ -69,8 +71,9 @@ public class Config {
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
+    // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-
+    
     /**
      * Returns one of the values passed based on the robot ID
      *
