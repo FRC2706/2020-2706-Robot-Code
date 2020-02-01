@@ -9,18 +9,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 
-public class Arm extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase {
 
     // TODO Change placeholder values to actual limits
     private static final int forwardLimit = 100000;
     private static final int reverseLimit = 0;
 
-    private static Arm currentInstance;
+    private static ArmSubsystem INSTANCE = new ArmSubsystem();
+
     // TODO Change placeholder value to robotSpecific
     WPI_TalonSRX armTalon;
     ErrorCode errorCode;
 
-    private Arm() {
+    private ArmSubsystem() {
         // Init all the talon values
         armTalon = new WPI_TalonSRX(Config.ARM_TALON);
 
@@ -76,22 +77,12 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Initialize the current instance if one does not already exist
-     */
-    public static void init() {
-        if (currentInstance == null) {
-            currentInstance = new Arm();
-        }
-    }
-
-    /**
      * Return the singleton arm instance
      *
      * @return the Arm instance
      */
-    public static Arm getInstance() {
-        init();
-        return currentInstance;
+    public static ArmSubsystem getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -109,9 +100,9 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition(0));
 
         if (errorCode.value == 0) {
-            SmartDashboard.putString("Arm Talon Error", "Working Fine");
+            SmartDashboard.putString("Arm Status", "Working Fine");
         } else {
-            SmartDashboard.putString("Arm Talon Error", "Non 0 error code, possible talon issues " + errorCode.value);
+            SmartDashboard.putString("Arm Status", "Non 0 error code, possible talon issues " + errorCode.value);
 
         }
     }
