@@ -7,11 +7,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.config.Config;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.config.XboxValue;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveBase;
+
+import javax.swing.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -33,6 +38,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     DriveBase.init();
+    Arm.init();
 
     m_robotContainer = new RobotContainer();
 
@@ -102,6 +108,32 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Joystick joystick = new Joystick(0);
+
+    JoystickButton a = new JoystickButton(joystick, XboxValue.XBOX_A_BUTTON.getPort());
+
+    JoystickButton b = new JoystickButton(joystick, XboxValue.XBOX_B_BUTTON.getPort());
+
+    JoystickButton x = new JoystickButton(joystick, XboxValue.XBOX_X_BUTTON.getPort());
+
+    JoystickButton y = new JoystickButton(joystick, XboxValue.XBOX_Y_BUTTON.getPort());
+
+    if(a.get()) {
+      Arm.getInstance().moveDown();
+    }
+
+    if(b.get()) {
+      Arm.getInstance().moveUp();
+    }
+
+    if(x.get()) {
+      Arm.getInstance().stop();
+    }
+
+    if(y.get()) {
+      Arm.getInstance().zeroTalonEncoder();
+    }
+
   }
 
   @Override
