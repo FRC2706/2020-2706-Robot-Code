@@ -59,20 +59,12 @@ public class RobotContainer {
 
     // Instantiate the drive command and bind it
     driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
-<<<<<<< HEAD
 
-    // DriveBase.getInstance().setDefaultCommand(driveCommand);
-
-
-    
-  
-=======
     DriveBase.getInstance().setDefaultCommand(driveCommand);
 
     // Instantiate the intake command and bind it
     intakeCommand = new OperatorIntakeCommand();
     new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
->>>>>>> master
   }
 
   /**

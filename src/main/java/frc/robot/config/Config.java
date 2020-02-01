@@ -70,29 +70,23 @@ public class Config {
     public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
     public static boolean INVERT_SIDE= robotSpecific(false, false, false);
 
-<<<<<<< HEAD
     public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
 
     public static int ARM_ALLOWABLE_CLOSED = 4096;
 
-=======
->>>>>>> master
     // Timeouts for sending CAN bus commands
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
-<<<<<<< HEAD
     // PIDF values for the arm
     public static double ARM_P = robotSpecific(0.2);
     public static double ARM_I = robotSpecific(0.0);
     public static double ARM_D = robotSpecific(0.1);
     public static double ARM_F = robotSpecific(0.0);
 
-=======
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-    
->>>>>>> master
+
     /**
      * Returns one of the values passed based on the robot ID
      *

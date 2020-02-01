@@ -123,18 +123,15 @@ public class DriveBase extends SubsystemBase {
         follow();
     }
 
-<<<<<<< HEAD
     /**
      * Stop all the talons
      */
-=======
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
         robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
         follow();
     }
 
->>>>>>> master
     public void stop() {
         leftFrontTalon.stopMotor();
         leftRearTalon.stopMotor();
