@@ -12,8 +12,8 @@ import frc.robot.config.Config;
 public class ArmSubsystem extends SubsystemBase {
 
     // TODO Change placeholder values to actual limits
-    private static final int forwardLimit = 100000;
-    private static final int reverseLimit = 0;
+    private static final int FORWARD_LIMIT_TICKS = 100000;
+    private static final int REVERSE_LIMIT_TICKS = 0;
 
     private static ArmSubsystem INSTANCE = new ArmSubsystem();
 
@@ -45,13 +45,13 @@ public class ArmSubsystem extends SubsystemBase {
         armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
         armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
 
-        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED, Config.CAN_TIMEOUT_SHORT);
+        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
 
         //  Config the PID Values based on constants
-        armTalon.config_kP(0, Config.ARM_P, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kI(0, Config.ARM_I, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kD(0, Config.ARM_D, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kF(0, Config.ARM_F, Config.CAN_TIMEOUT_SHORT);
+        armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
+        armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
+        armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
+        armTalon.config_kF(0, Config.ARM_PID_F, Config.CAN_TIMEOUT_SHORT);
 
         // Set up the close loop period
         armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
@@ -61,11 +61,11 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Enable forward soft limit and set the value in encoder ticks
         armTalon.configForwardSoftLimitEnable(true);
-        armTalon.configForwardSoftLimitThreshold(forwardLimit, Config.CAN_TIMEOUT_LONG);
+        armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
         // Enable reverse soft limit and set the value in encoder ticks
         armTalon.configReverseSoftLimitEnable(true);
-        armTalon.configReverseSoftLimitThreshold(reverseLimit, Config.CAN_TIMEOUT_LONG);
+        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
         // Max voltage to apply with the talon. 12 is the maximum
         armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
