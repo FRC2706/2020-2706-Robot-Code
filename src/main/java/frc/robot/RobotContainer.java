@@ -10,10 +10,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.config.Config;
+import frc.robot.config.XboxValue;
+import frc.robot.config.XboxValue.XboxInputType;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.CurvatureDriveWithJoystick;
 import frc.robot.commands.TankDriveWithJoystick;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -52,8 +57,11 @@ public class RobotContainer {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
 
-    //driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
-    driveCommand = new TankDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_Y , Config.INVERT_SECOND_AXIS);
+
+    //driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
+    //driveCommand = new TankDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_Y , Config.INVERT_SECOND_AXIS);
+    driveCommand = new CurvatureDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y,Config.INVERT_FIRST_AXIS,Config.LEFT_CONTROL_STICK_X,Config.INVERT_FIRST_AXIS, XboxValue.XBOX_A_BUTTON.getPort());
+
 
     DriveBase.getInstance().setDefaultCommand(driveCommand);
     
