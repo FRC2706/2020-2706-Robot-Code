@@ -122,7 +122,10 @@ public class DriveBase extends SubsystemBase {
         robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
         follow();
     }
-    
+
+    /**
+     * Stop all the talons
+     */
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
         robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
