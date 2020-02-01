@@ -72,7 +72,7 @@ public class Config {
 
     public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
 
-    public static int ARM_ALLOWABLE_CLOSED = 4096;
+    public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
 
     // Timeouts for sending CAN bus commands
     public static final int CAN_TIMEOUT_SHORT = 10;
@@ -82,10 +82,10 @@ public class Config {
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
     // PIDF values for the arm
-    public static double ARM_P = robotSpecific(0.2);
-    public static double ARM_I = robotSpecific(0.0);
-    public static double ARM_D = robotSpecific(0.1);
-    public static double ARM_F = robotSpecific(0.0);
+    public static double ARM_PID_P = robotSpecific(0.2);
+    public static double ARM_PID_I = robotSpecific(0.0);
+    public static double ARM_PID_D = robotSpecific(0.1);
+    public static double ARM_PID_F = robotSpecific(0.0);
 
     /**
      * Returns one of the values passed based on the robot ID
