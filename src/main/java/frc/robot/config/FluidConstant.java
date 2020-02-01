@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 /**
  * FluidConstants are 'constant' values which can be changed over NetworkTables while the robot is disabled.
  * This can be used to tune PID and other values which we may want to update without re-deploying the code.
+ *
+ * This implements {@link Supplier} to allow passing it as a supplier.
  * @param <T> The type of the value
  */
 public class FluidConstant<T> implements Supplier<T> {
@@ -57,6 +59,14 @@ public class FluidConstant<T> implements Supplier<T> {
         updateActions.add(updateAction);
         // Return the instance to make one-line decelerations possible
         return this;
+    }
+
+    /**
+     * The get function to implement the Supplier interface.
+     * @return The current value of this constant
+     */
+    public T get() {
+        return this.value;
     }
 
     /**
