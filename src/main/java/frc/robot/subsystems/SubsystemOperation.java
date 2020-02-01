@@ -12,10 +12,10 @@ public class SubsystemOperation {
      * A static class with some pre-defined applicable states for ease-of-use
      */
     public static class State {
-        public static Supplier<Boolean> TELEOP = () -> DriverStation.getInstance().isOperatorControl();
-        public static Supplier<Boolean> AUTO = () -> DriverStation.getInstance().isAutonomous();
-        public static Supplier<Boolean> TELEOP_AND_AUTO = () -> TELEOP.get() || AUTO.get();
-        public static Supplier<Boolean> ALWAYS = () -> true;
+        public static final Supplier<Boolean> TELEOP = () -> DriverStation.getInstance().isOperatorControl();
+        public static final Supplier<Boolean> AUTO = () -> DriverStation.getInstance().isAutonomous();
+        public static final Supplier<Boolean> TELEOP_OR_AUTO = () -> TELEOP.get() || AUTO.get();
+        public static final Supplier<Boolean> ALWAYS = () -> true;
     }
     
     // The name given to this operation
