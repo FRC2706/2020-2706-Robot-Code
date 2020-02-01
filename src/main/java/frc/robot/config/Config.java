@@ -69,12 +69,8 @@ public class Config {
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
-    static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
-    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
-            .registerToTable(constantsTable);
-    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
-            .registerToTable(constantsTable);
     /**
      * Returns one of the values passed based on the robot ID
      *

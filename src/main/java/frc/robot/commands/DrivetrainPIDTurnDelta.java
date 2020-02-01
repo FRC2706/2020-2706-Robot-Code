@@ -11,21 +11,24 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
     //Delcare PD variables
-    private Supplier<Double> pGain = Config.DRIVETRAIN_P;
-    private Supplier<Double> dGain = Config.DRIVETRAIN_D;
+    private Supplier<Double> pGain = DriveBase.DRIVETRAIN_P;
+    private Supplier<Double> dGain = DriveBase.DRIVETRAIN_D;
 
     //get the drivebase and pigeon
     private final DriveBase drivebase;
     private PigeonIMU _pidgey;
 
-    //Initiate/get angle variables
+    //The delta of which you want to turn in degrees
     private double deltaDegree;
+
+    //Target angle in degrees
     private double targetAngle;
+
+    //Current angle in degrees
     private double currentAngle;
 
     //Initiate forwardSpeed

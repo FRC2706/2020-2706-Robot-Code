@@ -14,6 +14,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
+import frc.robot.config.FluidConstant;
 
 
 public class DriveBase extends SubsystemBase {
@@ -36,6 +37,11 @@ public class DriveBase extends SubsystemBase {
     private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
 
     private PigeonIMU _pidgey;
+
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
+            .registerToTable(Config.constantsTable);
 
     private DriveBase() {
 
@@ -63,10 +69,18 @@ public class DriveBase extends SubsystemBase {
         return currentInstance;
     }
 
+    /**
+     * This just returns the pigeon
+     * @return
+     */
     public PigeonIMU getPigeon() {
         return _pidgey;
     }
 
+    /**
+     * Gets the current angle based upon the angle the robot was enabled on
+     * @return returns angle in degrees
+     */
     public double getCurrentAngle(){
         //Gets the current angle
         PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
