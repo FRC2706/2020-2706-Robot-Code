@@ -6,9 +6,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 
-//import edu.wpi.first.wpilibj.Joystick;
-
-
 /**
  * Abstract class to extend when using curve drive, allows for basic Command architecture
  * Allows the WPI Curvature Drive to be used with passed values
@@ -50,6 +47,7 @@ public abstract class CurvatureDrive extends CommandBase {
 
     @Override
     public void execute() {
+        //makes the robot move
         double forward = forwardVal.get();
         double curve = curveSpeed.get();
 
@@ -82,6 +80,8 @@ public abstract class CurvatureDrive extends CommandBase {
     @Override
 
     public void end(boolean interrupted) {
+
+        //go back to disabled mode
       DriveBase.getInstance().setDisabledMode();
     }
   
