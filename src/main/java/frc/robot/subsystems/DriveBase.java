@@ -58,6 +58,9 @@ public class DriveBase extends SubsystemBase {
 
     }
 
+    /**
+     * Initialize the current DriveBase instance
+     */
     public static void init() {
         if (currentInstance == null) {
             currentInstance = new DriveBase();
@@ -95,30 +98,40 @@ public class DriveBase extends SubsystemBase {
         if (driveMode != DriveMode.Disabled) {
             resetTalons();
             stop();
-
             driveMode = DriveMode.Disabled;
         }
     }
 
+    /**
+     * Make the back talons follow the front talons
+     */
     private void follow() {
         leftRearTalon.follow(leftFrontTalon);
         rightRearTalon.follow(rightFrontTalon);
     }
 
+    /**
+     * Have the robot drive using the built-in arcade drive
+     *
+     * @param forwardVal The speed at which to move forward, between -1 and 1
+     * @param rotateVal The speed at which to rotate, between -1 (Turn Left) and 1 (Turn Right)
+     * @param squareInputs Weather or not to square the inputs (makes driving less sensitive)
+     */
     public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
-
         setOpenLoopVoltage();
         robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
         follow();
-
     }
-
+    
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
         robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
         follow();
     }
 
+    /**
+     * Stop all the talons
+     */
     public void stop() {
         leftFrontTalon.stopMotor();
         leftRearTalon.stopMotor();
@@ -126,6 +139,11 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon.stopMotor();
     }
 
+    /**
+     * Set up open loop voltage.
+     *
+     * This is optimal for driving by a human
+     */
     public void setOpenLoopVoltage() {
         if (driveMode != DriveMode.OpenLoopVoltage) {
             stop();
