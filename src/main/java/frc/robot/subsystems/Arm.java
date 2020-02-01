@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
@@ -12,8 +11,9 @@ import frc.robot.config.Config;
 
 public class Arm extends SubsystemBase {
 
+    // TODO Change placeholder values to actual limits
     private static final int forwardLimit = 100000;
-    private static final int reverseLimit = -10000;
+    private static final int reverseLimit = 0;
 
     private static Arm currentInstance;
     // TODO Change placeholder value to robotSpecific
@@ -22,12 +22,15 @@ public class Arm extends SubsystemBase {
 
     private Arm() {
         // Init all the talon values
-        armTalon = new WPI_TalonSRX(12);
+        armTalon = new WPI_TalonSRX(Config.ARM_TALON);
 
+        // Config factory default to clear out any lingering values
         armTalon.configFactoryDefault();
 
+        // Allow the arm to be moved easily when disabled
         armTalon.setNeutralMode(NeutralMode.Coast);
 
+        // Setup the talon, recording the error code
         errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
                 0, Config.CAN_TIMEOUT_SHORT);
 
@@ -41,58 +44,59 @@ public class Arm extends SubsystemBase {
         armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
         armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
 
-         armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED, Config.CAN_TIMEOUT_SHORT);
+        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED, Config.CAN_TIMEOUT_SHORT);
 
-
-            //  armTalon.configSelectedFeedbackCoefficient(0.5, 0, Config.CAN_TIMEOUT_LONG);
-       //  Config the PID Values
+        //  Config the PID Values based on constants
         armTalon.config_kP(0, Config.ARM_P, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kI(0, Config.ARM_I, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kD(0, Config.ARM_D, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kF(0, Config.ARM_F, Config.CAN_TIMEOUT_SHORT);
 
+        // Set up the close loop period
         armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
         armTalon.setSensorPhase(true);
         armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
         armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
+        // Enable forward soft limit and set the value in encoder ticks
         armTalon.configForwardSoftLimitEnable(true);
         armTalon.configForwardSoftLimitThreshold(forwardLimit, Config.CAN_TIMEOUT_LONG);
 
+        // Enable reverse soft limit and set the value in encoder ticks
         armTalon.configReverseSoftLimitEnable(true);
         armTalon.configReverseSoftLimitThreshold(reverseLimit, Config.CAN_TIMEOUT_LONG);
 
+        // Max voltage to apply with the talon. 12 is the maximum
         armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
         armTalon.enableVoltageCompensation(true);
 
+        // Number of seconds from 0 to full throttle
         armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
 
     }
 
+    /**
+     * Initialize the current instance if one does not already exist
+     */
     public static void init() {
         if (currentInstance == null) {
             currentInstance = new Arm();
         }
     }
 
+    /**
+     * Return the singleton arm instance
+     *
+     * @return the Arm instance
+     */
     public static Arm getInstance() {
         init();
         return currentInstance;
     }
 
-    public void moveDown() {
-        armTalon.set(-0.2);
-    }
-
-    public void moveUp() {
-        armTalon.configClosedLoopPeakOutput(0, 80);
-        armTalon.set(ControlMode.Position, 2000);
-    }
-
-    public void stop() {
-        armTalon.set(0);
-    }
-
+    /**
+     * Set the talon to 0 encoder ticks
+     */
     public void zeroTalonEncoder() {
         armTalon.setSelectedSensorPosition(0);
     }
@@ -101,7 +105,14 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
+
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition(0));
-        SmartDashboard.putNumber("Arm Talon Error Code", errorCode.value);
+
+        if (errorCode.value == 0) {
+            SmartDashboard.putString("Arm Talon Error", "Working Fine");
+        } else {
+            SmartDashboard.putString("Arm Talon Error", "Non 0 error code, possible talon issues " + errorCode.value);
+
+        }
     }
 }
