@@ -2,13 +2,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SubsystemCondition;
+import frc.robot.subsystems.SubsystemOperation;
 
 
 public class OperatorIntakeCommand extends CommandBase {
     
+    private final static String BUTTON_PRESSED = "buttonPressed";
+    
     private IntakeSubsystem intakeSubsystem;
-    private SubsystemCondition condition;
+    private SubsystemOperation condition;
     
     public OperatorIntakeCommand() {
         intakeSubsystem = IntakeSubsystem.getInstance();
@@ -16,7 +18,8 @@ public class OperatorIntakeCommand extends CommandBase {
         
         // Initialize the condition
         condition = intakeSubsystem.getConditionManager()
-                .createCondition("buttonPressed", SubsystemCondition.ConditionOptions.TELEOP, false);
+                // This operation only applies while the robot is under Operator Control (TELEOP)
+                .createOperation(BUTTON_PRESSED, SubsystemOperation.State.TELEOP, false);
     }
     
     @Override

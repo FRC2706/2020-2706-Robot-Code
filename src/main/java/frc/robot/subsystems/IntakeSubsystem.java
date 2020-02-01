@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
@@ -19,7 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
             .registerToTable(Config.constantsTable);
     
     // The ConditionManager to handle all the conditions that are required for the intake to run
-    SubsystemConditionManager conditionManager;
+    SubsystemOperationManager conditionManager;
     
     // The intake motor (if any)
     private VictorSPX intakeMotor;
@@ -31,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     private IntakeSubsystem() {
         // Initialize the private variables
-        conditionManager = new SubsystemConditionManager();
+        conditionManager = new SubsystemOperationManager("intake");
         if (Config.INTAKE_MOTOR != -1) {
             intakeMotor = new VictorSPX(Config.INTAKE_MOTOR);
         }
@@ -49,9 +48,9 @@ public class IntakeSubsystem extends SubsystemBase {
     /**
      * @return This class's instance of it's SubsystemConditionManager
      */
-   public SubsystemConditionManager getConditionManager() {
+    public SubsystemOperationManager getConditionManager() {
         return this.conditionManager;
-   }
+    }
     
     @Override
     public void periodic() {
@@ -59,8 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
         if (intakeMotor == null) return;
         
         // If all the conditions are met, set the motor to run at the target speed, otherwise stop.
-        boolean isAuto = DriverStation.getInstance().isAutonomous();
-        if (conditionManager.allSatisfied(isAuto)) {
+        if (conditionManager.allSatisfied()) {
             intakeMotor.set(ControlMode.PercentOutput, INTAKE_SPEED.get());
         } else {
             intakeMotor.set(ControlMode.PercentOutput, 0d);
