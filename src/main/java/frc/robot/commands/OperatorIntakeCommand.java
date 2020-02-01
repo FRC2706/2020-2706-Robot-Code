@@ -14,7 +14,7 @@ public class OperatorIntakeCommand extends CommandBase {
         
         // Initialize the subsystem with this condition
         intakeSubsystem.setCondition("buttonPressed", false);
-        intakeSubsystem.setConditionActive("buttonPressed", IntakeSubsystem.ConditionActive.ONLY_TELEOP);
+        intakeSubsystem.setConditionActive("buttonPressed", IntakeSubsystem.Condition.ONLY_TELEOP);
     }
     
     @Override

@@ -8,7 +8,6 @@ import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 public class IntakeSubsystem extends SubsystemBase {
     /**
@@ -23,12 +22,12 @@ public class IntakeSubsystem extends SubsystemBase {
     
     // A dictionary to hold all the conditions for the intake to run
     private HashMap<String, Boolean> conditions;
-    private HashMap<String, ConditionActive> conditionsActiveDuring;
+    private HashMap<String, Condition> conditionsActiveDuring;
     
     // The intake motor (if any)
     private VictorSPX intakeMotor;
     
-    public enum ConditionActive {
+    public enum Condition {
         ONLY_AUTO,
         ONLY_TELEOP,
         BOTH;
@@ -71,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * @param name The condition name
      * @param during When should it be active
      */
-    public void setConditionActive(String name, ConditionActive during) {
+    public void setConditionActive(String name, Condition during) {
         conditionsActiveDuring.put(name, during);
     }
     
@@ -85,7 +84,7 @@ public class IntakeSubsystem extends SubsystemBase {
         // Check if all conditions are met: we can run if none of the conditions match the following filter
         boolean canRun = conditions.entrySet().stream().noneMatch(c -> {
             // If we're in auto ignore the teleop conditions and vice versa
-            ConditionActive ignored = (isAuto ? ConditionActive.ONLY_TELEOP : ConditionActive.ONLY_AUTO);
+            Condition ignored = (isAuto ? Condition.ONLY_TELEOP : Condition.ONLY_AUTO);
             
             // If we're not ignoring the condition and it is false return true
             // If the condition's active during time isn't set, assume it's BOTH
