@@ -15,6 +15,8 @@ public class ArmSubsystem extends SubsystemBase {
     private static final int FORWARD_LIMIT_TICKS = 100000;
     private static final int REVERSE_LIMIT_TICKS = 0;
 
+    private static boolean isTalonFunctional = true;
+
     private static ArmSubsystem INSTANCE = new ArmSubsystem();
 
     // TODO Change placeholder value to robotSpecific
@@ -22,58 +24,66 @@ public class ArmSubsystem extends SubsystemBase {
     ErrorCode errorCode;
 
     private ArmSubsystem() {
-        // Init all the talon values
-        armTalon = new WPI_TalonSRX(Config.ARM_TALON);
+        if (errorCode.value == 0) {
+            SmartDashboard.putString("Arm Status", "Working Fine");
 
-        // Config factory default to clear out any lingering values
-        armTalon.configFactoryDefault();
+            // Init all the talon values
+            armTalon = new WPI_TalonSRX(Config.ARM_TALON);
 
-        // Allow the arm to be moved easily when disabled
-        armTalon.setNeutralMode(NeutralMode.Coast);
+            // Config factory default to clear out any lingering values
+            armTalon.configFactoryDefault();
 
-        // Setup the talon, recording the error code
-        errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                0, Config.CAN_TIMEOUT_SHORT);
+            // Allow the arm to be moved easily when disabled
+            armTalon.setNeutralMode(NeutralMode.Coast);
 
-        armTalon.setSelectedSensorPosition(0);
+            // Setup the talon, recording the error code
+            errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                    0, Config.CAN_TIMEOUT_SHORT);
 
-        armTalon.setInverted(Config.INVERT_ARM_TALON);
+            armTalon.setSelectedSensorPosition(0);
 
-        /* Config the peak and nominal outputs, 12V means full */
-        armTalon.configNominalOutputForward(0, Config.CAN_TIMEOUT_SHORT);
-        armTalon.configNominalOutputReverse(0, Config.CAN_TIMEOUT_SHORT);
-        armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
-        armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
+            armTalon.setInverted(Config.INVERT_ARM_TALON);
 
-        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
+            /* Config the peak and nominal outputs, 12V means full */
+            armTalon.configNominalOutputForward(0, Config.CAN_TIMEOUT_SHORT);
+            armTalon.configNominalOutputReverse(0, Config.CAN_TIMEOUT_SHORT);
+            armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
+            armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
 
-        //  Config the PID Values based on constants
-        armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kF(0, Config.ARM_PID_F, Config.CAN_TIMEOUT_SHORT);
+            armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
 
-        // Set up the close loop period
-        armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
-        armTalon.setSensorPhase(true);
-        armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
-        armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
+            //  Config the PID Values based on constants
+            armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
+            armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
+            armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
+            armTalon.config_kF(0, Config.ARM_PID_F, Config.CAN_TIMEOUT_SHORT);
 
-        // Enable forward soft limit and set the value in encoder ticks
-        armTalon.configForwardSoftLimitEnable(true);
-        armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+            // Set up the close loop period
+            armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
+            armTalon.setSensorPhase(true);
+            armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
+            armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
-        // Enable reverse soft limit and set the value in encoder ticks
-        armTalon.configReverseSoftLimitEnable(true);
-        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+            // Enable forward soft limit and set the value in encoder ticks
+            armTalon.configForwardSoftLimitEnable(true);
+            armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
-        // Max voltage to apply with the talon. 12 is the maximum
-        armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
-        armTalon.enableVoltageCompensation(true);
+            // Enable reverse soft limit and set the value in encoder ticks
+            armTalon.configReverseSoftLimitEnable(true);
+            armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
-        // Number of seconds from 0 to full throttle
-        armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
+            // Max voltage to apply with the talon. 12 is the maximum
+            armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
+            armTalon.enableVoltageCompensation(true);
 
+            // Number of seconds from 0 to full throttle
+            armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
+
+
+        } else {
+            SmartDashboard.putString("Arm Status", "Non 0 error code, possible talon issues " + errorCode.value);
+            isTalonFunctional = false;
+        }
     }
 
     /**
@@ -89,7 +99,9 @@ public class ArmSubsystem extends SubsystemBase {
      * Set the talon to 0 encoder ticks
      */
     public void zeroTalonEncoder() {
-        armTalon.setSelectedSensorPosition(0);
+        if(isTalonFunctional) {
+            armTalon.setSelectedSensorPosition(0);
+        }
     }
 
 
@@ -99,11 +111,5 @@ public class ArmSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition(0));
 
-        if (errorCode.value == 0) {
-            SmartDashboard.putString("Arm Status", "Working Fine");
-        } else {
-            SmartDashboard.putString("Arm Status", "Non 0 error code, possible talon issues " + errorCode.value);
-
-        }
     }
 }
