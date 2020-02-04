@@ -86,7 +86,7 @@ public class Config {
 
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-    
+
     /**
      * Returns one of the values passed based on the robot ID
      *
