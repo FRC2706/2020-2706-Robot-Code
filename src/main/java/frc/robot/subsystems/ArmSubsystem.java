@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 
-public class ArmSubsystem extends SubsystemBase {
+public class ArmSubsystem extends ConditionalSubsystemBase {
 
     // TODO Change placeholder values to actual limits
     private static final int FORWARD_LIMIT_TICKS = 100000;
@@ -21,7 +21,6 @@ public class ArmSubsystem extends SubsystemBase {
     WPI_TalonSRX armTalon;
     ErrorCode errorCode;
 
-    private SubsystemOperationManager operationManager = new SubsystemOperationManager("arm-subsystem");
 
     private ArmSubsystem() {
 
@@ -77,10 +76,12 @@ public class ArmSubsystem extends SubsystemBase {
         // Number of seconds from 0 to full throttle
         armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
 
-        SubsystemOperation talonError = operationManager.createOperation("talonFunctional", SubsystemOperation.State.ALWAYS, true);
+        createCondition("talonFunctional", SubsystemOperation.State.ALWAYS);
 
-        if (errorCode.value != 0) {
-            talonError.setEnabled(false);
+        SubsystemCondition talonErrorCondition = getCondition("talonFunctional");
+
+        if (errorCode.value == 0) {
+            talonErrorCondition.setState(true);
         }
     }
 
@@ -99,12 +100,7 @@ public class ArmSubsystem extends SubsystemBase {
     public void zeroTalonEncoder() {
         armTalon.setSelectedSensorPosition(0);
     }
-
-    public SubsystemOperationManager getOperationManager() {
-        return this.operationManager;
-    }
-
-
+    
     @Override
     public void periodic() {
         super.periodic();
