@@ -78,15 +78,15 @@ public class Config {
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
-    // Define a global constants table for subsystems to use
-    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-
     // PIDF values for the arm
     public static double ARM_PID_P = robotSpecific(0.2);
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.1);
     public static double ARM_PID_F = robotSpecific(0.0);
 
+    // Define a global constants table for subsystems to use
+    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+    
     /**
      * Returns one of the values passed based on the robot ID
      *

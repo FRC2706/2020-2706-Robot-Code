@@ -7,7 +7,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -15,8 +14,6 @@ public class ArmSubsystem extends SubsystemBase {
     // TODO Change placeholder values to actual limits
     private static final int FORWARD_LIMIT_TICKS = 100000;
     private static final int REVERSE_LIMIT_TICKS = 0;
-
-    private static boolean isTalonFunctional = true;
 
     private static ArmSubsystem INSTANCE = new ArmSubsystem();
 
@@ -81,8 +78,8 @@ public class ArmSubsystem extends SubsystemBase {
         armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
 
         SubsystemOperation talonError = operationManager.createOperation("talonFunctional", SubsystemOperation.State.ALWAYS, true);
-        
-        if(errorCode.value != 0) {
+
+        if (errorCode.value != 0) {
             talonError.setEnabled(false);
         }
     }
@@ -100,9 +97,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Set the talon to 0 encoder ticks
      */
     public void zeroTalonEncoder() {
-        if (isTalonFunctional) {
-            armTalon.setSelectedSensorPosition(0);
-        }
+        armTalon.setSelectedSensorPosition(0);
     }
 
     public SubsystemOperationManager getOperationManager() {
@@ -115,6 +110,5 @@ public class ArmSubsystem extends SubsystemBase {
         super.periodic();
 
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition(0));
-
     }
 }
