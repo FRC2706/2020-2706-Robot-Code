@@ -3,13 +3,14 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.lang.reflect.Type;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class ConditionalSubsystemBase extends SubsystemBase {
-    
-    
     /**
      * A class that represents a subsystem's condition.
      */
@@ -57,8 +58,10 @@ public abstract class ConditionalSubsystemBase extends SubsystemBase {
      * @param name The condition name
      * @param activeWhen A anonymous function representing when this condition's state should be considered
      */
-    protected final void createCondition(String name, Supplier<Boolean> activeWhen) {
-        conditions.put(name, new SubsystemCondition(name, activeWhen));
+    protected final SubsystemCondition createCondition(String name, Supplier<Boolean> activeWhen) {
+        var condition = new SubsystemCondition(name, activeWhen);
+        conditions.put(name, condition);
+        return condition;
     }
     
     /**
@@ -89,9 +92,26 @@ public abstract class ConditionalSubsystemBase extends SubsystemBase {
     }
     
     /**
-     * TODO: Outputs some debug to the console.
+     * Outputs debug info about this subsystem's conditions including:
+     * A timestamp, the state of this subsystem, the DriverStation state and
+     * all the conditions with their states and active statuses
      */
     public final void outputDebug() {
+        StringBuilder output = new StringBuilder(String.format("Conditional subsystem debug for %s:\n" +
+                        "\tTime: %tc\n" +
+                        "\tSubsystem State: Active(%s)\n" +
+                        "\tDS State: Teleop(%s), Auto(%s), Test(%s)\n" +
+                        "\tConditions:\n", this.getClass().getSimpleName(), Date.from(Instant.now()),
+                checkConditions(),
+                DriverStation.getInstance().isOperatorControl(),
+                DriverStation.getInstance().isAutonomous(),
+                DriverStation.getInstance().isTest()));
     
+        for (var condition : this.conditions.values()) {
+            output.append(String.format("\t\t[%s] State(%s), Active(%s)", condition.name,
+                    condition.state, condition.activeWhen.get()));
+        }
+        
+        System.out.println(output);
     }
 }
