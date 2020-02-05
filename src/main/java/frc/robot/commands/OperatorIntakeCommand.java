@@ -17,8 +17,6 @@ public class OperatorIntakeCommand extends CommandBase {
         intakeSubsystem = IntakeSubsystem.getInstance();
         addRequirements(intakeSubsystem);
         
-        var test = intakeSubsystem.getCondition("operatorActivated");
-        
         // Initialize the condition
         condition = intakeSubsystem.getCondition("operatorActivated");
     }
