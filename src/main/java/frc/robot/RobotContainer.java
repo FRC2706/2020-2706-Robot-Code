@@ -5,9 +5,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.config.XboxValue.XboxInputType;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
-import frc.robot.config.XboxValue.XboxInputType;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 import frc.robot.commands.CurvatureDriveWithJoystick;
@@ -39,6 +42,7 @@ public class RobotContainer {
   private Joystick controlStick;
 
   private Command driveCommand;
+  private Command intakeCommand;
 
 
   /**
@@ -51,18 +55,14 @@ public class RobotContainer {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
 
-    /**
-     * Select different driveCommands to control the robot in different modes
-     */
-
-    //driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
-    //driveCommand = new TankDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_Y , Config.INVERT_SECOND_AXIS);
-    driveCommand = new CurvatureDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y,Config.INVERT_FIRST_AXIS,Config.LEFT_CONTROL_STICK_X,Config.INVERT_FIRST_AXIS, XboxValue.XBOX_A_BUTTON.getPort());
-
+    // Instantiate the drive command and bind it
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
 
     DriveBase.getInstance().setDefaultCommand(driveCommand);
-    
-  
+
+    // Instantiate the intake command and bind it
+    intakeCommand = new OperatorIntakeCommand();
+    new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
   }
 
   /**

@@ -109,6 +109,9 @@ Temporary Items
 !.vscode/launch.json
 !.vscode/extensions.json
 
+### IntelliJ IDEA Files ###
+.idea/*
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
