@@ -36,7 +36,7 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     //Initiate forwardSpeed
     private double forwardSpeed;
 
-    private Logger logger = Logger.getLogger("SomeNameHere");
+    private Logger logger = Logger.getLogger("DTPIDDelta");
 
 
     /**

@@ -36,11 +36,11 @@ public class Config {
 
     private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
 
-    private static String logFilename = new SimpleDateFormat("'Robotlog_'yyyy'-'MM'-'dd'_'HH'-'mm'-'ss'.txt'").format(new Date());
     public static FileHandler logFileHandler;
 
     static {
         try {
+            String logFilename = new SimpleDateFormat("'Robotlog_'yyyy'-'MM'-'dd'_'HH'-'mm'-'ss'.txt'").format(new Date());
             logFileHandler = new FileHandler("/home/lvuser/logs/" + logFilename);
             SimpleFormatter formatter = new SimpleFormatter();
             logFileHandler.setFormatter(formatter);
