@@ -221,4 +221,23 @@ public class DriveBase extends SubsystemBase {
 
     }
 
+    /**
+     *  Standard Curve Drive
+     */
+	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
+        setOpenLoopVoltage();
+
+        robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
+        follow();
+
+    }
+    
+     /**
+     * Checks whether the robot is in brake mode
+     *
+     * @return True when the Talons have the neutral mode set to {@code NeutralMode.Brake}
+     */
+    public boolean isBrakeMode() {
+        return brakeMode;
+    }
 }

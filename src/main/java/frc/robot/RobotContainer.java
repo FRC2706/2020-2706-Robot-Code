@@ -1,8 +1,8 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
+/*----------------------------------------------------------------------------*/ 
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ 
+/* Open Source Software - may be modified and shared by FRC teams. The code   */ 
+/* must be accompanied by the FIRST BSD license file in the root directory of */ 
+/* the project.                                                               */ 
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.config.XboxValue.XboxInputType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
 import frc.robot.commands.OperatorIntakeCommand;
@@ -17,6 +19,8 @@ import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.CurvatureDriveWithJoystick;
+import frc.robot.commands.TankDriveWithJoystick;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -36,16 +40,13 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
 
-
     configureButtonBindings();
   }
 
   private Joystick driverStick;
   private Joystick controlStick;
-
   private Command driveCommand;
   private Command intakeCommand;
-
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -57,14 +58,12 @@ public class RobotContainer {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
 
-    // Instantiate the drive command and bind it
-    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
+    /**
+     * Select drive mode for robot
+     */
 
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
     DriveBase.getInstance().setDefaultCommand(driveCommand);
-
-    // Instantiate the intake command and bind it
-    intakeCommand = new OperatorIntakeCommand();
-    new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
   }
 
   /**
@@ -76,6 +75,4 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return null;
   }
-
-
 }

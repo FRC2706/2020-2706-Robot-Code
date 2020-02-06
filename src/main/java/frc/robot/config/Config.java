@@ -10,6 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Config manager for the robot
+ */
 public class Config {
 
     /**
@@ -67,8 +70,12 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
 
-    public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
-    public static boolean INVERT_SIDE= robotSpecific(false, false, false);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_SECOND_AXIS= robotSpecific(true, true, true);
+
+	public static double CONTROLLER_DEADBAND =  0.05;
+
+	public static double CURVATURE_OVERRIDE = 0.25;
 
     public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
 
@@ -78,6 +85,10 @@ public class Config {
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
 
+	public static final boolean TELEOP_BRAKE = false;
+
+	public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
+  
     // PIDF values for the arm
     public static double ARM_PID_P = robotSpecific(0.2);
     public static double ARM_PID_I = robotSpecific(0.0);
@@ -136,5 +147,4 @@ public class Config {
             return value;
         }
     }
-
 }
