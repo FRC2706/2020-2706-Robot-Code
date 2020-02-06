@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -23,6 +22,8 @@ public class ShooterSubsystem extends SubsystemBase {
   double kP = 0.5; 
   double kI = 0;
   double kD = 10;
+
+  int targetRPM = 2000;
 
   double velocityModeUnits;
 
@@ -88,6 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Description
     if (calculatedRPM < (targetRPM + 75) && calculatedRPM > (targetRPM - 75)){
+      System.out.println("calculatedRPM is within 75 units of targetRPM");
       // RPM is accurate enough, set condition so shooter is ready to fire
       // I have no idea if +/- 75 tolerance around the RPM is accurate enough
       // Test and change
