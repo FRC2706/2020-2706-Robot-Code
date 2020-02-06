@@ -77,14 +77,6 @@ public class FluidConstant<T> implements Supplier<T> {
     }
     
     /**
-     * Get method for implementing the Supplier interface
-     * @return The current value of this constant
-     */
-    public T get() {
-        return this.value;
-    }
-    
-    /**
      * @return The initial value of this constant (at compile-time)
      */
     public T getInitialValue() {

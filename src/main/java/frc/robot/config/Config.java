@@ -53,6 +53,9 @@ public class Config {
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1);
     public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3);
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6);
+    public static int INDEXER_TALON;
+
+    public static int INDEXER_IR_SENSOR;
 
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
 
