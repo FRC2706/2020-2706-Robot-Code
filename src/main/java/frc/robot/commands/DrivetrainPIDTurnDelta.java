@@ -8,9 +8,11 @@
 package frc.robot.commands;
 
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
@@ -34,6 +36,9 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     //Initiate forwardSpeed
     private double forwardSpeed;
 
+    private Logger logger = Logger.getLogger("SomeNameHere");
+
+
     /**
      * Allows the robot to turn and move forward or back by itself
      * @param deltaDegree The degree you want the robot to turn, negative is left, positive is right
@@ -51,6 +56,7 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         this.drivebase = DriveBase.getInstance();
         _pidgey = drivebase.getPigeon();
         double currentAngle = drivebase.getCurrentAngle();
+        logger.addHandler(Config.logFileHandler);
 
     }
 

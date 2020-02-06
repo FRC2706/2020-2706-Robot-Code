@@ -52,7 +52,7 @@ public class DriveBase extends SubsystemBase {
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
-        _pidgey = new PigeonIMU(leftFrontTalon);
+        _pidgey = new PigeonIMU (Config.robotSpecific(leftFrontTalon, null, null, null, leftRearTalon));
 
         _pidgey.setFusedHeading(0.0, 30);
 
