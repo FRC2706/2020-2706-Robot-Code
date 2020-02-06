@@ -39,6 +39,8 @@ public class Config {
     /**
      * PLACE IDS OF ROBOTS HERE
      **/
+    // Competition robot is ID 0
+    // Practice robot is ID 1
     // Mergio is has the ID 2
     // Mergonaut is ID 3
 
@@ -53,9 +55,9 @@ public class Config {
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1);
     public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3);
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6);
-    public static int INDEXER_TALON;
+    public static int FEEDERSUBSYSTEM_TALON = robotSpecific(-1, -1, -1, -1);
 
-    public static int INDEXER_IR_SENSOR;
+    public static int FEEDERSUBSYSTEM_IR_SENSOR;
 
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
 
@@ -66,6 +68,9 @@ public class Config {
 
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
+
+    public static int EMPTY_FEEDER_BUTTON;
+    public static int INCREMENT_FEEDER_BUTTON;
 
     public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
     public static boolean INVERT_SIDE= robotSpecific(false, false, false);

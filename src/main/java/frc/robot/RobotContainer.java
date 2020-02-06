@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.IncrementFeeder;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
@@ -45,6 +46,8 @@ public class RobotContainer {
 
   private Command driveCommand;
   private Command intakeCommand;
+  private Command incrementFeederCommand;
+  private Command emptyFeederCommand;
 
 
   /**
@@ -64,6 +67,12 @@ public class RobotContainer {
     // Instantiate the intake command and bind it
     intakeCommand = new OperatorIntakeCommand();
     new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+
+    incrementFeederCommand = new IncrementFeeder();
+    new JoystickButton(controlStick, XboxController.Button.kA.value).whenPressed(incrementFeederCommand);
+
+    emptyFeederCommand = new IncrementFeeder();
+    new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
   }
 
   /**
