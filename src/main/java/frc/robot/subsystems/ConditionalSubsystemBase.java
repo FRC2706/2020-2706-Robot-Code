@@ -14,13 +14,6 @@ import java.util.function.Supplier;
  * You don't have to implement anything to extend this class, it only provides some functions for you to use.
  * Basically; This class will let you define some conditions and then you can check at any moment if those conditions
  * are met.
- *
- * Example:
- *  In the intake subsystem, we have 2 conditions: operatorActivated and motorExists.
- *  Both of those are pretty self-explanatory. OperatorActivated means the driver is holding the button and MotorExists
- *  represents if the motor exists or not.
- *  Now, the intake subsystem can tell itself to run as long as the motor exists and the operator is holding the button
- *  and this logic can be condensed down into very few lines of code that can be shared between all subsystems
  */
 public abstract class ConditionalSubsystemBase extends SubsystemBase {
     /**
