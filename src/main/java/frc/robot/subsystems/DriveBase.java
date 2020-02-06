@@ -131,11 +131,6 @@ public class DriveBase extends SubsystemBase {
         robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
         follow();
     }
-    public void tankDrive(double leftSpeed, double rightSpeed, boolean squareInputs){
-       setOpenLoopVoltage();
-       robotDriveBase.tankDrive(leftSpeed, rightSpeed, squareInputs);
-       follow();
-    }
 
     /**
      * Stop all the talons
@@ -245,5 +240,4 @@ public class DriveBase extends SubsystemBase {
     public boolean isBrakeMode() {
         return brakeMode;
     }
-
 }

@@ -18,7 +18,7 @@ public abstract class CurvatureDrive extends CommandBase {
     private final boolean squareInputs;
 
     /**
-     * Creates the arcade drive
+     * Creates the curvature drive
      *
      * @param forwardVal The values to use for driving forward
      * @param curveSpeed The amount that the robot should curve while driving
@@ -47,7 +47,7 @@ public abstract class CurvatureDrive extends CommandBase {
 
     @Override
     public void execute() {
-        //makes the robot move
+        // Makes the robot move
         double forward = forwardVal.get();
         double curve = curveSpeed.get();
 
@@ -56,7 +56,6 @@ public abstract class CurvatureDrive extends CommandBase {
         }
 
         double rotation = Math.abs(curve) < Config.CONTROLLER_DEADBAND ? 0 : curve;
-
         boolean override = Math.abs(forward) < Config.CURVATURE_OVERRIDE;
 
         if (buttonPress.get()) {
@@ -78,13 +77,8 @@ public abstract class CurvatureDrive extends CommandBase {
     public abstract boolean isFinished();
 
     @Override
-
     public void end(boolean interrupted) {
-
-        //go back to disabled mode
+        // Go back to disabled mode
       DriveBase.getInstance().setDisabledMode();
     }
-  
-
-
 }

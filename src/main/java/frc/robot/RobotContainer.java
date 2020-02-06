@@ -34,16 +34,13 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
 
-
     configureButtonBindings();
   }
 
   private Joystick driverStick;
   private Joystick controlStick;
-
   private Command driveCommand;
   private Command intakeCommand;
-
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -55,14 +52,12 @@ public class RobotContainer {
     driverStick = new Joystick(0);
     controlStick = new Joystick(1);
 
-    // Instantiate the drive command and bind it
-    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FORWARD, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SIDE);
+    /**
+     * Select drive mode for robot
+     */
 
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
     DriveBase.getInstance().setDefaultCommand(driveCommand);
-
-    // Instantiate the intake command and bind it
-    intakeCommand = new OperatorIntakeCommand();
-    new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
   }
 
   /**
@@ -74,6 +69,4 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return null;
   }
-
-
 }

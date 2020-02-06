@@ -25,7 +25,6 @@ public class TankDrive extends CommandBase {
    * @param initBrake Whetehr or not to start and end the command in brake or coast mode
    */
   protected TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed, boolean squareInputs, boolean initBrake) {
-
     //Ensure that this command is the only one to run on the drive base
     //Requires must be included to use this command as a default command for the drive base
     addRequirements(DriveBase.getInstance());
@@ -40,7 +39,6 @@ public class TankDrive extends CommandBase {
 
   @Override
   public void initialize() {
-
     //Prepare for driving by human
     DriveBase.getInstance().setOpenLoopVoltage();
     DriveBase.getInstance().setBrakeMode(initBrake);
@@ -49,7 +47,6 @@ public class TankDrive extends CommandBase {
  
   @Override
   public void execute() {
-
     //Pass values to drive base to make the robot move
     DriveBase.getInstance().tankDrive(leftSpeed.get(),rightSpeed.get(),squareInputs);
   }
