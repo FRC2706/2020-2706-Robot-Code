@@ -8,23 +8,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ProtobotShooter;
+import frc.robot.subsystems.ShooterSubsystem;;
 
 
-public class SpinShooterPID extends CommandBase {
+public class SpinUpShooter extends CommandBase {
   
-  private final ProtobotShooter protoShooter = new ProtobotShooter();
+  private ShooterSubsystem shooterSubsystem;
 
-  int kPIDLoopIDX = 0;
-  int kTimeoutMs = 30;
-
-  double kF = 0;
-  double kP = 0;
-  double kI = 0;
-  double kD = 0;
-
-  public SpinShooterPID(ProtobotShooter protoShooter) {
-    addRequirements(protoShooter);
+  public SpinUpShooter() {
+    shooterSubsystem = ShooterSubsystem.getInstance();
+    addRequirements(shooterSubsystem);
   }
 
   @Override
