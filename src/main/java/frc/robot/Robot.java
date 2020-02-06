@@ -28,11 +28,11 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   //network table for vision control
-  private VisionCtrlNetTable m_VisionCtrlNetTable;
+  private VisionCtrlNetTable VisionControlNetTable;
   //network table for control systems control
-  private ControlCtrlNetTable m_ControlCtrlNetTable;
+  private ControlCtrlNetTable ControlCtrlNetTable;
   //flag to indicate from the teleop mode
-  private Boolean m_bFromTeleMode;
+  private Boolean bFromTeleMode;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -47,11 +47,11 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     
     //create a vision control table
-    m_VisionCtrlNetTable  = new VisionCtrlNetTable();
+    VisionControlNetTable  = new VisionCtrlNetTable();
     //create a control system control table
-    m_ControlCtrlNetTable = new ControlCtrlNetTable();
+    ControlCtrlNetTable = new ControlCtrlNetTable();
     //set to false
-    m_bFromTeleMode = false;
+    bFromTeleMode = false;
 
   }
 
@@ -77,14 +77,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    if (isRealMatch() && m_bFromTeleMode == true) 
+    if (isRealMatch() && bFromTeleMode == true) 
     {
       // if in a real match and from teleop mode
       // Write to the network table the shut down signal.
-      m_VisionCtrlNetTable.shutDownVision();
-      m_ControlCtrlNetTable.shutDownControl();
+      VisionControlNetTable.shutDownVision();
+      ControlCtrlNetTable.shutDownControl();
 
-      System.out.print("Driver Station Disabled\n");      
+      System.out.println("Driver Station Disabled");      
     }
 
   }
@@ -106,9 +106,9 @@ public class Robot extends TimedRobot {
     }
 
     //send start up signal to vision team
-    m_VisionCtrlNetTable.startUpVision();
+    VisionControlNetTable.startUpVision();
 
-    m_bFromTeleMode = false;
+    bFromTeleMode = false;
   }
 
   /**
@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
     }
     
     //set teleop mode to true
-    m_bFromTeleMode = true;
+    bFromTeleMode = true;
 
   }
 
@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     //set teleop mode to false
-    m_bFromTeleMode = false;
+    bFromTeleMode = false;
   }
 
   /**

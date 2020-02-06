@@ -9,7 +9,7 @@ public class ControlCtrlNetTable {
     //For NetworkTables
     //Get the default instance of NetworkTables that was created automatically
     //when your program starts
-    private NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
     //todo: figure if Control pi needs a start signal
     //Add a new network table for the control system.
@@ -18,7 +18,7 @@ public class ControlCtrlNetTable {
 
     public ControlCtrlNetTable ()
     {
-        ControlShutdown_table = inst.getTable("ControlShutDown");
+        ControlShutdown_table = instance.getTable("ControlShutDown");
         ControlShutDownEntry = ControlShutdown_table.getEntry("ShutDown");
         ControlShutDownEntry.setBoolean(false);
     }
@@ -31,7 +31,4 @@ public class ControlCtrlNetTable {
     {
         ControlShutDownEntry.setBoolean(true);
     }
-
-    
-
 }
