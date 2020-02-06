@@ -88,7 +88,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double calculatedRPM = (m_shooter.getSelectedSensorVelocity() * 600) / 4096;
 
     // Description
-    if (calculatedRPM < (targetRPM + 75) && calculatedRPM > (targetRPM - 75)){
+    if (calculatedRPM < (targetRPM + 50) && calculatedRPM > (targetRPM - 50)){
       System.out.println("calculatedRPM is within 75 units of targetRPM");
       // RPM is accurate enough, set condition so shooter is ready to fire
       // I have no idea if +/- 75 tolerance around the RPM is accurate enough
