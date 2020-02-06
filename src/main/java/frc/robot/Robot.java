@@ -28,11 +28,13 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   //network table for vision control
-  private VisionCtrlNetTable VisionControlNetTable;
+  private VisionCtrlNetTable m_VisionControlNetTable;
   //network table for control systems control
-  private ControlCtrlNetTable ControlCtrlNetTable;
+  private ControlCtrlNetTable m_ControlCtrlNetTable;
   //flag to indicate from the teleop mode
-  private Boolean bFromTeleMode;
+  private Boolean m_bFromTeleMode;
+  //flag to indicate the real match
+  private Boolean m_bRealMatch;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -47,12 +49,12 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     
     //create a vision control table
-    VisionControlNetTable  = new VisionCtrlNetTable();
+    m_VisionControlNetTable  = new VisionCtrlNetTable();
     //create a control system control table
-    ControlCtrlNetTable = new ControlCtrlNetTable();
+    m_ControlCtrlNetTable = new ControlCtrlNetTable();
     //set to false
-    bFromTeleMode = false;
-
+    m_bFromTeleMode = false;
+    m_bRealMatch = false;
   }
 
   /**
@@ -77,12 +79,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    if (isRealMatch() && bFromTeleMode == true) 
+    if (m_bRealMatch == true && m_bFromTeleMode == true) 
     {
       // if in a real match and from teleop mode
       // Write to the network table the shut down signal.
-      VisionControlNetTable.shutDownVision();
-      ControlCtrlNetTable.shutDownControl();
+      m_VisionControlNetTable.shutDownVision();
+      m_ControlCtrlNetTable.shutDownControl();
 
       System.out.println("Driver Station Disabled");      
     }
@@ -106,9 +108,10 @@ public class Robot extends TimedRobot {
     }
 
     //send start up signal to vision team
-    VisionControlNetTable.startUpVision();
+    m_VisionControlNetTable.startUpVision();
 
-    bFromTeleMode = false;
+    m_bFromTeleMode = false;
+    m_bRealMatch = isRealMatch();
   }
 
   /**
@@ -129,7 +132,7 @@ public class Robot extends TimedRobot {
     }
     
     //set teleop mode to true
-    bFromTeleMode = true;
+    m_bFromTeleMode = true;
 
   }
 
@@ -146,7 +149,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     //set teleop mode to false
-    bFromTeleMode = false;
+    m_bFromTeleMode = false;
   }
 
   /**
