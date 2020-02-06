@@ -8,10 +8,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.config.Config;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.nettables.*;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,148 +22,152 @@ import edu.wpi.first.wpilibj.DriverStation;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  
+    private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+    private RobotContainer m_robotContainer;
 
-  //network table for vision control
-  private VisionCtrlNetTable m_VisionControlNetTable;
-  //network table for control systems control
-  private ControlCtrlNetTable m_ControlCtrlNetTable;
-  //flag to indicate from the teleop mode
-  private Boolean m_bFromTeleMode;
-  //flag to indicate the real match
-  private Boolean m_bRealMatch;
+    //network table for vision control
+    private VisionCtrlNetTable m_VisionControlNetTable;
+    //network table for control systems control
+    private ControlCtrlNetTable m_ControlCtrlNetTable;
+    //flag to indicate from the teleop mode
+    private Boolean m_bFromTeleMode;
+    //flag to indicate the real match
+    private Boolean m_bRealMatch;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  @Override
-  public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    DriveBase.init();
+  
+  
+    /**
+     * This function is run when the robot is first started up and should be used for any
+     * initialization code.
+     */
+    @Override
+    public void robotInit() {
+        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+        // autonomous chooser on the dashboard.
+        DriveBase.init();
 
-    m_robotContainer = new RobotContainer();
-    
-    //create a vision control table
-    m_VisionControlNetTable  = new VisionCtrlNetTable();
-    //create a control system control table
-    m_ControlCtrlNetTable = new ControlCtrlNetTable();
-    //set to false
-    m_bFromTeleMode = false;
-    m_bRealMatch = false;
-  }
+        m_robotContainer = new RobotContainer();
+      
+        //create a vision control table
+        m_VisionControlNetTable  = new VisionCtrlNetTable();
+        //create a control system control table
+        m_ControlCtrlNetTable = new ControlCtrlNetTable();
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+        m_bFromTeleMode = false;
+        m_bRealMatch = false;
 
-    CommandScheduler.getInstance().run();
-  }
-
-  /**
-   * This function is called once each time the robot enters Disabled mode.
-   */
-  @Override
-  public void disabledInit() {
-    if (m_bRealMatch == true && m_bFromTeleMode == true) 
-    {
-      // if in a real match and from teleop mode
-      // Write to the network table the shut down signal.
-      m_VisionControlNetTable.shutDownVision();
-      m_ControlCtrlNetTable.shutDownControl();
-
-      System.out.println("Driver Station Disabled");      
     }
 
-  }
+    /**
+     * This function is called every robot packet, no matter the mode. Use this for items like
+     * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+     *
+     * <p>This runs after the mode specific periodic functions, but before
+     * LiveWindow and SmartDashboard integrated updating.
+     */
+    @Override
+    public void robotPeriodic() { 
+        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
+        // commands, running already-scheduled commands, removing finished or interrupted commands,
+        // and running subsystem periodic() methods.  This must be called from the robot's periodic
+        // block in order for anything in the Command-based framework to work.
 
-  @Override
-  public void disabledPeriodic() {
-  }
-
-  /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
-   */
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+        CommandScheduler.getInstance().run();
     }
 
-    //send start up signal to vision team
-    m_VisionControlNetTable.startUpVision();
-
-    m_bFromTeleMode = false;
-    m_bRealMatch = isRealMatch();
-  }
-
-  /**
-   * This function is called periodically during autonomous.
-   */
-  @Override
-  public void autonomousPeriodic() {
-  }
-
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    /**
+     * This function is called once each time the robot enters Disabled mode.
+     */
+    @Override
+    public void disabledInit() {
+        if (m_bRealMatch == true && m_bFromTeleMode == true) 
+        {
+             // if in a real match and from teleop mode
+             // Write to the network table the shut down signal. 
+             m_VisionControlNetTable.shutDownVision();
+             m_ControlCtrlNetTable.shutDownControl();
+             System.out.println("Driver Station Disabled");      
+        }
     }
-    
-    //set teleop mode to true
-    m_bFromTeleMode = true;
 
-  }
+    @Override
+    public void disabledPeriodic() {
 
-  /**
-   * This function is called periodically during operator control.
-   */
-  @Override
-  public void teleopPeriodic() {
-  }
+    }
 
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    /**
+     * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+     */
+    @Override
+    public void autonomousInit() {
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    //set teleop mode to false
-    m_bFromTeleMode = false;
-  }
+        // schedule the autonomous command (example)
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
+        }
+        
+        //send start up signal to vision team
+        m_VisionControlNetTable.startUpVision(); 
+      
+        m_bFromTeleMode = false;
+        m_bRealMatch = isRealMatch();
+    }
 
-  /**
-   * This function is called periodically during test mode.
-   */
-  @Override
-  public void testPeriodic() {
-  }
+    /**
+     * This function is called periodically during autonomous.
+     */
+    @Override
+    public void autonomousPeriodic() {
 
-  /**
+    }
+
+    @Override
+    public void teleopInit() {
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.cancel();
+        }
+         
+        //set teleop mode to true
+        m_bFromTeleMode = true;
+    }
+
+    /**
+     * This function is called periodically during operator control.
+     */
+    @Override
+    public void teleopPeriodic() {
+
+    }
+
+    @Override
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+        
+        //set teleop mode to false
+        m_bFromTeleMode = false;
+    }
+  
+    /**
+     * This function is called periodically during test mode.
+     */
+    @Override
+    public void testPeriodic() {
+    }
+  
+   /**
      * Determines if the robot is in a real match.
      *
      * @return True if the robot is in a real match, false otherwise.
      */
-  public static boolean isRealMatch() {
-    return DriverStation.getInstance().isFMSAttached();
+     public static boolean isRealMatch() {
+         return DriverStation.getInstance().isFMSAttached();
   }
 }
