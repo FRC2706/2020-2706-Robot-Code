@@ -14,13 +14,14 @@ public class SpinUpShooter extends CommandBase {
 
   @Override
   public void initialize() {
-    
   }
 
   @Override
   public void execute() {
-    // Spin to win
+    // Hardcoded RPM for testing
+    shooterSubsystem.setRPM(2000);
     shooterSubsystem.periodic();
+    shooterSubsystem.checkRPM(2000);
   }
 
   // Called once the command ends or is interrupted.
