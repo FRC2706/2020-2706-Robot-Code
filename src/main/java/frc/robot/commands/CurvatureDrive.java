@@ -17,6 +17,10 @@ public abstract class CurvatureDrive extends CommandBase {
     private final Supplier<Boolean> buttonPress;
     private final boolean squareInputs;
 
+    private static final double forwardSpeedMultiplier = 0.6;
+    private static final double rotationSpeedDivisor = 2.5;
+    private static final double rotationSpeedDivisor2 = 2;
+
     /**
      * Creates the curvature drive
      *
@@ -63,13 +67,13 @@ public abstract class CurvatureDrive extends CommandBase {
                 DriveBase.getInstance().setBrakeMode(true);
             }
 
-            DriveBase.getInstance().curvatureDrive(forward * 0.6, (override ? rotation / 2.5 : rotation), override);
+            DriveBase.getInstance().curvatureDrive(forward * forwardSpeedMultiplier, (override ? rotation / rotationSpeedDivisor : rotation), override);
         } else {
             if (DriveBase.getInstance().isBrakeMode()) {
                 DriveBase.getInstance().setBrakeMode(false);
             }
 
-            DriveBase.getInstance().curvatureDrive(forward, (override ? rotation / 2 : rotation), override);
+            DriveBase.getInstance().curvatureDrive(forward, (override ? rotation / rotationSpeedDivisor2 : rotation), override);
         }
     }
 
