@@ -30,6 +30,7 @@ import java.util.logging.Logger;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems and commands are defined here...    
   private Joystick driverStick;
   private Joystick controlStick;
@@ -79,7 +80,6 @@ public class RobotContainer {
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
-      
     }
     
     /**
@@ -104,3 +104,5 @@ public class RobotContainer {
         return null;
     }
 }
+
+

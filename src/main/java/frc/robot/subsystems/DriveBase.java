@@ -51,8 +51,10 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
+        WPI_TalonSRX protobotPigeonTalon = new WPI_TalonSRX(5);
+
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
-        _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon));
+        _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon, protobotPigeonTalon));
 
         _pidgey.setFusedHeading(0.0, 30);
 

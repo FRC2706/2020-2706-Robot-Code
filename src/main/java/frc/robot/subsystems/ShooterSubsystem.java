@@ -9,9 +9,6 @@ import frc.robot.config.Config;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  // Singleton instance for ShooterSubsystem
-  private static final ShooterSubsystem INSTANCE_SHOOTER = new ShooterSubsystem();
-
   private WPI_TalonSRX m_shooter;
 
   // Indicates use of the primary PID loop rather than cascaded ones
@@ -33,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final int ITERATIONS_PER_HUNDRED_MS = 600;
 
   private ShooterSubsystem() {
+
     // Initialize a private variable for the motor
     if (Config.SHOOTER_MOTOR != -1){
       m_shooter = new WPI_TalonSRX(Config.SHOOTER_MOTOR);

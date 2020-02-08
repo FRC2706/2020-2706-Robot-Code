@@ -22,7 +22,6 @@ public class SpinUpShooter extends CommandBase {
 
   @Override
   public void execute() {
-    // Hardcoded RPM for testing
     shooterSubsystem.setRPM(RPM);
     shooterSubsystem.periodic();
     shooterSubsystem.checkRPM(RPM);
