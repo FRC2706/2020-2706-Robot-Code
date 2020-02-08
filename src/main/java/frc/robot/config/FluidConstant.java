@@ -102,5 +102,9 @@ public class FluidConstant<T> implements Supplier<T> {
         this.setValue(newValue);
     }
 
+    public T get() {
+        return this.value;
+    }
+
 
 }

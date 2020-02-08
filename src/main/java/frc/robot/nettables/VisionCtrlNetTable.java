@@ -4,6 +4,7 @@ package frc.robot.nettables;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.config.Config;
 
 public class VisionCtrlNetTable {
 
@@ -13,18 +14,31 @@ public class VisionCtrlNetTable {
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   
   //Add a visionControl network table
-  private NetworkTable VisionControl_table ;
-  private NetworkTableEntry VisionShutDownEntry ;
-  private NetworkTableEntry VisionStartUpEntry ;
+  private NetworkTable visionControlTable;
+  private NetworkTableEntry VisionShutDownEntry;
+  private NetworkTableEntry VisionStartUpEntry;
+  private NetworkTable mergeVisionTable;
+
+  private double distanceToPowerCell;
+  private double yawToPowerCell;
 
   public VisionCtrlNetTable ()
   {
-    VisionControl_table = inst.getTable("VisionControl");
-    VisionShutDownEntry = VisionControl_table.getEntry("ShutDown");
-    VisionStartUpEntry = VisionControl_table.getEntry("StartUp");
+    visionControlTable = inst.getTable("VisionControl");
+    VisionShutDownEntry = visionControlTable.getEntry("ShutDown");
+    VisionStartUpEntry = visionControlTable.getEntry("StartUp");
 
     VisionShutDownEntry.setBoolean(false);
     VisionStartUpEntry.setBoolean(false);
+
+    mergeVisionTable = inst.getTable(Config.VISION_TABLE_NAME);
+    distanceToPowerCell = mergeVisionTable.getEntry(Config.DISTANCE_POWERCELL).getDouble(-1);
+    yawToPowerCell = mergeVisionTable.getEntry(Config.YAW_POWERCELL).getDouble(-1);
+
+    
+
+
+
   }
 
   /**
