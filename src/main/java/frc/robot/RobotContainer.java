@@ -1,8 +1,8 @@
-/*----------------------------------------------------------------------------*/ 
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ 
-/* Open Source Software - may be modified and shared by FRC teams. The code   */ 
-/* must be accompanied by the FIRST BSD license file in the root directory of */ 
-/* the project.                                                               */ 
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.config.XboxValue.XboxInputType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.EmptyFeeder;
 import frc.robot.commands.IncrementFeeder;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
@@ -72,8 +73,9 @@ public class RobotContainer {
     incrementFeederCommand = new IncrementFeeder();
     new JoystickButton(controlStick, XboxController.Button.kA.value).whenPressed(incrementFeederCommand);
 
-    emptyFeederCommand = new IncrementFeeder();
-    new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
+    emptyFeederCommand = new EmptyFeeder();
+    new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);\
+
     driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
     DriveBase.getInstance().setDefaultCommand(driveCommand);
   }
