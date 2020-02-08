@@ -12,14 +12,13 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
 
 /**
  * Add your docs here.
  */
-public class FeederSubsystem extends SubsystemBase {
+public class FeederSubsystem extends ConditionalSubsystemBase {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
@@ -56,6 +55,8 @@ public class FeederSubsystem extends SubsystemBase {
 
     private FeederSubsystem(){
 
+        createCondition("encoderHealthy", SubsystemConditionStates.ALWAYS);
+
         //Initialize the talon
         feederTalon = new WPI_TalonSRX(Config.FEEDERSUBSYSTEM_TALON);
 
@@ -63,21 +64,23 @@ public class FeederSubsystem extends SubsystemBase {
         indexerIrSensor = new AnalogInput(Config.FEEDERSUBSYSTEM_IR_SENSOR);
 
         //Configure the talon
-        feederTalon.configFactoryDefault();
-        feederTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
-        feederTalon.setSensorPhase(true);
-        feederTalon.configNominalOutputForward(0, kTimeoutMs);
-        feederTalon.configNominalOutputReverse(0, kTimeoutMs);
-        feederTalon.configPeakOutputForward(FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
-        feederTalon.configPeakOutputReverse(-FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
-        feederTalon.configAllowableClosedloopError(0, 0, kTimeoutMs);
-        feederTalon.config_kF(kPIDLoopIdx, FEEDERSUBSYSTEM_F.get(), kTimeoutMs);
-        feederTalon.config_kP(kPIDLoopIdx, FEEDERSUBSYSTEM_P.get(), kTimeoutMs);
-        feederTalon.config_kI(kPIDLoopIdx, FEEDERSUBSYSTEM_I.get(), kTimeoutMs);
-        feederTalon.config_kD(kPIDLoopIdx, FEEDERSUBSYSTEM_D.get(), kTimeoutMs);
-        int absolutePosition = feederTalon.getSensorCollection().getPulseWidthPosition();
-        feederTalon.setSelectedSensorPosition(absolutePosition, kPIDLoopIdx, kTimeoutMs);
-        feederTalon.setSelectedSensorPosition(0, 0, 10);
+        if (checkConditions()){
+            feederTalon.configFactoryDefault();
+            feederTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+            feederTalon.setSensorPhase(true);
+            feederTalon.configNominalOutputForward(0, kTimeoutMs);
+            feederTalon.configNominalOutputReverse(0, kTimeoutMs);
+            feederTalon.configPeakOutputForward(FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
+            feederTalon.configPeakOutputReverse(-FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
+            feederTalon.configAllowableClosedloopError(0, 0, kTimeoutMs);
+            feederTalon.config_kF(kPIDLoopIdx, FEEDERSUBSYSTEM_F.get(), kTimeoutMs);
+            feederTalon.config_kP(kPIDLoopIdx, FEEDERSUBSYSTEM_P.get(), kTimeoutMs);
+            feederTalon.config_kI(kPIDLoopIdx, FEEDERSUBSYSTEM_I.get(), kTimeoutMs);
+            feederTalon.config_kD(kPIDLoopIdx, FEEDERSUBSYSTEM_D.get(), kTimeoutMs);
+            int absolutePosition = feederTalon.getSensorCollection().getPulseWidthPosition();
+            feederTalon.setSelectedSensorPosition(absolutePosition, kPIDLoopIdx, kTimeoutMs);
+            feederTalon.setSelectedSensorPosition(0, 0, 10);
+        }
 
     }
 
