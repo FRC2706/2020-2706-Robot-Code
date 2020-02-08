@@ -6,8 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 /**
- * Code by Charlie Macdonald.
- * Last modified on Feb 6th, 2020.
+ * Code modified by Charlie MacDonald.
+ * Last modified on Feb 8th, 2020.
  */
 
 package frc.robot.sensors;
@@ -25,21 +25,32 @@ public class IrSensor implements Sendable {
     private final AnalogInput m_irsensor;
 
     //Set the constants to calculate IR sensor distance:
-        //Values for short range (Sharp GP2Y0A41SK0F) 4-30cm sensor: 12.8528, 0.007545, -3.92, 30, 4.5, 0.
+        //Values for short range (Sharp GP2Y0A41SK0F) 4-30cm sensor: 12.8528, 0.007545, -3.92, 25, 4.5, 0.
         //Note: If a different IR sensor is used, these values will need to be updated.
     private final double IR_SLOPE_VALUE = 12.8528;
     private final double IR_X_VALUE = 0.007545;
     private final double IR_CONSTANT = -3.92;
     private final double IR_MAX_DISTANCE_CM = 25;
     private final double IR_MIN_DISTANCE_CM = 4.5;
-    private final double IR_MIN_OUTPUT_CM = 0;
+    private final double IR_MIN_OUTPUT_CM = 0.0;
+
+    private double irVoltage;
   
+    public double takeMeasurement() {
+        //Make sure to call this method in the periodic() method of the subsystem that uses the IR sensor. 
+        //This method continuously monitors the IR sensor output and filters outliers. Also returns sensor voltage, if anyone wishes to use that.
+        
+        irVoltage = (m_filter.calculate(m_irsensor.getValue())/1000); 
+        //Gets ir sensor value, filters outliers, and converts milivolt output to volts.
+
+        return(irVoltage);
+    }
+
     public double getDistance() {
         //Calculate distance (cm) from mV:
         //Accurate to +/- 2cm when measuring within 4.5-25cm.
         double currentDistanceCm = ((1/
-            (((m_filter.calculate(m_irsensor.getValue()))
-            /1000 - IR_X_VALUE)
+            ((irVoltage - IR_X_VALUE)
             /IR_SLOPE_VALUE)
             ) //Inverse is effectively calculated at this point.
             +IR_CONSTANT);
@@ -54,7 +65,6 @@ public class IrSensor implements Sendable {
         }
 
         return(currentDistanceCm);
-
     }
 
     public IrSensor(int channel) {
