@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Config manager for the robot
@@ -35,6 +39,19 @@ public class Config {
 
     private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
 
+    public static FileHandler logFileHandler;
+
+    static {
+        try {
+            String logFilename = new SimpleDateFormat("'Robotlog_'yyyy'-'MM'-'dd'_'HH'-'mm'-'ss'.txt'").format(new Date());
+            logFileHandler = new FileHandler("/home/lvuser/logs/" + logFilename);
+            SimpleFormatter formatter = new SimpleFormatter();
+            logFileHandler.setFormatter(formatter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * ID of the robot that code is running on
      */
@@ -52,11 +69,11 @@ public class Config {
     }
 
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2);
-    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4);
-    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3);
-    public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6);
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
+    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
+    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
+    public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
 
     public static int ARM_TALON = robotSpecific(12, 12, 12);
 
@@ -107,7 +124,7 @@ public class Config {
      * @return The value selected based on the ID of the robot
      */
     @SafeVarargs
-    private static <T> T robotSpecific(T first, T... more) {
+    public static <T> T robotSpecific(T first, T... more) {
         if (getRobotId() < 1 || getRobotId() > more.length) {
             return first;
         } else {
