@@ -17,8 +17,8 @@ public class ShooterSubsystem extends SubsystemBase {
   // Indicates use of the primary PID loop rather than cascaded ones
   int kPIDLoopIDX = 0;
 
-	 // Set to zero to skip waiting for confirmation, set to nonzero to wait and
-	 // report to DS if action fails.
+  // Set to zero to skip waiting for confirmation, set to nonzero to wait and
+  // report to DS if action fails.
   int kTimeoutMs = 30;
 
   // Protobot PID values
@@ -28,6 +28,9 @@ public class ShooterSubsystem extends SubsystemBase {
   double kD = 10;
 
   double velocityModeUnits;
+  private final int RPM_TOLERANCE = 50;
+  private final int ENCODER_TICKS_PER_REVOLUTION = 4096;
+  private final int ITERATIONS_PER_HUNDRED_MS = 600;
 
   private ShooterSubsystem() {
     // Initialize a private variable for the motor
@@ -58,11 +61,15 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooter.config_kD(kPIDLoopIDX, kD, kTimeoutMs);
   }
 
+  private static class ShooterHolder{
+    private static final ShooterSubsystem INSTANCE_SHOOTER = new ShooterSubsystem();
+  }
+
   /**
    * Returns the singleton instance for the ShooterSubsystem
    */
   public static ShooterSubsystem getInstance() {
-      return INSTANCE_SHOOTER;
+    return ShooterHolder.INSTANCE_SHOOTER;
   }
 
   /**
@@ -71,6 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getVelocity(){
     double encoderVelocity = m_shooter.getSelectedSensorVelocity();
     // Add the ability to print to SmartDashboard?
+    // Returns change in position per 100ms
     return encoderVelocity;
   }
 
@@ -79,24 +87,20 @@ public class ShooterSubsystem extends SubsystemBase {
    * based on distance from power port or other factors.
    */
   public void setRPM(int targetRPM){
-    velocityModeUnits = targetRPM * 4096 / 600;
+    velocityModeUnits = targetRPM * ENCODER_TICKS_PER_REVOLUTION / ITERATIONS_PER_HUNDRED_MS;
   }
 
   /**
    * Check the actual RPM and compare it with targetRPM
    * to verify that the shooter is up to necessary speed to fire.
    */
-  public void checkRPM(int targetRPM){
-
+  public boolean checkRPM(int targetRPM){
     // Calculate RPM based on the encoder reading
-    double calculatedRPM = (m_shooter.getSelectedSensorVelocity() * 600) / 4096;
-
+    double calculatedRPM = (m_shooter.getSelectedSensorVelocity() * ITERATIONS_PER_HUNDRED_MS) / ENCODER_TICKS_PER_REVOLUTION;
     // Verify that the motor is running at the target RPM
-    if (calculatedRPM < (targetRPM + 50) && calculatedRPM > (targetRPM - 50)){
-      System.out.println("calculatedRPM is within 50 units of targetRPM");
+    return (calculatedRPM < (targetRPM + RPM_TOLERANCE) && calculatedRPM > (targetRPM - RPM_TOLERANCE));
       // I have no idea if +/- 50 tolerance around the RPM is accurate enough
       // Test and change, add setting conditions
-    }
   }
 
   @Override

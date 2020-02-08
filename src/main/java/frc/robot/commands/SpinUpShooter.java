@@ -7,6 +7,10 @@ public class SpinUpShooter extends CommandBase {
   
   private ShooterSubsystem shooterSubsystem;
 
+  // Fluidconstant?
+  int RPM = 2000;
+  boolean doneRamping;
+
   public SpinUpShooter() {
     shooterSubsystem = ShooterSubsystem.getInstance();
     addRequirements(shooterSubsystem);
@@ -19,9 +23,14 @@ public class SpinUpShooter extends CommandBase {
   @Override
   public void execute() {
     // Hardcoded RPM for testing
-    shooterSubsystem.setRPM(2000);
+    shooterSubsystem.setRPM(RPM);
     shooterSubsystem.periodic();
-    shooterSubsystem.checkRPM(2000);
+    shooterSubsystem.checkRPM(RPM);
+    doneRamping = shooterSubsystem.checkRPM(RPM);
+    if(doneRamping == true){
+      // Print to console
+      System.out.println("calculatedRPM is within 50 units of targetRPM");
+    }
   }
 
   // Called once the command ends or is interrupted.
