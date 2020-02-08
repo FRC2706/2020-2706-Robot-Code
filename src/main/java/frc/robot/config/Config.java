@@ -3,6 +3,7 @@ package frc.robot.config;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +37,12 @@ public class Config {
      * 10. If it displays the value you entered, it was successful
      * 11. Type exit to safely exit the ssh session
      */
+
+    /**
+     * ID of the robot that code is running on
+     */
+    private static int robotId = -1;
+
     // Static Constants
     public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
     public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
@@ -58,8 +65,13 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
 
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true, false);
     public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
+
+    public static boolean INVERT_RIGHT_FRONT_TALON = robotSpecific(false, false, false, true);
+    public static boolean INVERT_RIGHT_REAR_TALON = robotSpecific(false, false, false, false);
+    public static boolean INVERT_LEFT_FRONT_TALON = robotSpecific(false, false, false, true);
+    public static boolean INVERT_LEFT_REAR_TALON = robotSpecific(false, false, false, false);
 
     public static double CONTROLLER_DEADBAND = 0.05;
 
@@ -107,11 +119,6 @@ public class Config {
     }
     
     /**
-     * ID of the robot that code is running on
-     */
-    private static int robotId = -1;
-    
-    /**
      * PLACE IDS OF ROBOTS HERE
      **/
     // Mergio is has the ID 2
@@ -151,10 +158,11 @@ public class Config {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
-            } catch (IOException | NumberFormatException e) {
+            } catch (Exception e) {
                 robotId = 0;
                 DriverStation.reportError("Could not find robot configuration file.", false);
             }
+            SmartDashboard.putNumber("Robot ID", robotId);
         }
         return robotId;
     }

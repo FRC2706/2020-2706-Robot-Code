@@ -7,12 +7,13 @@ import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.subsystems.DriveBase;
 
 
-public class TurnToPowerCellCommand extends CommandBase {
+public class TurnToPowerCell extends CommandBase {
 
-    Double distanceToPowerCell;
-    Double yawToPowerCell;
+    private Double distanceToPowerCell;
+    private Double yawToPowerCell;
+    private DrivetrainPIDTurnDelta drivetrainPIDTurnDelta;
 
-    public TurnToPowerCellCommand() {
+    public TurnToPowerCell() {
         addRequirements(DriveBase.getInstance());
     }
 
@@ -23,6 +24,8 @@ public class TurnToPowerCellCommand extends CommandBase {
     public void initialize() {
         distanceToPowerCell = VisionCtrlNetTable.distanceToPowerCell.get();
         yawToPowerCell = VisionCtrlNetTable.yawToPowerCell.get();
+        drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(yawToPowerCell, 0);
+        drivetrainPIDTurnDelta.initialize();
     }
 
     /**
@@ -31,8 +34,6 @@ public class TurnToPowerCellCommand extends CommandBase {
      */
     @Override
     public void execute() {
-        DrivetrainPIDTurnDelta drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(yawToPowerCell, 0);
-        drivetrainPIDTurnDelta.initialize();
         drivetrainPIDTurnDelta.execute();
     }
 

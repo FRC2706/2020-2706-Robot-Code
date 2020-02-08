@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
@@ -50,6 +51,8 @@ public class DriveBase extends SubsystemBase {
         leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
+
+        SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_TALON);
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
         _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon));
@@ -186,6 +189,11 @@ public class DriveBase extends SubsystemBase {
         leftRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+
+//        leftFrontTalon.setInverted(Config.INVERT_LEFT_FRONT_TALON);
+//        leftRearTalon.setInverted(Config.INVERT_LEFT_REAR_TALON);
+//        rightFrontTalon.setInverted(Config.INVERT_RIGHT_FRONT_TALON);
+//        rightRearTalon.setInverted(Config.INVERT_RIGHT_REAR_TALON);
 
     }
 
