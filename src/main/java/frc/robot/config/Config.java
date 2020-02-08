@@ -18,7 +18,7 @@ import java.util.logging.SimpleFormatter;
  * Config manager for the robot
  */
 public class Config {
-
+    
     /**
      * Instructions for set up of robot.conf file on robot
      * <p>
@@ -36,11 +36,11 @@ public class Config {
      * 10. If it displays the value you entered, it was successful
      * 11. Type exit to safely exit the ssh session
      */
-
+    
     private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
-
+    
     public static FileHandler logFileHandler;
-
+    
     static {
         try {
             String logFilename = new SimpleDateFormat("'Robotlog_'yyyy'-'MM'-'dd'_'HH'-'mm'-'ss'.txt'").format(new Date());
@@ -51,70 +51,73 @@ public class Config {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * ID of the robot that code is running on
      */
     private static int robotId = -1;
-
+    
     /**
      * PLACE IDS OF ROBOTS HERE
      **/
     // Mergio is has the ID 2
     // Mergonaut is ID 3
-
+    
     // This is a static class which should not be instantiated
     private Config() {
-
+    
     }
-
+    
     // Static Constants
     public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
     public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
     public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
-
+    
+    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0);
+    public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
+    
     public static int ARM_TALON = robotSpecific(12, 12, 12);
-
+    
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
-
+    
     public static Double JOYSTICK_AXIS_DEADBAND = 0.1;
-
+    
     public static int LEFT_CONTROL_STICK_Y = 1;
     public static int LEFT_CONTROL_STICK_X = 0;
-
+    
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
-
+    
     public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_SECOND_AXIS= robotSpecific(true, true, true);
-
-	public static double CONTROLLER_DEADBAND =  0.05;
-
-	public static double CURVATURE_OVERRIDE = 0.25;
-
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
+    
+    public static double CONTROLLER_DEADBAND = 0.05;
+    
+    public static double CURVATURE_OVERRIDE = 0.25;
+    
     public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
-
+    
     public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
-
+    
     // Timeouts for sending CAN bus commands
     public static final int CAN_TIMEOUT_SHORT = 10;
     public static final int CAN_TIMEOUT_LONG = 100;
-
-	public static final boolean TELEOP_BRAKE = false;
-
-	public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
-  
+    
+    public static final boolean TELEOP_BRAKE = false;
+    
+    public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
+    
     // PIDF values for the arm
     public static double ARM_PID_P = robotSpecific(0.2);
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.1);
     public static double ARM_PID_F = robotSpecific(0.0);
-
+    
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-
+    
     /**
      * Returns one of the values passed based on the robot ID
      *
@@ -131,8 +134,8 @@ public class Config {
             return more[getRobotId() - 1];
         }
     }
-
-
+    
+    
     /**
      * Obtain the robot id found in the robot.conf file
      *
@@ -149,16 +152,16 @@ public class Config {
         }
         return robotId;
     }
-
+    
     /**
      *
      * @param value The raw axis value from the control stick
      * @return The filtered value defined by the acceptable dead band
      */
     public static double removeJoystickDeadband(double value) {
-        if(value <= JOYSTICK_AXIS_DEADBAND && value >= 0) {
+        if (value <= JOYSTICK_AXIS_DEADBAND && value >= 0) {
             return 0;
-        } else if(value >= -JOYSTICK_AXIS_DEADBAND && value <= 0) {
+        } else if (value >= -JOYSTICK_AXIS_DEADBAND && value <= 0) {
             return 0;
         } else {
             return value;
