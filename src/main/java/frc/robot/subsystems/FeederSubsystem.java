@@ -126,6 +126,10 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         feederTalon.set(ControlMode.Position, 6*FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
+    public void stopFeeder(){
+        feederTalon.set(0);
+    }
+
     public void periodic() {
       // Set the default command for a subsystem here.
       // setDefaultCommand(new MySpecialCommand());
