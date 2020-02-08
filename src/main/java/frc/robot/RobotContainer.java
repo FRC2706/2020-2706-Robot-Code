@@ -78,6 +78,7 @@ public class RobotContainer {
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
+<<<<<<< HEAD
     }
     
     /**
@@ -101,4 +102,23 @@ public class RobotContainer {
         // Also return null if this ever gets to here because safety
         return null;
     }
+=======
+
+    // Instantiate the intake command and bind it 
+    intakeCommand = new OperatorIntakeCommand();
+
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
+    DriveBase.getInstance().setDefaultCommand(driveCommand);
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return null;
+  }
+>>>>>>> ddb2eb7... Changed inverts from variable to constant true or false
 }
