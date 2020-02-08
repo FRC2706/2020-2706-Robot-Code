@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.nettables.*;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,6 +27,15 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  //network table for vision control
+  private VisionCtrlNetTable visionControlNetTable;
+  //network table for control systems control
+  private ControlCtrlNetTable controlCtrlNetTable;
+  //flag to indicate from the teleop mode
+  private Boolean bFromTeleMode;
+  //flag to indicate the real match
+  private Boolean bRealMatch;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,7 +49,14 @@ public class Robot extends TimedRobot {
     FeederSubsystem.init();
 
     m_robotContainer = new RobotContainer();
-
+    
+    //create a vision control table
+    visionControlNetTable  = new VisionCtrlNetTable();
+    //create a control system control table
+    controlCtrlNetTable = new ControlCtrlNetTable();
+    //set to false
+    bFromTeleMode = false;
+    bRealMatch = false;
   }
 
   /**
@@ -63,6 +81,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    if (bRealMatch == true && bFromTeleMode == true) 
+    {
+      // if in a real match and from teleop mode
+      // Write to the network table the shut down signal.
+      visionControlNetTable.shutDownVision();
+      controlCtrlNetTable.shutDownControl();
+
+      System.out.println("Driver Station Disabled");      
+    }
+
   }
 
   @Override
@@ -80,6 +108,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    //send start up signal to vision team
+    visionControlNetTable.startUpVision();
+
+    bFromTeleMode = false;
+    bRealMatch = isRealMatch();
   }
 
   /**
@@ -98,6 +132,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
+    //set teleop mode to true
+    bFromTeleMode = true;
+
   }
 
   /**
@@ -111,6 +149,9 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    //set teleop mode to false
+    bFromTeleMode = false;
   }
 
   /**
@@ -118,5 +159,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  /**
+     * Determines if the robot is in a real match.
+     *
+     * @return True if the robot is in a real match, false otherwise.
+     */
+  public static boolean isRealMatch() {
+    return DriverStation.getInstance().isFMSAttached();
   }
 }
