@@ -35,26 +35,6 @@ import java.util.logging.Logger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    // Configure the button bindings
-
-    configureButtonBindings();
-  }
-
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by instantiating a {@link GenericHID} or one of its subclasses
-   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    driverStick = new Joystick(0);
-    controlStick = new Joystick(1);
-    // The robot's subsystems and commands are defined here...
     
     private Joystick driverStick;
     private Joystick controlStick;
@@ -62,6 +42,8 @@ public class RobotContainer {
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
     private Command intakeCommand;
+    private Command incrementFeederCommand;
+    private Command emptyFeederCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
     
     /**
