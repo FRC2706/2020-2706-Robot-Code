@@ -11,16 +11,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.commands.*;
 import frc.robot.config.XboxValue.XboxInputType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.DrivetrainPIDTurnDelta;
-import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.subsystems.DriveBase;
-import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.CurvatureDriveWithJoystick;
-import frc.robot.commands.TankDriveWithJoystick;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -64,6 +60,9 @@ public class RobotContainer {
 
     driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
     DriveBase.getInstance().setDefaultCommand(driveCommand);
+
+    JoystickButton turnToPowerCell = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
+    turnToPowerCell.whenHeld(new TurnToPowerCellCommand());
   }
 
   /**
