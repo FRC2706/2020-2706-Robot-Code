@@ -38,10 +38,10 @@ public class IrSensor implements Sendable {
   
     public double takeMeasurement() {
         //Make sure to call this method in the periodic() method of the subsystem that uses the IR sensor. 
-        //This method continuously monitors the IR sensor output and filters outliers. Also returns sensor voltage, if anyone wishes to use that.
+        //This method continuously monitors the IR sensor output and filters outliers. Also returns sensor voltage if anyone wants to use that.
         
         irVoltage = (m_filter.calculate(m_irsensor.getValue())/1000); 
-        //Gets ir sensor value, filters outliers, and converts milivolt output to volts.
+        //Gets IR sensor value, filters outliers, and converts milivolt output to volts.
 
         return(irVoltage);
     }
