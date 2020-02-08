@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
@@ -67,6 +68,9 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
         
+        
+            // Instantiate the intake command and bind it 
+        intakeCommand = new OperatorIntakeCommand();
         /**
          * Select drive mode for robot
          */
@@ -98,5 +102,3 @@ public class RobotContainer {
         return null;
     }
 }
-
-
