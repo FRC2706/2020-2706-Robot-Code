@@ -33,10 +33,10 @@ public class FeederSubsystem extends SubsystemBase {
     private static AnalogInput indexerIrSensor;
 
     //How much to shift the feeder wheel when incrementing
-    public static FluidConstant<Double> INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 0.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 0.0)
                 .registerToTable(Config.constantsTable);
     //Max distance at which the robot knows a ball is at the indexer
-    public static FluidConstant<Integer> IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
+    public static FluidConstant<Integer> FEEDERSUBSYSTEM_IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
                 .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.0)
                 .registerToTable(Config.constantsTable);
@@ -97,7 +97,7 @@ public class FeederSubsystem extends SubsystemBase {
      */
     public void incrementPowerCells(){
         feederTalon.setSelectedSensorPosition(0, 0, 10);
-        feederTalon.set(ControlMode.Position, INCREMENT_TICKS.get());
+        feederTalon.set(ControlMode.Position, FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
     /**
@@ -105,7 +105,7 @@ public class FeederSubsystem extends SubsystemBase {
      * @return whether a power cell has reached the indexer or not
      */
     public boolean isBallAtIndexer(){
-        return indexerIrSensor.getVoltage() > IR_MAX_DISTANCE.get();
+        return indexerIrSensor.getVoltage() > FEEDERSUBSYSTEM_IR_MAX_DISTANCE.get();
     }
 
     /**
@@ -120,7 +120,7 @@ public class FeederSubsystem extends SubsystemBase {
      */
     public void emptyFeeder(){
         feederTalon.setSelectedSensorPosition(0, 0, 10);
-        feederTalon.set(ControlMode.Position, 6*INCREMENT_TICKS.get());
+        feederTalon.set(ControlMode.Position, 6*FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
     public void periodic() {
