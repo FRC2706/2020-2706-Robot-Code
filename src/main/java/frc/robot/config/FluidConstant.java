@@ -89,6 +89,7 @@ public class FluidConstant<T> implements Supplier<T> {
      * Private NetworkTableEntry listener method for when the entry is updated
      * @param notification info about the notification
      */
+    @SuppressWarnings("unchecked")
     private void entryUpdated(EntryNotification notification) {
         // Only allow the value to be updated while the robot is disabled
         if (DriverStation.getInstance().isEnabled()) {
