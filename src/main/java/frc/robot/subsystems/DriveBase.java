@@ -34,7 +34,7 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
+    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
 
     private PigeonIMU _pidgey;
 
@@ -51,10 +51,12 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
+        talon5plyboy = new WPI_TalonSRX((Config.TALON_5_PLYBOY));
+
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
 
 
-        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon);
+        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon, talon5plyboy);
         if(pigeonTalon != null){
             _pidgey = new PigeonIMU (pigeonTalon);
             _pidgey.setFusedHeading(0.0, 30);
