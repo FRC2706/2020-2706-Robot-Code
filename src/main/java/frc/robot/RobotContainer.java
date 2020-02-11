@@ -38,6 +38,8 @@ public class RobotContainer {
   private AnalogSelector analogSelectorTwo;
   private Command driveCommand;
   private Command intakeCommand;
+  private Command emptyFeederCommand;
+  private Command incrementFeederCommand;
   private Command rampShooterCommand;
   private Logger logger = Logger.getLogger("RobotContainer");
 
