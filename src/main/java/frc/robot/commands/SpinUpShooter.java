@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -23,8 +24,8 @@ public class SpinUpShooter extends CommandBase {
   @Override
   public void execute() {
     shooterSubsystem.setRPM(RPM);
-    shooterSubsystem.periodic();
     shooterSubsystem.checkRPM(RPM);
+    SmartDashboard.putNumber("shooter velocity", shooterSubsystem.getVelocity());
     doneRamping = shooterSubsystem.checkRPM(RPM);
     if(doneRamping == true){
       // Print to console
@@ -35,6 +36,7 @@ public class SpinUpShooter extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    shooterSubsystem.setRPM(0);
   }
 
   // Returns true when the command should end.
