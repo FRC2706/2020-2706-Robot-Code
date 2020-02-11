@@ -75,6 +75,8 @@ public class Config {
     public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
     public static int SHOOTER_MOTOR = 16; //protobot
+
+    public static int TALON_5_PLYBOY = robotSpecific(null, null, null, null, null, -1);
     
     public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
