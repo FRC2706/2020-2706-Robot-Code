@@ -20,14 +20,12 @@ import frc.robot.config.FluidConstant;
 public class DriveBase extends SubsystemBase {
 
     // DriveBase is a singleton class as it represents a physical subsystem
-    private static DriveBase currentInstance;
+    private static DriveBase INSTANCE = new DriveBase();
 
     // The way the robot drives
     private static DifferentialDrive robotDriveBase;
-
-    /**
-     * Indicates whether the robot is in brake mode
-     */
+    
+    // Indicates whether the robot is in brake mode
     private boolean brakeMode;
 
     // The mode in which the robot drives
@@ -57,24 +55,14 @@ public class DriveBase extends SubsystemBase {
         _pidgey.setFusedHeading(0.0, 30);
 
     }
-
-    /**
-     * Initialize the current DriveBase instance
-     */
-    public static void init() {
-        if (currentInstance == null) {
-            currentInstance = new DriveBase();
-        }
-    }
-
+    
     public static DriveBase getInstance() {
-        init();
-        return currentInstance;
+        return INSTANCE;
     }
 
     /**
      * This just returns the pigeon
-     * @return
+     * @return The pigeon
      */
     public PigeonIMU getPigeon() {
         return _pidgey;
@@ -144,7 +132,6 @@ public class DriveBase extends SubsystemBase {
 
     /**
      * Set up open loop voltage.
-     *
      * This is optimal for driving by a human
      */
     public void setOpenLoopVoltage() {
@@ -159,7 +146,6 @@ public class DriveBase extends SubsystemBase {
 
     /**
      * Changes whether the drive motors should coast or brake when output is 0
-     *
      * @param brake Whether to turn on brake mode or not
      */
     public void setBrakeMode(boolean brake) {
@@ -209,16 +195,10 @@ public class DriveBase extends SubsystemBase {
      * The drive mode of the robot
      */
     public enum DriveMode {
-        /**
-         * There is no control mode active
-         */
+        // There is no control mode active
         Disabled,
-
-        /**
-         * Standard open loop voltage control
-         */
+        // Standard open loop voltage control
         OpenLoopVoltage
-
     }
 
     /**
@@ -226,10 +206,8 @@ public class DriveBase extends SubsystemBase {
      */
 	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
         setOpenLoopVoltage();
-
         robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
         follow();
-
     }
     
      /**

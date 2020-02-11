@@ -44,8 +44,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    DriveBase.init();
-
     m_robotContainer = new RobotContainer();
     
     //create a vision control table
@@ -79,7 +77,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    if (bRealMatch == true && bFromTeleMode == true) 
+    if (bRealMatch && bFromTeleMode)
     {
       // if in a real match and from teleop mode
       // Write to the network table the shut down signal.
