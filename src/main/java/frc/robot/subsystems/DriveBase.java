@@ -52,9 +52,13 @@ public class DriveBase extends SubsystemBase {
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
-        _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon));
 
-        _pidgey.setFusedHeading(0.0, 30);
+
+        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon);
+        if(pigeonTalon != null){
+            _pidgey = new PigeonIMU (pigeonTalon);
+            _pidgey.setFusedHeading(0.0, 30);
+        }
 
     }
 
@@ -86,9 +90,14 @@ public class DriveBase extends SubsystemBase {
      */
     public double getCurrentAngle(){
         //Gets the current angle
-        PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
-        _pidgey.getFusedHeading(fusionStatus);
-        return fusionStatus.heading;
+        try{
+            PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+            _pidgey.getFusedHeading(fusionStatus);
+            return fusionStatus.heading;
+        }
+        catch(NullPointerException e){
+            return (0);
+        }
     }
 
     /**
