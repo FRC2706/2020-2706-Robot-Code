@@ -3,6 +3,7 @@ package frc.robot.config;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -148,8 +149,7 @@ public class Config {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
             } catch (IOException | NumberFormatException e) {
-                robotId = 0;
-                DriverStation.reportError("Could not find robot configuration file.", false);
+                Robot.haltRobot("Can't load Robot ID", e);
             }
         }
         return robotId;
