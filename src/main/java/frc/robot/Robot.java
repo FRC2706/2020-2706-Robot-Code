@@ -178,19 +178,28 @@ public class Robot extends TimedRobot {
      * Halts the robot in every way
      */
     public static void haltRobot(String s) {
-        // Disable the scheduler and cancel everything
+        /*
+         Disable the scheduler and cancel everything.
+         This stops all subsystems and commands and prevents new ones from starting
+        */
         var scheduler = CommandScheduler.getInstance();
         scheduler.disable();
         scheduler.cancelAll();
         
-        // Log the message
+        /*
+         Log the message and close the log file.
+         Not strictly necessary, but it's good practice to close files when you're done with it.
+        */
         logger.severe("ROBOT HALTED: " + s);
-        
-        // Close the log file
         Config.logFileHandler.close();
         
-        // Hang
-        while(true){}
+        /*
+         Hang.
+         The reason we want to hang instead of letting the robot code exit is purely because the RoboRIO is going to
+         start the code up again, so to avoid creating many dozens of log files in the 2 minutes it takes to fix the
+         robot, we'll just hang and let the operator restart the code when they're ready.
+        */
+        while (true) {}
     }
     
     /**
