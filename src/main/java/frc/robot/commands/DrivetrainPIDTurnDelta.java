@@ -9,7 +9,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 import java.util.logging.Logger;
-
+import java.lang.Math;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
@@ -23,6 +23,8 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     //get the drivebase and pigeon
     private final DriveBase drivebase;
     private PigeonIMU _pidgey;
+
+    boolean isDone = false;
 
     //The delta of which you want to turn in degrees
     private double deltaDegree;
@@ -58,20 +60,20 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         double currentAngle = drivebase.getCurrentAngle();
         logger.addHandler(Config.logFileHandler);
 
-        if(_pidgey == null){
-
-        }
     }
 
     @Override
     public boolean isFinished(){
-        return (_pidgey != null);
+
+        return _pidgey == null || isDone;
+
     }
 
     @Override
     public void initialize() {
         //Get the target angle
         targetAngle = drivebase.getCurrentAngle() + deltaDegree;
+        isDone = false;
     }
 
     @Override
@@ -87,6 +89,10 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
         //Get current angle
         currentAngle = drivebase.getCurrentAngle();
+
+        if(Math.abs(targetAngle - currentAngle) < 1){
+            isDone = true;
+        }
 
         //Do PD
         turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();

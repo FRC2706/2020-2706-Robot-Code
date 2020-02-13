@@ -5,10 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-/**
- * Charlie MacDonald.
- * Last modified on Feb 8th, 2020.
- */
 
 package frc.robot.sensors;
 
@@ -76,5 +72,5 @@ public class IrSensor implements Sendable {
 	public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("Distance", this::getDistance, null);
         builder.addDoubleProperty("Voltage", this::takeMeasurement, null);
-	}
+    }
 }

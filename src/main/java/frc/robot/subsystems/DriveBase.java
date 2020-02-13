@@ -51,12 +51,10 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
-        WPI_TalonSRX protobotPigeonTalon = new WPI_TalonSRX(5);
-
-        talon5plyboy = new WPI_TalonSRX((Config.TALON_5_PLYBOY));
+        talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
-        _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon, protobotPigeonTalon));
+        _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon, talon5plyboy));
 
         var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon, talon5plyboy);
         if(pigeonTalon != null){
