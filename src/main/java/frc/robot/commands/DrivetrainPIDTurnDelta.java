@@ -58,6 +58,14 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         double currentAngle = drivebase.getCurrentAngle();
         logger.addHandler(Config.logFileHandler);
 
+        if(_pidgey == null){
+
+        }
+    }
+
+    @Override
+    public boolean isFinished(){
+        return (_pidgey != null);
     }
 
     @Override
