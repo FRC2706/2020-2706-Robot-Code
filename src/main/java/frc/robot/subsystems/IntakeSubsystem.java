@@ -10,8 +10,11 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
     /**
      * The Singleton instance of this IntakeSubsystem. External classes should
      * use the {@link #getInstance()} method to get the instance.
+     * It is encapsulated in a holder class to only instantiate the singleton when it is first requested
      */
-    private final static IntakeSubsystem INSTANCE = new IntakeSubsystem();
+    private static class SingletonHolder {
+        private final static IntakeSubsystem INSTANCE = new IntakeSubsystem();
+    }
     
     // The supplier of the intake speed
     private final static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.25d)
@@ -38,7 +41,7 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
      * classes, rather than the constructor to get the instance of this class.
      */
     public static IntakeSubsystem getInstance() {
-        return INSTANCE;
+        return SingletonHolder.INSTANCE;
     }
     
     @Override

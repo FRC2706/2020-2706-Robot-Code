@@ -18,48 +18,50 @@ import frc.robot.config.FluidConstant;
 
 
 public class DriveBase extends SubsystemBase {
-
+    
     // DriveBase is a singleton class as it represents a physical subsystem
-    private static DriveBase INSTANCE = new DriveBase();
-
+    private static class SingletonHolder {
+        private static final DriveBase INSTANCE = new DriveBase();
+    }
+    
     // The way the robot drives
     private static DifferentialDrive robotDriveBase;
     
     // Indicates whether the robot is in brake mode
     private boolean brakeMode;
-
+    
     // The mode in which the robot drives
     private DriveMode driveMode;
-
+    
     // The drivebase talons
     private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
-
+    
     private PigeonIMU _pidgey;
-
+    
     public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
             .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
             .registerToTable(Config.constantsTable);
-
+    
     private DriveBase() {
-
+        
         // Initialize the talons
         leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
         leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
-
+        
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
-        _pidgey = new PigeonIMU (Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon));
-
+        _pidgey = new PigeonIMU(Config.robotSpecific(null, null, null, leftFrontTalon, leftRearTalon));
+        
         _pidgey.setFusedHeading(0.0, 30);
-
+        
     }
     
     public static DriveBase getInstance() {
-        return INSTANCE;
+        return SingletonHolder.INSTANCE;
     }
-
+    
     /**
      * This just returns the pigeon
      * @return The pigeon
@@ -67,18 +69,18 @@ public class DriveBase extends SubsystemBase {
     public PigeonIMU getPigeon() {
         return _pidgey;
     }
-
+    
     /**
      * Gets the current angle based upon the angle the robot was enabled on
      * @return returns angle in degrees
      */
-    public double getCurrentAngle(){
+    public double getCurrentAngle() {
         //Gets the current angle
         PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
         _pidgey.getFusedHeading(fusionStatus);
         return fusionStatus.heading;
     }
-
+    
     /**
      * Sets the talons to a disabled mode
      */
@@ -89,7 +91,7 @@ public class DriveBase extends SubsystemBase {
             driveMode = DriveMode.Disabled;
         }
     }
-
+    
     /**
      * Make the back talons follow the front talons
      */
@@ -97,7 +99,7 @@ public class DriveBase extends SubsystemBase {
         leftRearTalon.follow(leftFrontTalon);
         rightRearTalon.follow(rightFrontTalon);
     }
-
+    
     /**
      * Have the robot drive using the built-in arcade drive
      *
@@ -110,16 +112,16 @@ public class DriveBase extends SubsystemBase {
         robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
         follow();
     }
-
+    
     /**
      * Stop all the talons
      */
-    public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
+    public void tankDrive(double leftVal, double rightVal, boolean squareInputs) {
         setOpenLoopVoltage();
         robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
         follow();
     }
-
+    
     /**
      * Stop all the talons
      */
@@ -129,7 +131,7 @@ public class DriveBase extends SubsystemBase {
         rightRearTalon.stopMotor();
         rightFrontTalon.stopMotor();
     }
-
+    
     /**
      * Set up open loop voltage.
      * This is optimal for driving by a human
@@ -138,27 +140,27 @@ public class DriveBase extends SubsystemBase {
         if (driveMode != DriveMode.OpenLoopVoltage) {
             stop();
             selectEncoderStandard();
-
+            
             driveMode = DriveMode.OpenLoopVoltage;
         }
-
+        
     }
-
+    
     /**
      * Changes whether the drive motors should coast or brake when output is 0
      * @param brake Whether to turn on brake mode or not
      */
     public void setBrakeMode(boolean brake) {
         NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
-
+        
         leftFrontTalon.setNeutralMode(mode);
         leftRearTalon.setNeutralMode(mode);
         rightFrontTalon.setNeutralMode(mode);
         rightRearTalon.setNeutralMode(mode);
-
+        
         brakeMode = brake;
     }
-
+    
     /**
      * Configure the encoder standard for the talons
      */
@@ -167,14 +169,14 @@ public class DriveBase extends SubsystemBase {
         leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         rightFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-
+        
         leftFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         leftRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
-
+        
     }
-
+    
     /**
      * Reset the talons to factory default
      */
@@ -183,14 +185,14 @@ public class DriveBase extends SubsystemBase {
         leftFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-
+        
         leftRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
         leftFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
         rightRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
         rightFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
     }
-
-
+    
+    
     /**
      * The drive mode of the robot
      */
@@ -200,17 +202,17 @@ public class DriveBase extends SubsystemBase {
         // Standard open loop voltage control
         OpenLoopVoltage
     }
-
+    
     /**
      *  Standard Curve Drive
      */
-	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
+    public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
         setOpenLoopVoltage();
         robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
         follow();
     }
     
-     /**
+    /**
      * Checks whether the robot is in brake mode
      *
      * @return True when the Talons have the neutral mode set to {@code NeutralMode.Brake}
