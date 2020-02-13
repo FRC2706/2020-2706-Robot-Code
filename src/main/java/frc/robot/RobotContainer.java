@@ -36,6 +36,8 @@ public class RobotContainer {
     private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
+    private Command emptyFeederCommand;
+    private Command incrementFeederCommand;
     private Command intakeCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
 
@@ -52,10 +54,7 @@ public class RobotContainer {
             analogSelectorTwo = new AnalogSelector(Config.ANALOG_SELECTOR_TWO);
         }
 
-
         configureButtonBindings();
-
-
     }
 
     /**
@@ -72,8 +71,8 @@ public class RobotContainer {
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
-//        JoystickButton turnToPowerCell = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
-//        turnToPowerCell.whenHeld(new TurnToPowerCell());
+        JoystickButton turnToPowerCell = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
+        turnToPowerCell.whenHeld(new TurnToPowerCell());
     }
 
     /**
@@ -98,3 +97,5 @@ public class RobotContainer {
         return null;
     }
 }
+
+

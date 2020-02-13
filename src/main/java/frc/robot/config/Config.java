@@ -43,6 +43,9 @@ public class Config {
      */
     private static int robotId = -1;
 
+    // THIS MUST BE ABOVE ALL ROBOT SPECIFICS --- DO NOT MOVE THIS!
+    private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
+
     // Static Constants
     public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
     public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
@@ -98,7 +101,6 @@ public class Config {
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
-    private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
     public static FileHandler logFileHandler;
 
     // Vision Table Constants
