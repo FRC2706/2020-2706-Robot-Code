@@ -16,10 +16,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
 
-  double kF = 0;
-  double kP = 0; 
+  double kF = 0.00018;
+  double kP = 0.0003; 
   double kI = 0;
-  double kD = 0;
+  double kD = 0.0001;
 
   int setpointRPM;
 
