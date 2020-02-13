@@ -194,12 +194,18 @@ public class Robot extends TimedRobot {
         Config.logFileHandler.close();
         
         /*
-         Hang.
+         Hang (Using Thread.sleep instead of a busy loop).
          The reason we want to hang instead of letting the robot code exit is purely because the RoboRIO is going to
          start the code up again, so to avoid creating many dozens of log files in the 2 minutes it takes to fix the
          robot, we'll just hang and let the operator restart the code when they're ready.
         */
-        while (true) {}
+        try {
+            while (true) {
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            // If the sleep gets interrupted we'll let the robot code restart.
+        }
     }
     
     /**
