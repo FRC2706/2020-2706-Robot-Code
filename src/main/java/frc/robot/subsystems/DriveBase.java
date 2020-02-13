@@ -51,7 +51,11 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
-        talon5plyboy = new WPI_TalonSRX((Config.TALON_5_PLYBOY));
+//        try {
+          talon5plyboy = new WPI_TalonSRX((Config.TALON_5_PLYBOY));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
 
