@@ -29,7 +29,7 @@ public class SensitiveDriverControl extends CommandBase {
     }
 
     /**
-     * Changes the value of the trigger
+     * Drives with sensitive control
      */
     @Override
     public void execute() {
@@ -44,7 +44,7 @@ public class SensitiveDriverControl extends CommandBase {
     }
 
     /**
-     * Resets the value once the command has ended
+     * Stops the drivebase
      */
     @Override
     public void end(boolean interrupted) {

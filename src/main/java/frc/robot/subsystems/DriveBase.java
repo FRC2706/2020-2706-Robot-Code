@@ -132,6 +132,7 @@ public class DriveBase extends SubsystemBase {
      */
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
+        //steers the robot at a much lower max speed if sensitive control is on
         if (sensitiveSteering){
             robotDriveBase.tankDrive(leftVal*DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), -rightVal*DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), squareInputs);
         } else {
