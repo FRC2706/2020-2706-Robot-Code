@@ -1,13 +1,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.nettables.VisionCtrlNetTable;
+
+import java.util.function.Supplier;
 
 
 public class TurnToVisionYawCommand extends CommandBase {
 
-    public TurnToVisionYawCommand() {
+    Supplier<Double> targetYaw;
 
+    public TurnToVisionYawCommand(Supplier<Double> targetYaw) {
+        this.targetYaw = targetYaw;
     }
 
     /**
@@ -25,8 +30,10 @@ public class TurnToVisionYawCommand extends CommandBase {
     @Override
     public void execute() {
         for(int i = 0; i < 2; i++) {
-
-            TurnToVisionYawCommand()
+            Double currentTarget = targetYaw.get();
+            
+            DrivetrainPIDTurnDelta drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0);
+            drivetrainPIDTurnDelta.schedule();
         }
 
     }
