@@ -20,13 +20,12 @@ public class Shuffleboard extends SubsystemBase {
   private final Timer m_timer = new Timer();
   private int SecondsLeftInMatch = 150; // 150 (seconds) = 2:30 minutes
 
-  private static Shuffleboard INSTANCE;
+  private static Shuffleboard INSTANCE = new Shuffleboard();
 
   /**
    * Creates a new Shuffleboard.
    */
   private Shuffleboard() {
-    INSTANCE = new Shuffleboard();
     CameraServer.getInstance().startAutomaticCapture();
     m_timer.start();
     SmartDashboard.putNumber("Time Left", SecondsLeftInMatch);
@@ -104,6 +103,7 @@ public class Shuffleboard extends SubsystemBase {
 
     } else {
       // game over signal can be added here
+      
     }
   }
 }

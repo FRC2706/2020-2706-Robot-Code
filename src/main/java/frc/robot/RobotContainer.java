@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.Shuffleboard;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,6 +52,7 @@ public class RobotContainer {
         if (Config.ANALOG_SELECTOR_TWO != -1) {
             analogSelectorTwo = new AnalogSelector(Config.ANALOG_SELECTOR_TWO);
         }
+        Shuffleboard shuffleboard = Shuffleboard.getINSTANCE();
         configureButtonBindings();
     }
     
