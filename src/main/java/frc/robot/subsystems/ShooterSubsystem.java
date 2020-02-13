@@ -2,61 +2,52 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.config.Config;
+
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  private WPI_TalonSRX m_shooter;
+  private CANSparkMax m_shooter;
+  private CANPIDController m_pidController;
+  private CANEncoder m_encoder;
 
-  // Indicates use of the primary PID loop rather than cascaded ones
-  int kPIDLoopIDX = 0;
-
-  // Set to zero to skip waiting for confirmation, set to nonzero to wait and
-  // report to DS if action fails.
-  int kTimeoutMs = 30;
-
-  // Protobot PID values
-  double kF = 0.037;
-  double kP = 0.5; 
+  double kF = 0;
+  double kP = 0; 
   double kI = 0;
-  double kD = 10;
+  double kD = 0;
 
-  double velocityModeUnits;
+  int setpointRPM;
+
+  double kMaxOutput = 1; 
+  double kMinOutput = -1;
+
   private final int RPM_TOLERANCE = 50;
-  private final int ENCODER_TICKS_PER_REVOLUTION = 4096;
-  private final int ITERATIONS_PER_HUNDRED_MS = 600;
 
   private ShooterSubsystem() {
-
+    
     // Initialize a private variable for the motor
     if (Config.SHOOTER_MOTOR != -1){
-      m_shooter = new WPI_TalonSRX(Config.SHOOTER_MOTOR);
+      m_shooter = new CANSparkMax(Config.SHOOTER_MOTOR, MotorType.kBrushless);
     }
 
     // Factory Default to prevent unexpected behaviour
-    m_shooter.configFactoryDefault();
+    m_shooter.restoreFactoryDefaults();
 
-    // Config sensor used for PID control
-    m_shooter.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
-    kPIDLoopIDX, kTimeoutMs); 
+    // PID controller for the shooter
+    m_pidController = m_shooter.getPIDController();
+    m_encoder = m_shooter.getEncoder();
 
-    // Invert the phase of the sensor so positive output yields positive change
-    m_shooter.setSensorPhase(true);
-    
-		// Config the peak and nominal outputs
-		m_shooter.configNominalOutputForward(0, kTimeoutMs);
-		m_shooter.configNominalOutputReverse(0, kTimeoutMs);
-		m_shooter.configPeakOutputForward(1, kTimeoutMs);
-		m_shooter.configPeakOutputReverse(-1, kTimeoutMs);
+    m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-		// Config the Velocity closed loop gains
-		m_shooter.config_kF(kPIDLoopIDX, kF, kTimeoutMs);
-		m_shooter.config_kP(kPIDLoopIDX, kP, kTimeoutMs);
-		m_shooter.config_kI(kPIDLoopIDX, kI, kTimeoutMs);
-    m_shooter.config_kD(kPIDLoopIDX, kD, kTimeoutMs);
+    m_pidController.setFF(kF);
+    m_pidController.setP(kP);
+    m_pidController.setI(kI);
+    m_pidController.setD(kD);
   }
 
   private static class ShooterHolder{
@@ -71,32 +62,27 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   /**
-   * Return the motor velocity measured by the encoder
+   * Set the target RPM to ramp up to.
    */
-  public double getVelocity(){
-    double encoderVelocity = m_shooter.getSelectedSensorVelocity();
-    // Add the ability to print to SmartDashboard?
-    // Returns change in position per 100ms
-    return encoderVelocity;
+  public void setRPM(int inputRPM){
+    setpointRPM = inputRPM;
   }
 
   /**
-   * Set the target RPM to ramp up to. Will eventually get this value 
-   * based on distance from power port or other factors.
+   * Return the motor velocity measured by the encoder
    */
-  public void setRPM(int targetRPM){
-    velocityModeUnits = targetRPM * ENCODER_TICKS_PER_REVOLUTION / ITERATIONS_PER_HUNDRED_MS;
+  public double getRPM(){
+    double encoderRPM = m_encoder.getVelocity();
+    return encoderRPM;
   }
 
   /**
    * Check the actual RPM and compare it with targetRPM
    * to verify that the shooter is up to necessary speed to fire.
    */
-  public boolean checkRPM(int targetRPM){
-    // Calculate RPM based on the encoder reading
-    double calculatedRPM = (m_shooter.getSelectedSensorVelocity() * ITERATIONS_PER_HUNDRED_MS) / ENCODER_TICKS_PER_REVOLUTION;
-    // Verify that the motor is running at the target RPM
-    return (calculatedRPM < (targetRPM + RPM_TOLERANCE) && calculatedRPM > (targetRPM - RPM_TOLERANCE));
+  public boolean checkRPM(int inputRPM){
+    double encoderRPM = m_encoder.getVelocity();
+    return (encoderRPM < (inputRPM + RPM_TOLERANCE) && encoderRPM > (inputRPM - RPM_TOLERANCE));
       // I have no idea if +/- 50 tolerance around the RPM is accurate enough
       // Test and change, add setting conditions
   }
@@ -104,6 +90,6 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (m_shooter == null) return;
-    m_shooter.set(ControlMode.Velocity, velocityModeUnits);
+    m_pidController.setReference(setpointRPM, ControlType.kVelocity);
   }
 }

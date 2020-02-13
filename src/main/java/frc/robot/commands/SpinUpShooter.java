@@ -24,10 +24,9 @@ public class SpinUpShooter extends CommandBase {
   @Override
   public void execute() {
     shooterSubsystem.setRPM(RPM);
-    shooterSubsystem.checkRPM(RPM);
-    SmartDashboard.putNumber("shooter velocity", shooterSubsystem.getVelocity());
+    SmartDashboard.putNumber("shooter RPM", shooterSubsystem.getRPM());
     doneRamping = shooterSubsystem.checkRPM(RPM);
-    if(doneRamping == true){
+    if(doneRamping){
       // Print to console
       System.out.println("calculatedRPM is within 50 units of targetRPM");
     }
