@@ -69,12 +69,12 @@ public class RobotContainer {
         controlStick = new Joystick(1);
         
         
-            // Instantiate the intake command and bind it 
+        // Instantiate the intake command and bind it 
         intakeCommand = new OperatorIntakeCommand();
+        
         /**
          * Select drive mode for robot
-         */
-        
+         */       
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
