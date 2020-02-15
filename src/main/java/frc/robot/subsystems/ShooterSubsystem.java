@@ -30,7 +30,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public static FluidConstant<Double> F_SHOOTERSUBSYSTEM = new FluidConstant<>
     ("F_ShooterSubsystem", 0.00018).registerToTable(Config.constantsTable);
 
-  int setpointRPM;
+  public static FluidConstant<Integer> SETPOINT_RPM = new FluidConstant<>
+    ("setpointRPM", 2000).registerToTable(Config.constantsTable);
 
   double kMaxOutput = 1; 
   double kMinOutput = -1;
@@ -53,10 +54,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-    m_pidController.setFF(F_SHOOTERSUBSYSTEM.getValue());
-    m_pidController.setP(P_SHOOTERSUBSYSTEM.getValue());
-    m_pidController.setI(I_SHOOTERSUBSYSTEM.getValue());
-    m_pidController.setD(D_SHOOTERSUBSYSTEM.getValue());
+    m_pidController.setFF(F_SHOOTERSUBSYSTEM.get());
+    m_pidController.setP(P_SHOOTERSUBSYSTEM.get());
+    m_pidController.setI(I_SHOOTERSUBSYSTEM.get());
+    m_pidController.setD(D_SHOOTERSUBSYSTEM.get());
   }
 
   private static class ShooterHolder{
@@ -74,7 +75,7 @@ public class ShooterSubsystem extends SubsystemBase {
    * Set the target RPM to ramp up to.
    */
   public void setTargetRPM(int inputRPM){
-    setpointRPM = inputRPM;
+    SETPOINT_RPM.setValue(inputRPM);
   }
 
   /**
@@ -90,7 +91,7 @@ public class ShooterSubsystem extends SubsystemBase {
    */
   public boolean isAtTargetRPM(){
     double encoderRPM = m_encoder.getVelocity();
-    return (Math.abs(setpointRPM - encoderRPM) < RPM_TOLERANCE);
+    return (Math.abs(SETPOINT_RPM.get() - encoderRPM) < RPM_TOLERANCE);
       // I have no idea if +/- 50 tolerance around the RPM is accurate enough
       // Test and change, add setting conditions
   }
@@ -98,6 +99,6 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (m_shooter == null) return;
-    m_pidController.setReference(setpointRPM, ControlType.kVelocity);
+    m_pidController.setReference(SETPOINT_RPM.get(), ControlType.kVelocity);
   }
 }
