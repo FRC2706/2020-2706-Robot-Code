@@ -12,12 +12,18 @@ import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj.XboxController;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
 import frc.robot.commands.OperatorIntakeCommand;
 >>>>>>> master
+=======
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.OperatorIntakeCommand;
+>>>>>>> lukalexAutoDriveForNseconds
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
@@ -38,12 +44,17 @@ import java.util.logging.Logger;
  */
 public class RobotContainer {
 <<<<<<< HEAD
+<<<<<<< HEAD
     // The robot's subsystems and commands are defined here...
 
 =======
   // The robot's subsystems and commands are defined here...
     
 >>>>>>> master
+=======
+  // The robot's subsystems and commands are defined here...
+    
+>>>>>>> lukalexAutoDriveForNseconds
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
@@ -103,6 +114,7 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         /**
          * Select drive mode for robot
@@ -111,6 +123,8 @@ public class RobotContainer {
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS,
                 Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
 =======
+=======
+>>>>>>> lukalexAutoDriveForNseconds
         
         
         // Instantiate the intake command and bind it 
@@ -120,7 +134,10 @@ public class RobotContainer {
          * Select drive mode for robot
          */       
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
+<<<<<<< HEAD
 >>>>>>> master
+=======
+>>>>>>> lukalexAutoDriveForNseconds
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
     }
