@@ -62,9 +62,25 @@ public class FluidConstant<T> implements Supplier<T> {
     }
 
     /**
+     * The get function to implement the Supplier interface.
+     * @return The current value of this constant
+     */
+    public T get() {
+        return this.value;
+    }
+
+    /**
      * @return The current value of this constant
      */
     public T getValue() {
+        return this.value;
+    }
+    
+    /**
+     * Get method for implementing the Supplier interface
+     * @return The current value of this constant
+     */
+    public T get() {
         return this.value;
     }
     
@@ -101,10 +117,4 @@ public class FluidConstant<T> implements Supplier<T> {
         T newValue = (T) notification.value.getValue();
         this.setValue(newValue);
     }
-
-    public T get() {
-        return this.value;
-    }
-
-
 }

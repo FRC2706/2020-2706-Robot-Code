@@ -34,7 +34,7 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
 
     private PigeonIMU _pidgey;
 
@@ -51,22 +51,13 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
-        talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
-
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
+        _pidgey = new PigeonIMU(leftFrontTalon);
 
-
-        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon, talon5plyboy);
-        if(pigeonTalon != null){
-            _pidgey = new PigeonIMU (pigeonTalon);
-            _pidgey.setFusedHeading(0.0, 30);
-        }
+        _pidgey.setFusedHeading(0.0, 30);
 
     }
 
-    /**
-     * Initialize the current DriveBase instance
-     */
     public static void init() {
         if (currentInstance == null) {
             currentInstance = new DriveBase();
@@ -92,14 +83,9 @@ public class DriveBase extends SubsystemBase {
      */
     public double getCurrentAngle(){
         //Gets the current angle
-        try{
-            PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
-            _pidgey.getFusedHeading(fusionStatus);
-            return fusionStatus.heading;
-        }
-        catch(NullPointerException e){
-            return (0);
-        }
+        PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+        _pidgey.getFusedHeading(fusionStatus);
+        return fusionStatus.heading;
     }
 
     /**
@@ -109,43 +95,30 @@ public class DriveBase extends SubsystemBase {
         if (driveMode != DriveMode.Disabled) {
             resetTalons();
             stop();
+
             driveMode = DriveMode.Disabled;
         }
     }
 
-    /**
-     * Make the back talons follow the front talons
-     */
     private void follow() {
         leftRearTalon.follow(leftFrontTalon);
         rightRearTalon.follow(rightFrontTalon);
     }
 
-    /**
-     * Have the robot drive using the built-in arcade drive
-     *
-     * @param forwardVal The speed at which to move forward, between -1 and 1
-     * @param rotateVal The speed at which to rotate, between -1 (Turn Left) and 1 (Turn Right)
-     * @param squareInputs Weather or not to square the inputs (makes driving less sensitive)
-     */
     public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
+
         setOpenLoopVoltage();
         robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
         follow();
+
     }
 
-    /**
-     * Stop all the talons
-     */
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
         robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
         follow();
     }
 
-    /**
-     * Stop all the talons
-     */
     public void stop() {
         leftFrontTalon.stopMotor();
         leftRearTalon.stopMotor();
@@ -153,11 +126,6 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon.stopMotor();
     }
 
-    /**
-     * Set up open loop voltage.
-     *
-     * This is optimal for driving by a human
-     */
     public void setOpenLoopVoltage() {
         if (driveMode != DriveMode.OpenLoopVoltage) {
             stop();
@@ -232,23 +200,4 @@ public class DriveBase extends SubsystemBase {
 
     }
 
-    /**
-     *  Standard Curve Drive
-     */
-	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
-        setOpenLoopVoltage();
-
-        robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
-        follow();
-
-    }
-    
-     /**
-     * Checks whether the robot is in brake mode
-     *
-     * @return True when the Talons have the neutral mode set to {@code NeutralMode.Brake}
-     */
-    public boolean isBrakeMode() {
-        return brakeMode;
-    }
 }
