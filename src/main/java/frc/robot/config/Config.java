@@ -1,5 +1,7 @@
 package frc.robot.config;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import java.io.BufferedReader;
@@ -8,11 +10,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Config manager for the robot
+ */
 public class Config {
 
     /**
      * Instructions for set up of robot.conf file on robot
      * <p>
+     * 0. Connect to the robot to the robot using a usb cable or the wifi network.
      * 1. Using a tool like Git Bash or putty, ssh into admin@roboRIO-2706-FRC.local (ssh admin@roboRIO-2706-FRC.local)
      * a. There is no password on a freshly flashed roboRIO
      * 2. Go up a directory (cd ..)
@@ -38,6 +44,7 @@ public class Config {
      * PLACE IDS OF ROBOTS HERE
      **/
     // Mergio is has the ID 2
+    // Mergonaut is ID 3
 
     // This is a static class which should not be instantiated
     private Config() {
@@ -45,10 +52,13 @@ public class Config {
     }
 
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3);
-    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4);
-    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2);
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2);
+    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4);
+    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1);
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3);
+    public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6);
+
+    public static int ARM_TALON = robotSpecific(12, 12, 12);
 
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
 
@@ -60,13 +70,16 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
 
-    public static boolean INVERT_FORWARD = robotSpecific(true, true, true);
-    public static boolean INVERT_SIDE= robotSpecific(false, false, false);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_SECOND_AXIS= robotSpecific(true, true, true);
 
 	public static double CONTROLLER_DEADBAND =  0.05;
 
 	public static double CURVATURE_OVERRIDE = 0.25;
 
+    public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
+
+    public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
 
     // Timeouts for sending CAN bus commands
     public static final int CAN_TIMEOUT_SHORT = 10;
@@ -75,6 +88,15 @@ public class Config {
 	public static final boolean TELEOP_BRAKE = false;
 
 	public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
+  
+    // PIDF values for the arm
+    public static double ARM_PID_P = robotSpecific(0.2);
+    public static double ARM_PID_I = robotSpecific(0.0);
+    public static double ARM_PID_D = robotSpecific(0.1);
+    public static double ARM_PID_F = robotSpecific(0.0);
+
+    // Define a global constants table for subsystems to use
+    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
     /**
      * Returns one of the values passed based on the robot ID
@@ -125,5 +147,4 @@ public class Config {
             return value;
         }
     }
-
 }

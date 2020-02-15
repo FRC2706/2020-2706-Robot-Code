@@ -6,9 +6,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 
-import edu.wpi.first.wpilibj.Joystick;
-
-
 /**
  * Abstract class to extend when using curve drive, allows for basic Command architecture
  * Allows the WPI Curvature Drive to be used with passed values
@@ -20,8 +17,12 @@ public abstract class CurvatureDrive extends CommandBase {
     private final Supplier<Boolean> buttonPress;
     private final boolean squareInputs;
 
+    private static final double forwardSpeedMultiplier = 0.6;
+    private static final double rotationSpeedDivisor = 2.5;
+    private static final double rotationSpeedDivisor2 = 2;
+
     /**
-     * Creates the arcade drive
+     * Creates the curvature drive
      *
      * @param forwardVal The values to use for driving forward
      * @param curveSpeed The amount that the robot should curve while driving
@@ -50,6 +51,7 @@ public abstract class CurvatureDrive extends CommandBase {
 
     @Override
     public void execute() {
+        // Makes the robot move
         double forward = forwardVal.get();
         double curve = curveSpeed.get();
 
@@ -58,7 +60,6 @@ public abstract class CurvatureDrive extends CommandBase {
         }
 
         double rotation = Math.abs(curve) < Config.CONTROLLER_DEADBAND ? 0 : curve;
-
         boolean override = Math.abs(forward) < Config.CURVATURE_OVERRIDE;
 
         if (buttonPress.get()) {
@@ -66,13 +67,13 @@ public abstract class CurvatureDrive extends CommandBase {
                 DriveBase.getInstance().setBrakeMode(true);
             }
 
-            DriveBase.getInstance().curvatureDrive(forward * 0.6, (override ? rotation / 2.5 : rotation), override);
+            DriveBase.getInstance().curvatureDrive(forward * forwardSpeedMultiplier, (override ? rotation / rotationSpeedDivisor : rotation), override);
         } else {
             if (DriveBase.getInstance().isBrakeMode()) {
                 DriveBase.getInstance().setBrakeMode(false);
             }
 
-            DriveBase.getInstance().curvatureDrive(forward, (override ? rotation / 2 : rotation), override);
+            DriveBase.getInstance().curvatureDrive(forward, (override ? rotation / rotationSpeedDivisor2 : rotation), override);
         }
     }
 
@@ -80,11 +81,8 @@ public abstract class CurvatureDrive extends CommandBase {
     public abstract boolean isFinished();
 
     @Override
-
     public void end(boolean interrupted) {
+        // Go back to disabled mode
       DriveBase.getInstance().setDisabledMode();
     }
-  
-
-
 }

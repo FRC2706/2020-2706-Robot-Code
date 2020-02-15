@@ -1,9 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
 
@@ -12,7 +6,9 @@ import java.util.function.Supplier;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 
-
+/**
+ * Class to allow for usage of WPI and Comand functions with TankDrive
+ */
 public class TankDrive extends CommandBase {
 
   private final Supplier<Double> leftSpeed;
@@ -22,10 +18,15 @@ public class TankDrive extends CommandBase {
   private final boolean initBrake;
 
   /**
-   * Creates a new TankDrive.
+   * 
+   * @param leftSpeed The values to use for the left side
+   * @param rightSpeed The values to use for the right side
+   * @param squareInputs Whether or not to square the forward and rotation values
+   * @param initBrake Whether or not to start and end the command in brake or coast mode
    */
-  public TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed, boolean squareInputs, boolean initBrake) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  protected TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed, boolean squareInputs, boolean initBrake) {
+    //Ensure that this command is the only one to run on the drive base
+    //Requires must be included to use this command as a default command for the drive base
     addRequirements(DriveBase.getInstance());
 
     this.leftSpeed = leftSpeed;
@@ -35,28 +36,30 @@ public class TankDrive extends CommandBase {
 
   }
 
-  // Called when the command is initially scheduled.
+
   @Override
   public void initialize() {
-
+    //Prepare for driving by human
     DriveBase.getInstance().setOpenLoopVoltage();
     DriveBase.getInstance().setBrakeMode(initBrake);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+ 
   @Override
   public void execute() {
-
+    //Pass values to drive base to make the robot move
     DriveBase.getInstance().tankDrive(leftSpeed.get(),rightSpeed.get(),squareInputs);
   }
 
-  // Called once the command ends or is interrupted.
+
   @Override
   public void end(boolean interrupted) {
+    //go back to disabled mode
     DriveBase.getInstance().setDisabledMode();
+
+  
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
