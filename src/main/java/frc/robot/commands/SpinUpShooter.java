@@ -23,9 +23,9 @@ public class SpinUpShooter extends CommandBase {
 
   @Override
   public void execute() {
-    shooterSubsystem.setRPM(RPM);
+    shooterSubsystem.setTargetRPM(RPM);
     SmartDashboard.putNumber("shooter RPM", shooterSubsystem.getRPM());
-    doneRamping = shooterSubsystem.checkRPM(RPM);
+    doneRamping = shooterSubsystem.isAtTargetRPM();
     if(doneRamping){
       // Print to console
       System.out.println("calculatedRPM is within 50 units of targetRPM");
@@ -35,7 +35,7 @@ public class SpinUpShooter extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.setRPM(0);
+    shooterSubsystem.setTargetRPM(0);
   }
 
   // Returns true when the command should end.

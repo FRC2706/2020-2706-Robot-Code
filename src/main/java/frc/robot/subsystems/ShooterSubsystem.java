@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.config.Config;
+import frc.robot.config.FluidConstant;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -16,10 +17,18 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
 
-  double kF = 0.00018;
-  double kP = 0.0003; 
-  double kI = 0;
-  double kD = 0.0001;
+  // PID values (currently set for protobot's shooter)
+  public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>
+    ("P_ShooterSubsystem", 0.0003).registerToTable(Config.constantsTable);
+
+  public static FluidConstant<Double> I_SHOOTERSUBSYSTEM = new FluidConstant<>
+    ("I_ShooterSubsystem", 0.0).registerToTable(Config.constantsTable);
+
+  public static FluidConstant<Double> D_SHOOTERSUBSYSTEM = new FluidConstant<>
+    ("D_ShooterSubsystem", 0.0001).registerToTable(Config.constantsTable);
+
+  public static FluidConstant<Double> F_SHOOTERSUBSYSTEM = new FluidConstant<>
+    ("F_ShooterSubsystem", 0.00018).registerToTable(Config.constantsTable);
 
   int setpointRPM;
 
@@ -44,10 +53,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-    m_pidController.setFF(kF);
-    m_pidController.setP(kP);
-    m_pidController.setI(kI);
-    m_pidController.setD(kD);
+    m_pidController.setFF(F_SHOOTERSUBSYSTEM.getValue());
+    m_pidController.setP(P_SHOOTERSUBSYSTEM.getValue());
+    m_pidController.setI(I_SHOOTERSUBSYSTEM.getValue());
+    m_pidController.setD(D_SHOOTERSUBSYSTEM.getValue());
   }
 
   private static class ShooterHolder{
@@ -64,7 +73,7 @@ public class ShooterSubsystem extends SubsystemBase {
   /**
    * Set the target RPM to ramp up to.
    */
-  public void setRPM(int inputRPM){
+  public void setTargetRPM(int inputRPM){
     setpointRPM = inputRPM;
   }
 
@@ -72,17 +81,16 @@ public class ShooterSubsystem extends SubsystemBase {
    * Return the motor velocity measured by the encoder
    */
   public double getRPM(){
-    double encoderRPM = m_encoder.getVelocity();
-    return encoderRPM;
+    return m_encoder.getVelocity();
   }
 
   /**
    * Check the actual RPM and compare it with targetRPM
    * to verify that the shooter is up to necessary speed to fire.
    */
-  public boolean checkRPM(int inputRPM){
+  public boolean isAtTargetRPM(){
     double encoderRPM = m_encoder.getVelocity();
-    return (encoderRPM < (inputRPM + RPM_TOLERANCE) && encoderRPM > (inputRPM - RPM_TOLERANCE));
+    return (Math.abs(setpointRPM - encoderRPM) < RPM_TOLERANCE);
       // I have no idea if +/- 50 tolerance around the RPM is accurate enough
       // Test and change, add setting conditions
   }

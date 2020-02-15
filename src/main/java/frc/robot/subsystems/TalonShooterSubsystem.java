@@ -25,6 +25,8 @@ public class TalonShooterSubsystem extends SubsystemBase {
   double kD = 10;
 
   double velocityModeUnits;
+  int setpointRPM;
+
   private final int RPM_TOLERANCE = 50;
   private final int ENCODER_TICKS_PER_REVOLUTION = 4096;
   private final int ITERATIONS_PER_HUNDRED_MS = 600;
@@ -84,7 +86,8 @@ public class TalonShooterSubsystem extends SubsystemBase {
    * Set the target RPM to ramp up to. Will eventually get this value 
    * based on distance from power port or other factors.
    */
-  public void setRPM(int targetRPM){
+  public void setTargetRPM(int targetRPM){
+    setpointRPM = targetRPM;
     velocityModeUnits = targetRPM * ENCODER_TICKS_PER_REVOLUTION / ITERATIONS_PER_HUNDRED_MS;
   }
 
@@ -92,11 +95,11 @@ public class TalonShooterSubsystem extends SubsystemBase {
    * Check the actual RPM and compare it with targetRPM
    * to verify that the shooter is up to necessary speed to fire.
    */
-  public boolean checkRPM(int targetRPM){
+  public boolean isAtTargetRPM(){
     // Calculate RPM based on the encoder reading
     double calculatedRPM = (m_shooter.getSelectedSensorVelocity() * ITERATIONS_PER_HUNDRED_MS) / ENCODER_TICKS_PER_REVOLUTION;
     // Verify that the motor is running at the target RPM
-    return (calculatedRPM < (targetRPM + RPM_TOLERANCE) && calculatedRPM > (targetRPM - RPM_TOLERANCE));
+    return (Math.abs(setpointRPM - calculatedRPM) < RPM_TOLERANCE);
       // I have no idea if +/- 50 tolerance around the RPM is accurate enough
       // Test and change, add setting conditions
   }
