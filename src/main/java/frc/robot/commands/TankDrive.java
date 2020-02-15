@@ -22,7 +22,7 @@ public class TankDrive extends CommandBase {
    * @param leftSpeed The values to use for the left side
    * @param rightSpeed The values to use for the right side
    * @param squareInputs Whether or not to square the forward and rotation values
-   * @param initBrake Whetehr or not to start and end the command in brake or coast mode
+   * @param initBrake Whether or not to start and end the command in brake or coast mode
    */
   protected TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed, boolean squareInputs, boolean initBrake) {
     //Ensure that this command is the only one to run on the drive base
