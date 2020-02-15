@@ -8,32 +8,47 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveBase.DriveMode;
+import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj.Timer;
 
+
+
 public class DriveWithTime extends CommandBase {
+
+  public double seconds = 0;
+  public double leftSpeeds= 0;
+  public double rightSpeeds = 0;
+
   /**
    * Creates a new DriveWithTime.
    */
-  public DriveWithTime() {
+
+  public DriveWithTime(double seconds, double leftSpeed, double rightSpeed) {
+
+    this.seconds = seconds;
+    this.leftSpeeds = leftSpeed;
+    this.rightSpeeds = rightSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
+    System.out.println("DriveWithTime Running");
   }
   private Timer m_timer = new Timer();
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_timer.start();
+    
+    addRequirements(DriveBase.getInstance());
+
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_timer.reset();
-    m_timer.start();
+   
+    DriveBase.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
     
-    while (m_timer.get() < 2.0) { 
-    //DriveMode.getInstance().tankDrive(0.2, 0.2, false);
-    }
-    //DriveBase.getInstance().tankDrive(0, 0, false); 
   }
+    
+  
 
   // Called once the command ends or is interrupted.
   @Override
@@ -43,6 +58,6 @@ public class DriveWithTime extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_timer.get() > seconds;
   }
 }

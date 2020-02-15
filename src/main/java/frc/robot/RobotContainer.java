@@ -19,8 +19,7 @@ import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
-
-
+import frc.robot.commands.DriveWithTime;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.logging.Logger;
@@ -37,7 +36,7 @@ public class RobotContainer {
     
     private Joystick driverStick;
     private Joystick controlStick;
-    private AnalogSelector analogSelectorOne;
+    public static AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
     private Command emptyFeederCommand;
@@ -73,7 +72,7 @@ public class RobotContainer {
         
         
         // Instantiate the intake command and bind it 
-        intakeCommand = new OperatorIntakeCommand();
+       // intakeCommand = new OperatorIntakeCommand();
         
         /**
          * Select drive mode for robot
@@ -89,7 +88,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        int selectorOne = 0, selectorTwo = 0;
+        int selectorOne = 1, selectorTwo = 1;
         if (analogSelectorOne != null)
             selectorOne = analogSelectorOne.getIndex();
         if (analogSelectorTwo != null)
@@ -102,11 +101,11 @@ public class RobotContainer {
         }
 
 
-        if (selectorOne == 1 && selectorTwo == 1) {
+        if (selectorOne == 1 || selectorTwo == 1) {
 
             //put code for DriveWithTime command here
 
-            return null;
+            return new DriveWithTime(1.0, 0.2, 0.2);
         }
         // Also return null if this ever gets to here because safety
         return null;
