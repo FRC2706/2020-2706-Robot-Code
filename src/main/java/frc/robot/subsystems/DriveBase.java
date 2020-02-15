@@ -44,7 +44,7 @@ public class DriveBase extends SubsystemBase {
             .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
             .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.3)
+    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
 
     private DriveBase() {
@@ -134,7 +134,9 @@ public class DriveBase extends SubsystemBase {
      */
     public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
         setOpenLoopVoltage();
-        robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        if (!sensitiveSteering){
+            robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        }
         follow();
     }
 

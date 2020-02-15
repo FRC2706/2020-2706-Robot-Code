@@ -83,7 +83,7 @@ public class RobotContainer {
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
         sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(sensitiveDriverControlCommand);
+        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriverControlCommand);
 
     }
     
