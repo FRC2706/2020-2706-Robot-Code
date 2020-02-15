@@ -102,9 +102,11 @@ public class RobotContainer {
 
 
         if (selectorOne == 1 || selectorTwo == 1) {
+        /*
+         * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
+         */
 
-            //put code for DriveWithTime command here
-
+      // for the inputed variables: DriveWithTime(seconds (double), left motors speed (double), right motors speed (double))
             return new DriveWithTime(1.0, 0.2, 0.2);
         }
         // Also return null if this ever gets to here because safety
