@@ -62,14 +62,6 @@ public class FluidConstant<T> implements Supplier<T> {
     }
 
     /**
-     * The get function to implement the Supplier interface.
-     * @return The current value of this constant
-     */
-    public T get() {
-        return this.value;
-    }
-
-    /**
      * @return The current value of this constant
      */
     public T getValue() {
@@ -108,6 +100,10 @@ public class FluidConstant<T> implements Supplier<T> {
         // This is a safe cast because NetworkTables already prevents assigning different types to NTEntries
         T newValue = (T) notification.value.getValue();
         this.setValue(newValue);
+    }
+
+    public T get() {
+        return this.value;
     }
 
 
