@@ -11,8 +11,15 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj.XboxController;
+<<<<<<< HEAD
 
+=======
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.OperatorIntakeCommand;
+>>>>>>> master
 import frc.robot.config.Config;
+import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
@@ -30,8 +37,13 @@ import java.util.logging.Logger;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+<<<<<<< HEAD
     // The robot's subsystems and commands are defined here...
 
+=======
+  // The robot's subsystems and commands are defined here...
+    
+>>>>>>> master
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
@@ -46,6 +58,29 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+
+    // Instantiate the intake command and bind it 
+    intakeCommand = new OperatorIntakeCommand();
+
+    driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
+    DriveBase.getInstance().setDefaultCommand(driveCommand);
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return null;
+  }
+=======
+=======
+>>>>>>> master
     public RobotContainer() {
         // Configure the button bindings
         logger.addHandler(Config.logFileHandler);
@@ -67,6 +102,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
+<<<<<<< HEAD
 
         /**
          * Select drive mode for robot
@@ -74,7 +110,19 @@ public class RobotContainer {
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS,
                 Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
+=======
+        
+        
+        // Instantiate the intake command and bind it 
+        intakeCommand = new OperatorIntakeCommand();
+        
+        /**
+         * Select drive mode for robot
+         */       
+        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
+>>>>>>> master
         DriveBase.getInstance().setDefaultCommand(driveCommand);
+
     }
 
     /**
@@ -105,8 +153,16 @@ public class RobotContainer {
         // Also return null if this ever gets to here because safety
         return null;
     }
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> lukalexAutoDriveForNseconds
+=======
     
     
+>>>>>>> lukalexAutoDriveForNseconds
 }
 
 
+=======
+}
+>>>>>>> master
