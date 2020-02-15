@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,35 +7,32 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveBase.DriveMode;
+import edu.wpi.first.wpilibj.Timer;
 
-/**
- * An example command that uses an example subsystem.
- */
-public class ExampleCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleSubsystem m_subsystem;
-
+public class DriveWithTime extends CommandBase {
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new DriveWithTime.
    */
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+  public DriveWithTime() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
   }
-
+  private Timer m_timer = new Timer();
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
   }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_timer.reset();
+    m_timer.start();
+    
+    while (m_timer.get() < 2.0) { 
+    //DriveMode.getInstance().tankDrive(0.2, 0.2, false);
+    }
+    //DriveBase.getInstance().tankDrive(0, 0, false); 
   }
 
   // Called once the command ends or is interrupted.
