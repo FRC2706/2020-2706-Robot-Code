@@ -22,16 +22,16 @@ public class SensitiveDriverControl extends CommandBase {
     
     //get the drivebase
     private DriveBase driveBase;
-    private Joystick j;
+    private Joystick joystick;
 
-    public SensitiveDriverControl(Joystick j) {
+    public SensitiveDriverControl(Joystick joystick) {
         //set the drivebase
         this.driveBase = DriveBase.getInstance();
         addRequirements(this.driveBase);
-        this.j = j;
+        this.joystick = joystick;
 
         //Separation of concern- no other class uses this code
-        new JoystickButton(j, XboxController.Button.kBumperLeft.value).whenHeld(this);
+        new JoystickButton(joystick, XboxController.Button.kBumperLeft.value).whenHeld(this);
         
     }
 
@@ -41,7 +41,7 @@ public class SensitiveDriverControl extends CommandBase {
     @Override
     public void execute() {
         this.driveBase.sensitiveSteering = true;
-        this.driveBase.tankDrive(j.getRawAxis(Config.RIGHT_CONTROL_STICK_X), j.getRawAxis(Config.RIGHT_CONTROL_STICK_X), false);
+        this.driveBase.tankDrive(this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X), this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X), false);
     }
 
     @Override
