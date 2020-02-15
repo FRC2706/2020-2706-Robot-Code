@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
+import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
@@ -30,8 +33,8 @@ import java.util.logging.Logger;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    // The robot's subsystems and commands are defined here...
-
+  // The robot's subsystems and commands are defined here...
+    
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
@@ -67,14 +70,17 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-
+        
+        
+        // Instantiate the intake command and bind it 
+        intakeCommand = new OperatorIntakeCommand();
+        
         /**
          * Select drive mode for robot
-         */
-
-        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS,
-                Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
+         */       
+        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
+
     }
 
     /**
