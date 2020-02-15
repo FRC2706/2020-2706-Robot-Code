@@ -9,11 +9,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+
 import edu.wpi.first.wpilibj.XboxController;
+
 import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -28,15 +31,18 @@ import java.util.logging.Logger;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    
+
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
+    private Command emptyFeederCommand;
+    private Command incrementFeederCommand;
     private Command intakeCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
-    
+
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -71,7 +77,7 @@ public class RobotContainer {
         }
         configureButtonBindings();
     }
-    
+
     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by instantiating a {@link GenericHID} or one of its subclasses
@@ -81,15 +87,16 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-        
+
         /**
          * Select drive mode for robot
          */
-        
-        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
+
+        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS,
+                Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
     }
-    
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -97,19 +104,32 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         int selectorOne = 0, selectorTwo = 0;
-        if (analogSelectorOne != null) selectorOne = analogSelectorOne.getIndex();
-        if (analogSelectorTwo != null) selectorTwo = analogSelectorTwo.getIndex();
+        if (analogSelectorOne != null)
+            selectorOne = analogSelectorOne.getIndex();
+        if (analogSelectorTwo != null)
+            selectorTwo = analogSelectorTwo.getIndex();
         logger.info("Selectors: " + selectorOne + " " + selectorTwo);
-        
+
         if (selectorOne == 0 && selectorTwo == 0) {
             // This is our 'do nothing' selector
             return null;
         }
-        
-        // If we had more auto options I'd add them here lol
-        
+
+
+        if (selectorOne == 1 && selectorTwo == 1) {
+
+            
+            return null;
+        }
         // Also return null if this ever gets to here because safety
         return null;
     }
+<<<<<<< HEAD
+>>>>>>> lukalexAutoDriveForNseconds
+=======
+    
+    
 >>>>>>> lukalexAutoDriveForNseconds
 }
+
+
