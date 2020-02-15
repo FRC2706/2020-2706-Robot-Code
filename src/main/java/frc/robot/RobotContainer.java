@@ -43,10 +43,8 @@ public class RobotContainer {
     private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
-    private Command emptyFeederCommand;
-    private Command incrementFeederCommand;
-    private Command sensitiveDriverControlCommand;
     private Command intakeCommand;
+    private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
     
     /**
@@ -83,7 +81,6 @@ public class RobotContainer {
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
         sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
-        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriverControlCommand);
 
     }
     
