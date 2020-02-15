@@ -18,8 +18,9 @@ import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
-
+import frc.robot.commands.SensitiveDriverControl;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.logging.Logger;
 
@@ -32,15 +33,19 @@ import java.util.logging.Logger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+    // The robot's subsystems and commands are defined here...
     
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
-    private Command emptyFeederCommand;
-    private Command incrementFeederCommand;
     private Command intakeCommand;
+    private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
     
     /**
@@ -77,6 +82,8 @@ public class RobotContainer {
          */       
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, true, Config.RIGHT_CONTROL_STICK_X, false);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
+
+        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
     }
     
