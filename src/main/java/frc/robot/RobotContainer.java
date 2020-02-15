@@ -67,12 +67,13 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
 
-         // Select drive mode for robot
+        // Select drive mode for robot
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
         JoystickButton turnToPowerCell = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
         turnToPowerCell.whenHeld(new TurnToPowerCell());
+
     }
 
     /**

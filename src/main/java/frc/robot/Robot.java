@@ -12,9 +12,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.subsystems.DriveBase;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.logging.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,10 +28,9 @@ import frc.robot.subsystems.DriveBase;
  * project.
  */
 public class Robot extends TimedRobot {
+    static Logger logger = Logger.getLogger("Robot");
     private Command m_autonomousCommand;
-
     private RobotContainer m_robotContainer;
-
     //network table for vision control
     private VisionCtrlNetTable visionControlNetTable;
     //network table for control systems control
@@ -46,6 +50,56 @@ public class Robot extends TimedRobot {
     }
 
     /**
+     * Halts the robot in every way
+     */
+    public static void haltRobot(String s) {
+        /*
+         Disable the scheduler and cancel everything.
+         This stops all subsystems and commands and prevents new ones from starting
+        */
+        var scheduler = CommandScheduler.getInstance();
+        scheduler.disable();
+        scheduler.cancelAll();
+
+        /*
+         Log the message and close the log file.
+         Not strictly necessary, but it's good practice to close files when you're done with it.
+        */
+        logger.severe("ROBOT HALTED: " + s);
+        Config.logFileHandler.close();
+
+        /*
+         Hang (Using Thread.sleep instead of a busy loop).
+         The reason we want to hang instead of letting the robot code exit is purely because the RoboRIO is going to
+         start the code up again, so to avoid creating many dozens of log files in the 2 minutes it takes to fix the
+         robot, we'll just hang and let the operator restart the code when they're ready.
+        */
+        try {
+            while (true) {
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            // If the sleep gets interrupted we'll let the robot code restart.
+        }
+    }
+
+    /**
+     * Same as above but takes an exception for printing
+     *
+     * @param s A String to print
+     * @param e the exception to print
+     */
+    public static void haltRobot(String s, Exception e) {
+        // Format the exception as a string
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        String stackTrace = sw.toString();
+
+        // Call the string only version
+        haltRobot(s + "\n" + stackTrace);
+    }
+
+    /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
@@ -56,7 +110,6 @@ public class Robot extends TimedRobot {
         DriveBase.init();
 
         m_robotContainer = new RobotContainer();
-
         //create a vision control table
         visionControlNetTable = new VisionCtrlNetTable();
         //create a control system control table
@@ -64,6 +117,9 @@ public class Robot extends TimedRobot {
         //set to false
         bFromTeleMode = false;
         bRealMatch = false;
+
+        logger.addHandler(Config.logFileHandler);
+
     }
 
     /**
@@ -131,21 +187,6 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
     }
 
-    @Override
-    public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
-
-        //set teleop mode to true
-        bFromTeleMode = true;
-
-    }
-
     /**
      * This function is called periodically during operator control.
      */
@@ -167,5 +208,21 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {
+
+        CommandScheduler.getInstance().run();
+    }
+
+    @Override
+    public void teleopInit() {
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.cancel();
+        }
+
+        //set teleop mode to true
+        bFromTeleMode = true;
     }
 }

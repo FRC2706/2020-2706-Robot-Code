@@ -2,8 +2,8 @@ package frc.robot.config;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,13 +38,33 @@ public class Config {
      * 11. Type exit to safely exit the ssh session
      */
 
+    // Timeouts for sending CAN bus commands
+    public static final int CAN_TIMEOUT_SHORT = 10;
+    public static final int CAN_TIMEOUT_LONG = 100;
+    public static final boolean TELEOP_BRAKE = false;
+    public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
+    // THIS MUST BE ABOVE ALL ROBOT SPECIFICS --- DO NOT MOVE THIS!
+    private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
+    public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
+    public static Double JOYSTICK_AXIS_DEADBAND = 0.1;
+    public static int LEFT_CONTROL_STICK_Y = 1;
+    public static int LEFT_CONTROL_STICK_X = 0;
+    public static int RIGHT_CONTROL_STICK_Y = 5;
+    public static int RIGHT_CONTROL_STICK_X = 4;
+    public static double CONTROLLER_DEADBAND = 0.05;
+    public static double CURVATURE_OVERRIDE = 0.25;
+    public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
+    // Define a global constants table for subsystems to use
+    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+    public static FileHandler logFileHandler;
+    // Vision Table Constants
+    public static String VISION_TABLE_NAME = "MergeVision";
+    public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
+    public static String YAW_POWERCELL = "YawToPowerCell";
     /**
      * ID of the robot that code is running on
      */
     private static int robotId = -1;
-
-    // THIS MUST BE ABOVE ALL ROBOT SPECIFICS --- DO NOT MOVE THIS!
-    private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
 
     // Static Constants
     public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
@@ -52,62 +72,22 @@ public class Config {
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
     public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
-
+    public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
-
     public static int ARM_TALON = robotSpecific(12, 12, 12);
-
-    public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
-
-    public static Double JOYSTICK_AXIS_DEADBAND = 0.1;
-
-    public static int LEFT_CONTROL_STICK_Y = 1;
-    public static int LEFT_CONTROL_STICK_X = 0;
-
-    public static int RIGHT_CONTROL_STICK_Y = 5;
-    public static int RIGHT_CONTROL_STICK_X = 4;
-
     public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true, false);
     public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
-
     public static boolean INVERT_RIGHT_FRONT_TALON = robotSpecific(false, false, false, true);
     public static boolean INVERT_RIGHT_REAR_TALON = robotSpecific(false, false, false, false);
     public static boolean INVERT_LEFT_FRONT_TALON = robotSpecific(false, false, false, true);
     public static boolean INVERT_LEFT_REAR_TALON = robotSpecific(false, false, false, false);
-
-    public static double CONTROLLER_DEADBAND = 0.05;
-
-    public static double CURVATURE_OVERRIDE = 0.25;
-
     public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
-
-    public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
-
-    // Timeouts for sending CAN bus commands
-    public static final int CAN_TIMEOUT_SHORT = 10;
-    public static final int CAN_TIMEOUT_LONG = 100;
-
-    public static final boolean TELEOP_BRAKE = false;
-
-    public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
-
     // PIDF values for the arm
     public static double ARM_PID_P = robotSpecific(0.2);
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.1);
     public static double ARM_PID_F = robotSpecific(0.0);
-
-    // Define a global constants table for subsystems to use
-    public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
-
-    public static FileHandler logFileHandler;
-
-    // Vision Table Constants
-    public static String VISION_TABLE_NAME = "MergeVision";
-    public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
-    public static String YAW_POWERCELL = "YawToPowerCell";
-
 
     static {
         try {
@@ -119,18 +99,17 @@ public class Config {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * PLACE IDS OF ROBOTS HERE
      **/
     // Mergio is has the ID 2
     // Mergonaut is ID 3
-    
+
     // This is a static class which should not be instantiated
     private Config() {
-    
+
     }
-    
 
 
     /**
@@ -149,8 +128,8 @@ public class Config {
             return more[getRobotId() - 1];
         }
     }
-    
-    
+
+
     /**
      * Obtain the robot id found in the robot.conf file
      *
@@ -160,15 +139,14 @@ public class Config {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
-            } catch (Exception e) {
-                robotId = 0;
-                DriverStation.reportError("Could not find robot configuration file.", false);
+            } catch (IOException | NumberFormatException e) {
+                Robot.haltRobot("Can't load Robot ID", e);
             }
             SmartDashboard.putNumber("Robot ID", robotId);
         }
         return robotId;
     }
-    
+
     /**
      * @param value The raw axis value from the control stick
      * @return The filtered value defined by the acceptable dead band
