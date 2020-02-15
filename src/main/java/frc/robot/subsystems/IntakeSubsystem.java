@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
 
-public class IntakeSubsystem extends SubsystemBase {
+public class IntakeSubsystem extends ConditionalSubsystemBase {
     /**
      * The Singleton instance of this IntakeSubsystem. External classes should
      * use the {@link #getInstance()} method to get the instance.
@@ -17,9 +17,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private final static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.25d)
             .registerToTable(Config.constantsTable);
     
-    // The ConditionManager to handle all the conditions that are required for the intake to run
-    SubsystemOperationManager conditionManager;
-    
     // The intake motor (if any)
     private VictorSPX intakeMotor;
     
@@ -29,8 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * should use the {@link #getInstance()} method to get the instance.
      */
     private IntakeSubsystem() {
-        // Initialize the private variables
-        conditionManager = new SubsystemOperationManager("intake");
+        createCondition("operatorActivated", SubsystemConditionStates.TELEOP);
         if (Config.INTAKE_MOTOR != -1) {
             intakeMotor = new VictorSPX(Config.INTAKE_MOTOR);
         }
@@ -45,20 +41,13 @@ public class IntakeSubsystem extends SubsystemBase {
         return INSTANCE;
     }
     
-    /**
-     * @return This class's instance of it's SubsystemConditionManager
-     */
-    public SubsystemOperationManager getConditionManager() {
-        return this.conditionManager;
-    }
-    
     @Override
     public void periodic() {
         // The intakeMotor will be null if the Config entry for it was -1. (Meaning this robot doesn't have an intake)
         if (intakeMotor == null) return;
         
         // If all the conditions are met, set the motor to run at the target speed, otherwise stop.
-        if (conditionManager.allSatisfied()) {
+        if (checkConditions()) {
             intakeMotor.set(ControlMode.PercentOutput, INTAKE_SPEED.get());
         } else {
             intakeMotor.set(ControlMode.PercentOutput, 0d);
@@ -66,3 +55,4 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 }
 
+//hi
