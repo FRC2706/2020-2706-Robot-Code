@@ -31,7 +31,7 @@ public class TurnToVisionYawCommand extends CommandBase {
     public void execute() {
         for(int i = 0; i < 2; i++) {
             Double currentTarget = targetYaw.get();
-            
+
             DrivetrainPIDTurnDelta drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0);
             drivetrainPIDTurnDelta.schedule();
         }
