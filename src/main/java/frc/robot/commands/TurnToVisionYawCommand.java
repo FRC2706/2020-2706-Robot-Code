@@ -1,18 +1,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.nettables.VisionCtrlNetTable;
 
 import java.util.function.Supplier;
 
 
 public class TurnToVisionYawCommand extends CommandBase {
 
-    Supplier<Double> targetYaw;
+    private Supplier<Double> targetYaw;
+    private Double currentTarget;
+    private boolean invert;
+    private Double maxTime;
+    private Double acceptableError;
+    private DrivetrainPIDTurnDelta drivetrainPIDTurnDelta;
 
-    public TurnToVisionYawCommand(Supplier<Double> targetYaw) {
+    public TurnToVisionYawCommand(Supplier<Double> targetYaw, boolean invert) {
         this.targetYaw = targetYaw;
+        this.invert = invert;
     }
 
     /**
@@ -20,7 +24,7 @@ public class TurnToVisionYawCommand extends CommandBase {
      */
     @Override
     public void initialize() {
-
+        currentTarget = targetYaw.get();
     }
 
     /**
@@ -29,10 +33,14 @@ public class TurnToVisionYawCommand extends CommandBase {
      */
     @Override
     public void execute() {
-        for(int i = 0; i < 2; i++) {
-            Double currentTarget = targetYaw.get();
-
-            DrivetrainPIDTurnDelta drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0);
+        // Filter out the default value
+        if(currentTarget != -1) {
+            // Check if the yaw should be inverted (Shooter is on the back so we may need to)
+            if(invert) {
+                drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(-currentTarget, 0, acceptableError, maxTime);
+            } else {
+                drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0, acceptableError, maxTime);
+            }
             drivetrainPIDTurnDelta.schedule();
         }
 
@@ -55,7 +63,7 @@ public class TurnToVisionYawCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return false;
+        return drivetrainPIDTurnDelta.isFinished();
     }
 
     /**

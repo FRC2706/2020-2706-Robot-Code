@@ -23,6 +23,7 @@ public class VisionCtrlNetTable {
 
   public static Supplier<Double> distanceToPowerCell;
   public static Supplier<Double> yawToPowerCell;
+  public static Supplier<Double> yawToOuterPort;
 
   public VisionCtrlNetTable () {
     visionControlTable = inst.getTable("VisionControl");
@@ -35,6 +36,9 @@ public class VisionCtrlNetTable {
     mergeVisionTable = inst.getTable(Config.VISION_TABLE_NAME);
     distanceToPowerCell = () -> mergeVisionTable.getEntry(Config.DISTANCE_POWERCELL).getDouble(-1);
     yawToPowerCell = () -> mergeVisionTable.getEntry(Config.YAW_POWERCELL).getDouble(-1);
+    yawToOuterPort = () -> mergeVisionTable.getEntry(Config.YAW_OUTER_PORT).getDouble(-1);
+
+
 
   }
 

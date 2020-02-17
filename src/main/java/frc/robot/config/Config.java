@@ -43,8 +43,10 @@ public class Config {
     public static final int CAN_TIMEOUT_LONG = 100;
     public static final boolean TELEOP_BRAKE = false;
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
+
     // THIS MUST BE ABOVE ALL ROBOT SPECIFICS --- DO NOT MOVE THIS!
     private static final Path ROBOT_ID_LOC = Paths.get(System.getProperty("user.home"), "robot.conf");
+
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
     public static Double JOYSTICK_AXIS_DEADBAND = 0.1;
     public static int LEFT_CONTROL_STICK_Y = 1;
@@ -61,27 +63,50 @@ public class Config {
     public static String VISION_TABLE_NAME = "MergeVision";
     public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
     public static String YAW_POWERCELL = "YawToPowerCell";
+
+    public static String YAW_OUTER_PORT = "DistanceToTarget";
     /**
      * ID of the robot that code is running on
      */
     private static int robotId = -1;
 
+    /**
+     * Returns one of the values passed based on the robot ID
+     *
+     * @param first The first value (default value)
+     * @param more  Other values that could be selected
+     * @param <T>   The type of the value
+     * @return The value selected based on the ID of the robot
+     */
+    @SafeVarargs
+    public static <T> T robotSpecific(T first, T... more) {
+        if (getRobotId() < 1 || getRobotId() > more.length) {
+            return first;
+        } else {
+            return more[getRobotId() - 1];
+        }
+    }
+
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
-    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
-    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2, 2);
+    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4, 4);
+    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1, 1);
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3, 3);
+
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
     public static int ARM_TALON = robotSpecific(12, 12, 12);
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true, false);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_RIGHT_FRONT_TALON = robotSpecific(false, false, false, true);
-    public static boolean INVERT_RIGHT_REAR_TALON = robotSpecific(false, false, false, false);
-    public static boolean INVERT_LEFT_FRONT_TALON = robotSpecific(false, false, false, true);
-    public static boolean INVERT_LEFT_REAR_TALON = robotSpecific(false, false, false, false);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, false, true, true, false);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true, false, false);
+
+    public static boolean INVERT_RIGHT_FRONT_TALON = robotSpecific(false, false, false, false, false, false);
+    public static boolean INVERT_RIGHT_REAR_TALON = robotSpecific(false, false, false, false, false, false);
+
+    public static boolean INVERT_LEFT_FRONT_TALON = robotSpecific(false, false, false, false, true, false);
+    public static boolean INVERT_LEFT_REAR_TALON = robotSpecific(false, false, false, false, false, false);
+
     public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
     // PIDF values for the arm
     public static double ARM_PID_P = robotSpecific(0.2);
@@ -112,22 +137,7 @@ public class Config {
     }
 
 
-    /**
-     * Returns one of the values passed based on the robot ID
-     *
-     * @param first The first value (default value)
-     * @param more  Other values that could be selected
-     * @param <T>   The type of the value
-     * @return The value selected based on the ID of the robot
-     */
-    @SafeVarargs
-    public static <T> T robotSpecific(T first, T... more) {
-        if (getRobotId() < 1 || getRobotId() > more.length) {
-            return first;
-        } else {
-            return more[getRobotId() - 1];
-        }
-    }
+
 
 
     /**
@@ -139,7 +149,7 @@ public class Config {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
-            } catch (IOException | NumberFormatException e) {
+            } catch (Exception e) {
                 Robot.haltRobot("Can't load Robot ID", e);
             }
             SmartDashboard.putNumber("Robot ID", robotId);
