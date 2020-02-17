@@ -13,12 +13,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.DrivetrainPIDTurnDelta;
-import frc.robot.commands.TurnToPowerCell;
-import frc.robot.commands.TurnToVisionYawCommand;
+import frc.robot.commands.TurnToOuterPortCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
-import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 
@@ -75,7 +72,7 @@ public class RobotContainer {
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
         JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
-        turnToYaw.whenPressed(new DrivetrainPIDTurnDelta(20, 0));
+        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, 3.0, 1.0));
 
     }
 

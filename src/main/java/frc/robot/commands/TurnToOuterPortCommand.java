@@ -1,22 +1,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.config.Config;
+import frc.robot.nettables.VisionCtrlNetTable;
 
-import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
-public class TurnToVisionYawCommand extends CommandBase {
+public class TurnToOuterPortCommand extends CommandBase {
 
-    private Supplier<Double> targetYaw;
+    // The target angle to turn the robot to
     private Double currentTarget;
-    private boolean invert;
-    private Double maxTime;
-    private Double acceptableError;
-    private DrivetrainPIDTurnDelta drivetrainPIDTurnDelta;
 
-    public TurnToVisionYawCommand(Supplier<Double> targetYaw, boolean invert) {
-        this.targetYaw = targetYaw;
+    // Weather or not too invert the direction turned (true if aiming the back of the robot)
+    private boolean invert;
+
+    // The maximum amount of time the command is allowed to run
+    private Double maxTime;
+
+    // The acceptable error for the target angle
+    private Double acceptableError;
+
+    // Logging
+    private Logger logger = Logger.getLogger("TurnOuterPort");
+
+    public TurnToOuterPortCommand(boolean invert, Double acceptableError, Double maxTime) {
         this.invert = invert;
+        this.maxTime = maxTime;
+        this.acceptableError = acceptableError;
+
+        logger.addHandler(Config.logFileHandler);
     }
 
     /**
@@ -24,7 +38,11 @@ public class TurnToVisionYawCommand extends CommandBase {
      */
     @Override
     public void initialize() {
-        currentTarget = targetYaw.get();
+        // Get the target angle from NetworkTables
+        currentTarget = VisionCtrlNetTable.yawToOuterPort.get();
+
+        // Ensure the vision is running in tape mode
+        VisionCtrlNetTable.setTapeMode();
     }
 
     /**
@@ -34,14 +52,19 @@ public class TurnToVisionYawCommand extends CommandBase {
     @Override
     public void execute() {
         // Filter out the default value
-        if(currentTarget != -1) {
+        DrivetrainPIDTurnDelta drivetrainPIDTurnDelta;
+        if (currentTarget != -1) {
             // Check if the yaw should be inverted (Shooter is on the back so we may need to)
-            if(invert) {
+            if (invert) {
                 drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(-currentTarget, 0, acceptableError, maxTime);
             } else {
                 drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0, acceptableError, maxTime);
             }
             drivetrainPIDTurnDelta.schedule();
+        } else {
+            // Ensure no movement on faulty values
+            drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(0, 0, 0d, 0d);
+            logger.log(Level.WARNING, "Invalid Current Target: " + VisionCtrlNetTable.yawToOuterPort.get());
         }
 
     }
@@ -62,8 +85,8 @@ public class TurnToVisionYawCommand extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return drivetrainPIDTurnDelta.isFinished();
+        // This command should only be run once
+        return true;
     }
 
     /**

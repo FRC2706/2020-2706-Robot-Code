@@ -17,26 +17,26 @@ import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
-    //Delcare PD variables
-    private Supplier<Double> pGain = DriveBase.DRIVETRAIN_P;
-    private Supplier<Double> dGain = DriveBase.DRIVETRAIN_D;
+    // Declare PD variables
+    private Supplier<Double> pGain = Config.DRIVETRAIN_P;
+    private Supplier<Double> dGain = Config.DRIVETRAIN_D;
 
-    //get the drivebase and pigeon
+    // Get the drivebase and pigeon
     private final DriveBase drivebase;
     private PigeonIMU pigeonIMU;
 
     boolean isDone = false;
 
-    //The delta of which you want to turn in degrees
+    // The delta of which you want to turn in degrees
     private double deltaDegree;
 
-    //Target angle in degrees
+    // Target angle in degrees
     private double targetAngle;
 
-    //Current angle in degrees
+    // Current angle in degrees
     private double currentAngle;
 
-    //Initiate forwardSpeed
+    // Initiate forwardSpeed
     private double forwardSpeed;
 
     // Acceptable error in the angle
@@ -71,9 +71,11 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         logger.addHandler(Config.logFileHandler);
 
         // Instantiate the timer
-        if(maxTime != null) {
+        if(this.maxTime != null) {
             timer = new Timer();
         }
+
+
 
     }
 
@@ -84,12 +86,16 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
     @Override
     public void initialize() {
+       // drivebase.getPigeon().setFusedHeading(0.0, 30);
+
         //Get the target angle
         targetAngle = drivebase.getCurrentAngle() + deltaDegree;
 
         isDone = false;
 
-        timer.start();
+        if(maxTime != null) {
+            timer.start();
+        }
     }
 
     @Override

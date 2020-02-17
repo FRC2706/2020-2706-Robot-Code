@@ -39,11 +39,6 @@ public class DriveBase extends SubsystemBase {
 
     private PigeonIMU _pidgey;
 
-    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
-            .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
-            .registerToTable(Config.constantsTable);
-
     private DriveBase() {
 
         // Initialize the talons

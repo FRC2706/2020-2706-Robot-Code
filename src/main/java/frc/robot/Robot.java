@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
 
-        SmartDashboard.putNumber("PowerCell Yaw", VisionCtrlNetTable.yawToPowerCell.get());
+        SmartDashboard.putNumber("Outer Port Yaw", VisionCtrlNetTable.yawToOuterPort.get());
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
         SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();

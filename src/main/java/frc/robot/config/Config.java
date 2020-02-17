@@ -64,7 +64,7 @@ public class Config {
     public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
     public static String YAW_POWERCELL = "YawToPowerCell";
 
-    public static String YAW_OUTER_PORT = "DistanceToTarget";
+    public static String YAW_OUTER_PORT = "YawToTarget";
     /**
      * ID of the robot that code is running on
      */
@@ -98,8 +98,8 @@ public class Config {
     public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
     public static int ARM_TALON = robotSpecific(12, 12, 12);
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, false, true, true, false);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true, false, false);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, false, true, true, false, true);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true, false, false, true);
 
     public static boolean INVERT_RIGHT_FRONT_TALON = robotSpecific(false, false, false, false, false, false);
     public static boolean INVERT_RIGHT_REAR_TALON = robotSpecific(false, false, false, false, false, false);
@@ -113,6 +113,16 @@ public class Config {
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.1);
     public static double ARM_PID_F = robotSpecific(0.0);
+
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", DRIVETRAIN_D_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+
+
 
     static {
         try {
