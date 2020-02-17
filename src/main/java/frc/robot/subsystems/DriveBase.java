@@ -37,7 +37,12 @@ public class DriveBase extends SubsystemBase {
     // The drivebase talons
     private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
 
+    public boolean sensitiveSteering = false;
+
     private PigeonIMU _pidgey;
+
+    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
+            .registerToTable(Config.constantsTable);
 
     private DriveBase() {
 
@@ -130,7 +135,9 @@ public class DriveBase extends SubsystemBase {
      */
     public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
         setOpenLoopVoltage();
-        robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        if (!sensitiveSteering){
+            robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        }
         follow();
     }
 
@@ -139,7 +146,13 @@ public class DriveBase extends SubsystemBase {
      */
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
-        robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
+        //steers the robot at a much lower max speed if sensitive control is on
+        if (sensitiveSteering){
+            robotDriveBase.tankDrive(leftVal*DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), -rightVal*DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), squareInputs);
+        } else {
+            robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
+        }
+        
         follow();
     }
 

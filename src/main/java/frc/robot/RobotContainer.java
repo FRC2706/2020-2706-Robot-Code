@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
     // The robot's subsystems and commands are defined here...
 
     private Joystick driverStick;
@@ -36,9 +37,8 @@ public class RobotContainer {
     private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
-    private Command emptyFeederCommand;
-    private Command incrementFeederCommand;
     private Command intakeCommand;
+    private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
 
     /**
@@ -98,5 +98,3 @@ public class RobotContainer {
         return null;
     }
 }
-
-
