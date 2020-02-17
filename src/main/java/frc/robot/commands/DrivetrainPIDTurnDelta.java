@@ -86,7 +86,6 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
     @Override
     public void initialize() {
-       // drivebase.getPigeon().setFusedHeading(0.0, 30);
 
         //Get the target angle
         targetAngle = drivebase.getCurrentAngle() + deltaDegree;
