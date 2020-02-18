@@ -11,8 +11,8 @@ public class Agitator extends SubsystemBase {
     private VictorSPX agitatorMotor;
 
 //Variables:
-private final double AGITATOR_SPEED = 1.0;
-private final double AGITATOR_REVERSE_SPEED = -1.0;
+    private final double AGITATOR_SPEED = 1.0;
+    private final double AGITATOR_REVERSE_SPEED = -1.0;
 
 public Agitator (VictorSPX agitatorMotor)
 {//Defining the agitator motor
@@ -30,10 +30,7 @@ public void stopAgitator ()
     }
 
 public void reverseAgitator ()
-{//Runs the agitator in reverse (Might be useless?)
+{//Runs the agitator in reverse
     agitatorMotor.set(AGITATOR_REVERSE_SPEED);
     } 
 }
-
-/* Code will be bulletproofed later by getting readings from sensors
-and config entry before running*/
