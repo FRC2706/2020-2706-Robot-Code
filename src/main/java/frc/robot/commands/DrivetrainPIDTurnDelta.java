@@ -14,11 +14,12 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
     //Delcare PD variables
-    private Supplier<Double> pGain = DriveBase.DRIVETRAIN_P;
-    private Supplier<Double> dGain = DriveBase.DRIVETRAIN_D;
+    private Supplier<Double> pGain = Config.PIDTURNDELTA_P;
+    private Supplier<Double> dGain = Config.PIDTURNDELTA_D;
 
     //get the drivebase and pigeon
     private final DriveBase drivebase;
@@ -54,8 +55,8 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         this.forwardSpeed = forwardSpeed;
 
         //Set the drivebase
-        addRequirements(DriveBase.getInstance());
-        this.drivebase = DriveBase.getInstance();
+        this.drivebase = DriveBaseHolder.getInstance();
+        addRequirements(this.drivebase);
         _pidgey = drivebase.getPigeon();
         double currentAngle = drivebase.getCurrentAngle();
         logger.addHandler(Config.logFileHandler);

@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 
 /**
  * Abstract class to extend when using curve drive, allows for basic Command architecture
@@ -16,6 +17,8 @@ public abstract class CurvatureDrive extends CommandBase {
     private final boolean initBrake;
     private final Supplier<Boolean> buttonPress;
     private final boolean squareInputs;
+    private final DriveBase driveBase;
+
 
     private static final double forwardSpeedMultiplier = 0.6;
     private static final double breakButtonRotationSpeedDivisor = 2.5;
@@ -34,19 +37,20 @@ public abstract class CurvatureDrive extends CommandBase {
            Ensure that this command is the only one to run on the drive base
            Requires must be included to use this command as a default command for the drive base
         */
-        addRequirements(DriveBase.getInstance());
+        this.driveBase = DriveBaseHolder.getInstance();
         this.forwardVal = forwardVal;
         this.curveSpeed = curveSpeed;
         this.initBrake = initBrake;
         this.buttonPress = buttonPress;
         this.squareInputs = squareInputs;
+        addRequirements(this.driveBase);
     }
 
     @Override
     public void initialize() {
         // Prepare for driving by human
-        DriveBase.getInstance().setOpenLoopVoltage();
-        DriveBase.getInstance().setBrakeMode(initBrake);
+        this.driveBase.setOpenLoopVoltage();
+        this.driveBase.setBrakeMode(initBrake);
     }
 
     @Override
@@ -63,17 +67,17 @@ public abstract class CurvatureDrive extends CommandBase {
         boolean override = Math.abs(forward) < Config.CURVATURE_OVERRIDE;
 
         if (buttonPress.get()) {
-            if (!DriveBase.getInstance().isBrakeMode()) {
-                DriveBase.getInstance().setBrakeMode(true);
+            if (!this.driveBase.isBrakeMode()) {
+                this.driveBase.setBrakeMode(true);
             }
 
-            DriveBase.getInstance().curvatureDrive(forward * forwardSpeedMultiplier, (override ? rotation / breakButtonRotationSpeedDivisor : rotation), override);
+            this.driveBase.curvatureDrive(forward * forwardSpeedMultiplier, (override ? rotation / breakButtonRotationSpeedDivisor : rotation), override);
         } else {
-            if (DriveBase.getInstance().isBrakeMode()) {
-                DriveBase.getInstance().setBrakeMode(false);
+            if (this.driveBase.isBrakeMode()) {
+                this.driveBase.setBrakeMode(false);
             }
 
-            DriveBase.getInstance().curvatureDrive(forward, (override ? rotation / passiveRotationSpeedDivisor : rotation), override);
+            this.driveBase.curvatureDrive(forward, (override ? rotation / passiveRotationSpeedDivisor : rotation), override);
         }
     }
 
@@ -83,6 +87,6 @@ public abstract class CurvatureDrive extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         // Go back to disabled mode
-      DriveBase.getInstance().setDisabledMode();
+      this.driveBase.setDisabledMode();
     }
 }

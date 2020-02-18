@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.RobotContainer;
 import frc.robot.config.Config;
 import frc.robot.subsystems.*;
 
@@ -26,7 +25,7 @@ public class SensitiveDriverControl extends CommandBase {
 
     public SensitiveDriverControl(Joystick joystick) {
         //set the drivebase
-        this.driveBase = DriveBase.getInstance();
+        this.driveBase = DriveBaseHolder.getInstance();
         addRequirements(this.driveBase);
         this.joystick = joystick;
 
@@ -40,7 +39,7 @@ public class SensitiveDriverControl extends CommandBase {
      */
     @Override
     public void execute() {
-        this.driveBase.sensitiveSteering = true;
+        this.driveBase.setSensitiveSteering(true);
         this.driveBase.tankDrive(this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X), this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X), false);
     }
 
@@ -55,7 +54,7 @@ public class SensitiveDriverControl extends CommandBase {
      */
     @Override
     public void end(boolean interrupted) {
-        this.driveBase.sensitiveSteering = false;
-        this.driveBase.stop();
+        this.driveBase.setSensitiveSteering(false);
+        this.driveBase.stopMotors();
     }
 }

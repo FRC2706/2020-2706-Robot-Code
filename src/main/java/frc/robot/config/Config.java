@@ -2,8 +2,9 @@ package frc.robot.config;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveBasePre2020;
+import frc.robot.subsystems.DriveBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,6 +71,8 @@ public class Config {
     }
     
     // Static Constants
+    private static Class<? extends DriveBase> Pre2020DriveBase = DriveBasePre2020.class.asSubclass(DriveBase.class);
+    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Pre2020DriveBase);
     public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
     public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
@@ -117,6 +120,16 @@ public class Config {
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.1);
     public static double ARM_PID_F = robotSpecific(0.0);
+
+    // PID Values for the DrivetrainPIDTurnDelta command
+    public static FluidConstant<Double> PIDTURNDELTA_P = new FluidConstant<>("DrivetrainP", 0.018d)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> PIDTURNDELTA_D = new FluidConstant<>("DrivetrainD", 0.0016d)
+            .registerToTable(Config.constantsTable);
+
+    // Fluid constant for Drivetrains
+    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
+            .registerToTable(Config.constantsTable);
     
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");

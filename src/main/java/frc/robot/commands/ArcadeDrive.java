@@ -10,8 +10,8 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 
 /**
  * Drive the robot using values for driving forward and rotation (Arcade Drive)
@@ -24,6 +24,8 @@ public class ArcadeDrive extends CommandBase {
   private final boolean squareInputs;
   private final boolean initBrake;
 
+  private final DriveBase driveBase;
+
 /**
  * Creates the arcade drive
  * 
@@ -35,26 +37,27 @@ public class ArcadeDrive extends CommandBase {
   public ArcadeDrive(Supplier<Double> forwardVal, Supplier<Double> rotateVal, boolean squareInputs, boolean initBrake) {
     // Ensure that this command is the only one to run on the drive base
     // Requires must be included to use this command as a default command for the drive base
-    addRequirements(DriveBase.getInstance());
     this.forwardVal = forwardVal;
     this.rotateVal = rotateVal;
     this.squareInputs = squareInputs;
     this.initBrake = initBrake;
+    this.driveBase = DriveBaseHolder.getInstance();
+    addRequirements(this.driveBase);
   }
   
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // Prepare for driving by human
-    DriveBase.getInstance().setOpenLoopVoltage();
-    DriveBase.getInstance().setBrakeMode(initBrake);
+    this.driveBase.setOpenLoopVoltage();
+    this.driveBase.setBrakeMode(initBrake);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // Pass values to drive base to make the robot move
-    DriveBase.getInstance().arcadeDrive(forwardVal.get(), rotateVal.get(), squareInputs);
+    this.driveBase.arcadeDrive(forwardVal.get(), rotateVal.get(), squareInputs);
 
   }
 
@@ -62,6 +65,6 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // Go back to disabled mode
-    DriveBase.getInstance().setDisabledMode();
+    this.driveBase.setDisabledMode();
   }
 }

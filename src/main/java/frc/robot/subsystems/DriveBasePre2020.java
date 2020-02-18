@@ -1,0 +1,246 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
+package frc.robot.subsystems;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.config.Config;
+import frc.robot.config.FluidConstant;
+
+
+public class DriveBasePre2020 extends DriveBase {
+
+    // The way the robot drives
+    private static DifferentialDrive robotDriveBase;
+
+    /**
+     * Indicates whether the robot is in brake mode
+     */
+    private boolean brakeMode;
+
+    // The mode in which the robot drives
+    private DriveMode driveMode;
+
+    // The drivebase talons
+    private final WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+
+    private boolean sensitiveSteering = false;
+
+    private PigeonIMU _pidgey;
+
+    public DriveBasePre2020() {
+
+        // Initialize the talons
+        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
+        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
+        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
+        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
+
+        talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
+
+        robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
+
+
+        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon, talon5plyboy);
+        if(pigeonTalon != null){
+            _pidgey = new PigeonIMU (pigeonTalon);
+            _pidgey.setFusedHeading(0.0, 30);
+        }
+
+    }
+
+    /**
+     * This just returns the pigeon
+     * @return
+     */
+    public PigeonIMU getPigeon() {
+        return _pidgey;
+    }
+
+    /**
+     * Gets the current angle based upon the angle the robot was enabled on
+     * @return returns angle in degrees
+     */
+    public double getCurrentAngle(){
+        //Gets the current angle
+        try{
+            PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+            _pidgey.getFusedHeading(fusionStatus);
+            return fusionStatus.heading;
+        }
+        catch(NullPointerException e){
+            return (0);
+        }
+    }
+
+    /**
+     * Sets the talons to a disabled mode
+     */
+    public void setDisabledMode() {
+        if (driveMode != DriveMode.Disabled) {
+            resetTalons();
+            stopMotors();
+            driveMode = DriveMode.Disabled;
+        }
+    }
+
+    /**
+     * Make the back talons follow the front talons
+     */
+    private void follow() {
+        leftRearTalon.follow(leftFrontTalon);
+        rightRearTalon.follow(rightFrontTalon);
+    }
+
+    /**
+     * Have the robot drive using the built-in arcade drive
+     *
+     * @param forwardVal The speed at which to move forward, between -1 and 1
+     * @param rotateVal The speed at which to rotate, between -1 (Turn Left) and 1 (Turn Right)
+     * @param squareInputs Weather or not to square the inputs (makes driving less sensitive)
+     */
+    public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
+        setOpenLoopVoltage();
+        if (!sensitiveSteering){
+            robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        }
+        follow();
+    }
+
+    /**
+     * Stop all the talons
+     */
+    public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
+        setOpenLoopVoltage();
+        //steers the robot at a much lower max speed if sensitive control is on
+        if (sensitiveSteering){
+            robotDriveBase.tankDrive(leftVal*Config.DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), -rightVal*Config.DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), squareInputs);
+        } else {
+            robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
+        }
+        
+        follow();
+    }
+
+    /**
+     * Stop all the talons
+     */
+    public void stopMotors() {
+        leftFrontTalon.stopMotor();
+        leftRearTalon.stopMotor();
+        rightRearTalon.stopMotor();
+        rightFrontTalon.stopMotor();
+    }
+
+    /**
+     * Set up open loop voltage.
+     *
+     * This is optimal for driving by a human
+     */
+    public void setOpenLoopVoltage() {
+        if (driveMode != DriveMode.OpenLoopVoltage) {
+            stopMotors();
+            selectEncoderStandard();
+
+            driveMode = DriveMode.OpenLoopVoltage;
+        }
+
+    }
+
+    /**
+     * Changes whether the drive motors should coast or brake when output is 0
+     *
+     * @param brake Whether to turn on brake mode or not
+     */
+    public void setBrakeMode(boolean brake) {
+        NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
+
+        leftFrontTalon.setNeutralMode(mode);
+        leftRearTalon.setNeutralMode(mode);
+        rightFrontTalon.setNeutralMode(mode);
+        rightRearTalon.setNeutralMode(mode);
+
+        brakeMode = brake;
+    }
+
+    /**
+     * Configure the encoder standard for the talons
+     */
+    private void selectEncoderStandard() {
+        leftFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        rightFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
+        leftFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+        leftRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+        rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+        rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+
+    }
+
+    /**
+     * Reset the talons to factory default
+     */
+    private void resetTalons() {
+        leftRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        leftFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        rightFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        rightRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+
+        leftRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        leftFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        rightRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        rightFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+    }
+
+
+    /**
+     * The drive mode of the robot
+     */
+    public enum DriveMode {
+        /**
+         * There is no control mode active
+         */
+        Disabled,
+
+        /**
+         * Standard open loop voltage control
+         */
+        OpenLoopVoltage
+
+    }
+
+    /**
+     *  Standard Curve Drive
+     */
+	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
+        setOpenLoopVoltage();
+
+        robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
+        follow();
+
+    }
+    
+     /**
+     * Checks whether the robot is in brake mode
+     *
+     * @return True when the Talons have the neutral mode set to {@code NeutralMode.Brake}
+     */
+    public boolean isBrakeMode() {
+        return brakeMode;
+    }
+
+    @Override
+    public void setSensitiveSteering(boolean enabled) {
+        sensitiveSteering = enabled;
+    }
+}

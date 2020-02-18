@@ -10,17 +10,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.DrivetrainPIDTurnDelta;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
-import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
-import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 import frc.robot.commands.SensitiveDriverControl;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.logging.Logger;
 
@@ -81,7 +77,7 @@ public class RobotContainer {
          * Select drive mode for robot
          */       
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
-        DriveBase.getInstance().setDefaultCommand(driveCommand);
+        DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
 
         sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
