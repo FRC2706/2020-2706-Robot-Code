@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
 
+import java.util.function.Consumer;
+
 
 public class DriveBase extends SubsystemBase {
 
@@ -68,6 +70,13 @@ public class DriveBase extends SubsystemBase {
 
     }
 
+    private void forEachTalon(Consumer<WPI_TalonSRX> action) {
+        action.accept(leftFrontTalon);
+        action.accept(leftRearTalon);
+        action.accept(rightFrontTalon);
+        action.accept(rightRearTalon);
+    }
+
     /**
      * Initialize the current DriveBase instance
      */
@@ -84,7 +93,7 @@ public class DriveBase extends SubsystemBase {
 
     /**
      * This just returns the pigeon
-     * @return
+     * @return the pigeon
      */
     public PigeonIMU getPigeon() {
         return _pidgey;
@@ -159,10 +168,7 @@ public class DriveBase extends SubsystemBase {
      * Stop all the talons
      */
     public void stop() {
-        leftFrontTalon.stopMotor();
-        leftRearTalon.stopMotor();
-        rightRearTalon.stopMotor();
-        rightFrontTalon.stopMotor();
+        forEachTalon(WPI_TalonSRX::stopMotor);
     }
 
     /**
@@ -187,12 +193,7 @@ public class DriveBase extends SubsystemBase {
      */
     public void setBrakeMode(boolean brake) {
         NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
-
-        leftFrontTalon.setNeutralMode(mode);
-        leftRearTalon.setNeutralMode(mode);
-        rightFrontTalon.setNeutralMode(mode);
-        rightRearTalon.setNeutralMode(mode);
-
+        forEachTalon(talon -> talon.setNeutralMode(mode));
         brakeMode = brake;
     }
 
@@ -200,15 +201,8 @@ public class DriveBase extends SubsystemBase {
      * Configure the encoder standard for the talons
      */
     private void selectEncoderStandard() {
-        leftFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        rightFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-
-        leftFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
-        leftRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
-        rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
-        rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+        forEachTalon(talon -> talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative));
+        forEachTalon(talon -> talon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND));
 
     }
 
@@ -216,15 +210,8 @@ public class DriveBase extends SubsystemBase {
      * Reset the talons to factory default
      */
     private void resetTalons() {
-        leftRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-        leftFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-        rightFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-        rightRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-
-        leftRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
-        leftFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
-        rightRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
-        rightFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        forEachTalon(talon -> talon.configFactoryDefault(Config.CAN_TIMEOUT_LONG));
+        forEachTalon(talon -> talon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG));
     }
 
 
