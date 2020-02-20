@@ -215,12 +215,7 @@ public class DriveBase extends SubsystemBase {
         SmartDashboard.putNumber("Left Back", leftRearTalon.getDeviceID());
         SmartDashboard.putNumber("Right Front", rightFrontTalon.getDeviceID());
         SmartDashboard.putNumber("Right Back", leftFrontTalon.getDeviceID());
-
-        leftFrontTalon.setInverted(Config.INVERT_LEFT_FRONT_TALON);
-        leftRearTalon.setInverted(Config.INVERT_LEFT_REAR_TALON);
-        rightFrontTalon.setInverted(Config.INVERT_RIGHT_FRONT_TALON);
-        rightRearTalon.setInverted(Config.INVERT_RIGHT_REAR_TALON);
-
+        
     }
 
     /**
