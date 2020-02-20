@@ -1,6 +1,7 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import java.util.function.Supplier;
 
@@ -42,8 +43,8 @@ public class TankDrive extends CommandBase {
   @Override
   public void initialize() {
     //Prepare for driving by human
-    this.driveBase.setOpenLoopVoltage();
-    this.driveBase.setBrakeMode(initBrake);
+    this.driveBase.setDriveMode(DriveBase.DriveMode.OpenLoopVoltage);
+    this.driveBase.setNeutralMode(initBrake ? NeutralMode.Brake : NeutralMode.Coast);
   }
 
  
@@ -57,7 +58,7 @@ public class TankDrive extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     //go back to disabled mode
-    this.driveBase.setDisabledMode();
+    this.driveBase.setNeutralMode(NeutralMode.Brake);
 
   
   }

@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.DriveBaseHolder;
@@ -49,8 +50,8 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void initialize() {
     // Prepare for driving by human
-    this.driveBase.setOpenLoopVoltage();
-    this.driveBase.setBrakeMode(initBrake);
+    this.driveBase.setDriveMode(DriveBase.DriveMode.OpenLoopVoltage);
+    this.driveBase.setNeutralMode(initBrake ? NeutralMode.Brake : NeutralMode.Coast);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,6 +66,6 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // Go back to disabled mode
-    this.driveBase.setDisabledMode();
+    this.driveBase.setDriveMode(DriveBase.DriveMode.Disabled);
   }
 }
