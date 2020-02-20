@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.OperatorIntakeCommand;
+import frc.robot.commands.SpinUpShooter;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
@@ -32,23 +34,20 @@ import java.util.logging.Logger;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-    // The robot's subsystems and commands are defined here...
-    
-    private Joystick driverStick;
-    private Joystick controlStick;
-    private AnalogSelector analogSelectorOne;
-    private AnalogSelector analogSelectorTwo;
-    private Command driveCommand;
-    private Command intakeCommand;
-    private Command sensitiveDriverControlCommand;
-    private Logger logger = Logger.getLogger("RobotContainer");
-    
-    /**
+  // The robot's subsystems and commands are defined here...    
+  private Joystick driverStick;
+  private Joystick controlStick;
+  private AnalogSelector analogSelectorOne;
+  private AnalogSelector analogSelectorTwo;
+  private Command driveCommand;
+  private Command intakeCommand;
+  private Command emptyFeederCommand;
+  private Command incrementFeederCommand;
+  private Command rampShooterCommand;
+  private Logger logger = Logger.getLogger("RobotContainer");
+
+/**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
@@ -79,7 +78,16 @@ public class RobotContainer {
         
         /**
          * Select drive mode for robot
-         */       
+         */
+      
+        // Instantiate the intake command and bind it
+        intakeCommand = new OperatorIntakeCommand();
+        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+
+        // Instantiate the shooter ramping command and bind it
+        rampShooterCommand = new SpinUpShooter();
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
