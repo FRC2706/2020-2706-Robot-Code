@@ -8,9 +8,8 @@ public class SpinUpShooter extends CommandBase {
   
   private ShooterSubsystem shooterSubsystem;
 
-  // Fluidconstant?
-  int RPM = 2000;
   boolean doneRamping;
+  int RPM = 2000;
 
   public SpinUpShooter() {
     shooterSubsystem = ShooterSubsystem.getInstance();

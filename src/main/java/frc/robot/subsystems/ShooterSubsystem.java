@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
     ("F_ShooterSubsystem", 0.00018).registerToTable(Config.constantsTable);
 
   public static FluidConstant<Integer> SETPOINT_RPM = new FluidConstant<>
-    ("setpointRPM", 2000).registerToTable(Config.constantsTable);
+    ("setpointRPM", 0).registerToTable(Config.constantsTable);
 
   double kMaxOutput = 1; 
   double kMinOutput = -1;
