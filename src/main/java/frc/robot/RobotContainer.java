@@ -10,12 +10,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.OperatorIntakeCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DriveForwardMetersCommand;
+import frc.robot.commands.DrivetrainPIDTurnDelta;
 import frc.robot.config.Config;
+import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
-import frc.robot.subsystems.DriveBaseHolder;
+import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.SensitiveDriverControl;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.logging.Logger;
@@ -29,19 +32,15 @@ import java.util.logging.Logger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-    // The robot's subsystems and commands are defined here...
     
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
+    private Command emptyFeederCommand;
+    private Command incrementFeederCommand;
     private Command intakeCommand;
-    private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
     
     /**
@@ -69,18 +68,14 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
         
-        
-        // Instantiate the intake command and bind it 
-        intakeCommand = new OperatorIntakeCommand();
-        
         /**
          * Select drive mode for robot
-         */       
+         */
+        
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
-        DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
+        DriveBase.getInstance().setDefaultCommand(driveCommand);
 
-        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
-
+        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenPressed(new DriveForwardMetersCommand(4.94));
     }
     
     /**
@@ -105,3 +100,5 @@ public class RobotContainer {
         return null;
     }
 }
+
+
