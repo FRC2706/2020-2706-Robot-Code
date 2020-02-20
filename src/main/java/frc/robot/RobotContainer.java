@@ -10,14 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.TurnToOuterPortCommand;
+import frc.robot.commands.*;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.logging.Logger;
 
@@ -29,9 +29,13 @@ import java.util.logging.Logger;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
 
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
     // The robot's subsystems and commands are defined here...
-
+    
     private Joystick driverStick;
     private Joystick controlStick;
     private AnalogSelector analogSelectorOne;
@@ -40,7 +44,7 @@ public class RobotContainer {
     private Command intakeCommand;
     private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
-
+    
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -53,10 +57,9 @@ public class RobotContainer {
         if (Config.ANALOG_SELECTOR_TWO != -1) {
             analogSelectorTwo = new AnalogSelector(Config.ANALOG_SELECTOR_TWO);
         }
-
         configureButtonBindings();
     }
-
+    
     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by instantiating a {@link GenericHID} or one of its subclasses
@@ -66,16 +69,24 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-
-        // Select drive mode for robot
+        
+        
+        // Instantiate the intake command and bind it 
+        intakeCommand = new OperatorIntakeCommand();
+        
+        /**
+         * Select drive mode for robot
+         */       
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
+
+        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
         JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
         turnToYaw.whenPressed(new TurnToOuterPortCommand(true, 3.0, 1.0));
 
     }
-
+    
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -86,14 +97,14 @@ public class RobotContainer {
         if (analogSelectorOne != null) selectorOne = analogSelectorOne.getIndex();
         if (analogSelectorTwo != null) selectorTwo = analogSelectorTwo.getIndex();
         logger.info("Selectors: " + selectorOne + " " + selectorTwo);
-
+        
         if (selectorOne == 0 && selectorTwo == 0) {
             // This is our 'do nothing' selector
             return null;
         }
-
+        
         // If we had more auto options I'd add them here lol
-
+        
         // Also return null if this ever gets to here because safety
         return null;
     }
