@@ -135,6 +135,11 @@ public class Config {
             .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", DRIVETRAIN_D_SPECIFIC)
             .registerToTable(Config.constantsTable);
+
+    public static FluidConstant<Double> maxTimeOuterPortCommand = new FluidConstant<>("Outer Port Max Time", 1.0)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> maxYawErrorOuterPortCommand = new FluidConstant<>("Outer Port Command Yaw Error", 3.0)
+            .registerToTable(Config.constantsTable);
     
     /**
      * Returns one of the values passed based on the robot ID

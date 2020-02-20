@@ -83,7 +83,7 @@ public class RobotContainer {
         sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
         JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
-        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, 3.0, 1.0));
+        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
 
     }
     
