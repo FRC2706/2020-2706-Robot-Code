@@ -14,13 +14,15 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.commands.SpinUpShooter;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
+import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
-
+import frc.robot.commands.SensitiveDriverControl;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.logging.Logger;
 
@@ -70,8 +72,13 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
         
+        
+        // Instantiate the intake command and bind it 
+        intakeCommand = new OperatorIntakeCommand();
+        
         /**
          * Select drive mode for robot
+<<<<<<< HEAD
          */
       
         // Instantiate the intake command and bind it
@@ -82,8 +89,13 @@ public class RobotContainer {
         rampShooterCommand = new SpinUpShooter();
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
+=======
+         */       
+>>>>>>> 5db4699c98d868a8b9a75d8437aa4c462f36949f
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
+
+        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
     }
     
@@ -109,5 +121,3 @@ public class RobotContainer {
         return null;
     }
 }
-
-
