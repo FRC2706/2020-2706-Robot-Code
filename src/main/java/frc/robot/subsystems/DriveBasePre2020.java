@@ -42,12 +42,11 @@ public class DriveBasePre2020 extends DriveBase {
     
     @Override
     protected void driveModeUpdated(DriveMode mode) {
+        this.stopMotors();
         if (mode == DriveMode.OpenLoopVoltage) {
-            stopMotors();
-            selectEncoderStandard();
+            this.selectEncoderStandard();
         } else if (mode == DriveMode.Disabled) {
-            stopMotors();
-            resetMotors();
+            this.resetMotors();
         }
     }
     

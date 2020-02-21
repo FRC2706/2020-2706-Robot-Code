@@ -15,7 +15,16 @@ public class DriveBase2020 extends DriveBase {
     WPI_VictorSPX leftSlave, rightSlave;
     
     public DriveBase2020() {
+        leftMaster = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
+        rightMaster = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
+        leftSlave = new WPI_VictorSPX(Config.LEFT_REAR_TALON);
+        rightSlave = new WPI_VictorSPX(Config.RIGHT_REAR_TALON);
+        differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
     
+        if (Config.PIGEON_ID != -1) {
+            pigeon = new PigeonIMU(Config.PIGEON_ID);
+            pigeon.setFusedHeading(0d, Config.CAN_TIMEOUT_LONG);
+        }
     }
     
     @Override
@@ -32,6 +41,9 @@ public class DriveBase2020 extends DriveBase {
         rightMaster.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         leftSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        
+        leftMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+        rightMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
     }
     
     @Override
