@@ -47,12 +47,12 @@ public class DriveBase extends SubsystemBase {
     private DriveBase() {
 
         // Initialize the talons
-        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
-        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
-        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
-        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
+        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_MOTOR);
+        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_MOTOR);
+        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_MOTOR);
+        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_MOTOR);
 
-        SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_TALON);
+        SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_MOTOR);
 
         talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
 
