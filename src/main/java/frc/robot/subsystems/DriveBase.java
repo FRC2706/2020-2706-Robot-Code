@@ -15,6 +15,7 @@ public abstract class DriveBase extends SubsystemBase {
     protected PigeonIMU pigeon;
     protected DriveMode driveMode;
     protected NeutralMode neutralMode;
+    protected DriveBaseState state;
     
     // This is used to get the pigeon heading.
     private PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
@@ -26,6 +27,12 @@ public abstract class DriveBase extends SubsystemBase {
         
         // Standard open loop voltage control
         OpenLoopVoltage
+    }
+    
+    public enum DriveBaseState {
+        Fine,
+        Degraded,
+        Unusable
     }
     
     /**
