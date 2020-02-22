@@ -70,10 +70,6 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
         
-        
-        // Instantiate the intake command and bind it 
-        intakeCommand = new OperatorIntakeCommand();
-        
         /**
          * Select drive mode for robot
          */
