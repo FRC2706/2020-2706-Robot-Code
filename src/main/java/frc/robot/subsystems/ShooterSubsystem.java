@@ -36,13 +36,15 @@ public class ShooterSubsystem extends SubsystemBase {
   double kMaxOutput = 1; 
   double kMinOutput = -1;
 
-  private final int RPM_TOLERANCE = 50;
+  private final int RPM_TOLERANCE = 30;
 
   private ShooterSubsystem() {
     
     // Initialize a private variable for the motor
     if (Config.SHOOTER_MOTOR != -1){
       m_shooter = new CANSparkMax(Config.SHOOTER_MOTOR, MotorType.kBrushless);
+    } else {
+      // No shooter on the robot
     }
 
     // Factory Default to prevent unexpected behaviour
@@ -106,8 +108,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean isAtTargetRPM(){
     double encoderRPM = m_encoder.getVelocity();
     return (Math.abs(SETPOINT_RPM.get() - encoderRPM) < RPM_TOLERANCE);
-      // I have no idea if +/- 50 tolerance around the RPM is accurate enough
-      // Test and change, add setting conditions
   }
 
   @Override
