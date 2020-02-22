@@ -22,7 +22,7 @@ public class Config {
     
     /**
      * Instructions for set up of robot.conf file on robot
-     * 
+     *
      * 0. Connect to the robot to the robot using a usb cable or the wifi network.
      * 1. Using a tool like Git Bash or putty, ssh into admin@roboRIO-2706-FRC.local (ssh admin@roboRIO-2706-FRC.local)
      * a. There is no password on a freshly flashed roboRIO
