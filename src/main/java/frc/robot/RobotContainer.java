@@ -88,8 +88,8 @@ public class RobotContainer {
         new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
 
         // Instantiate the shooter ramping command and bind it
-        // rampShooterCommand = new SpinUpShooter();
-        // new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+        rampShooterCommand = new SpinUpShooter();
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);

@@ -13,7 +13,9 @@ public class SpinUpShooter extends CommandBase {
 
   public SpinUpShooter() {
     shooterSubsystem = ShooterSubsystem.getInstance();
-    addRequirements(shooterSubsystem);
+    if(shooterSubsystem.isActive()){
+      addRequirements(shooterSubsystem);
+    }
   }
 
   @Override
@@ -40,6 +42,10 @@ public class SpinUpShooter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (!shooterSubsystem.isActive()){
+      return true;
+    } else {
+      return false;
+    }
   }
 }
