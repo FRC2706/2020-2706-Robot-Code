@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
@@ -40,22 +41,22 @@ public class DriveBase extends SubsystemBase {
 
     private PigeonIMU _pidgey;
 
-    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
-            .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
-            .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
 
     private DriveBase() {
 
         // Initialize the talons
-        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
-        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
-        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
-        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
+        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_MOTOR);
+        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_MOTOR);
+        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_MOTOR);
+        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_MOTOR);
+
+        SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_MOTOR);
 
         talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
+
+        follow();
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
 
@@ -209,6 +210,11 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
 
+        SmartDashboard.putNumber("Left Front", leftFrontTalon.getDeviceID());
+        SmartDashboard.putNumber("Left Back", leftRearTalon.getDeviceID());
+        SmartDashboard.putNumber("Right Front", rightFrontTalon.getDeviceID());
+        SmartDashboard.putNumber("Right Back", leftFrontTalon.getDeviceID());
+
     }
 
     /**
@@ -248,10 +254,8 @@ public class DriveBase extends SubsystemBase {
      */
 	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
         setOpenLoopVoltage();
-
         robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
         follow();
-
     }
     
      /**

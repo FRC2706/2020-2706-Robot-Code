@@ -58,7 +58,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         createCondition("encoderHealthy", SubsystemConditionStates.ALWAYS);
 
         //Initialize the talon
-        //feederTalon = new WPI_TalonSRX(Config.FEEDERSUBSYSTEM_TALON);
+        //feederTalon = new WPI_TalonSRX(Config.FEEDER_SUBSYSTEM_TALON);
 
         //Initialize the IR sensor
         //indexerIrSensor = new AnalogInput(Config.FEEDERSUBSYSTEM_IR_SENSOR);

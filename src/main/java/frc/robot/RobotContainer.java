@@ -11,16 +11,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.*;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.commands.SpinUpShooter;
-import frc.robot.commands.DrivetrainPIDTurnDelta;
-import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
-import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.SensitiveDriverControl;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -45,6 +42,7 @@ public class RobotContainer {
   private Command emptyFeederCommand;
   private Command incrementFeederCommand;
   private Command rampShooterCommand;
+  private Command sensitiveDriverControlCommand;
   private Logger logger = Logger.getLogger("RobotContainer");
 
 /**
@@ -88,6 +86,9 @@ public class RobotContainer {
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
         //sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
+
+        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
+        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
 
     }
     
