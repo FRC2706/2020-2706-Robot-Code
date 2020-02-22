@@ -6,12 +6,12 @@
 trigger:
   batch: true
   branches:
-  include:
-  - master
-  - releases/*
+    include:
+    - master
+    - releases/*
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'vs2017-win2016'
 
 steps:
 - task: Gradle@2
