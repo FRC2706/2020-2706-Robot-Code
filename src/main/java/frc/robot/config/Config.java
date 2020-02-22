@@ -121,6 +121,26 @@ public class Config {
     
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+
+    // Vision Table Constants
+    public static String VISION_TABLE_NAME = "MergeVision";
+    public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
+    public static String YAW_POWERCELL = "YawToPowerCell";
+    public static String YAW_OUTER_PORT = "YawToTarget";
+
+    // Drivetrain PID values
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", DRIVETRAIN_D_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+
+    public static FluidConstant<Double> maxTimeOuterPortCommand = new FluidConstant<>("Outer Port Max Time", 1.0)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> maxYawErrorOuterPortCommand = new FluidConstant<>("Outer Port Command Yaw Error", 3.0)
+            .registerToTable(Config.constantsTable);
     
     /**
      * Returns one of the values passed based on the robot ID
@@ -149,7 +169,7 @@ public class Config {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
-            } catch (IOException | NumberFormatException e) {
+            } catch (Exception e) {
                 Robot.haltRobot("Can't load Robot ID", e);
             }
         }
