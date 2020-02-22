@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
@@ -34,27 +35,36 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon;
+    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+
+    public boolean sensitiveSteering = false;
 
     private PigeonIMU _pidgey;
 
-    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", 0.018d)
-            .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", 0.0016d)
+    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
 
     private DriveBase() {
 
         // Initialize the talons
-        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
-        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
-        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
-        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
+        leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_MOTOR);
+        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_MOTOR);
+        rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_MOTOR);
+        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_MOTOR);
+
+        SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_MOTOR);
+
+        talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
+
+        follow();
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
-        _pidgey = new PigeonIMU (Config.robotSpecific(leftFrontTalon, null, null, null, leftRearTalon));
 
-        _pidgey.setFusedHeading(0.0, 30);
+        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon, talon5plyboy);
+        if(pigeonTalon != null){
+            _pidgey = new PigeonIMU (pigeonTalon);
+            _pidgey.setFusedHeading(0.0, 30);
+        }
 
     }
 
@@ -86,9 +96,14 @@ public class DriveBase extends SubsystemBase {
      */
     public double getCurrentAngle(){
         //Gets the current angle
-        PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
-        _pidgey.getFusedHeading(fusionStatus);
-        return fusionStatus.heading;
+        try{
+            PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+            _pidgey.getFusedHeading(fusionStatus);
+            return fusionStatus.heading;
+        }
+        catch(NullPointerException e){
+            return (0);
+        }
     }
 
     /**
@@ -119,7 +134,9 @@ public class DriveBase extends SubsystemBase {
      */
     public void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
         setOpenLoopVoltage();
-        robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        if (!sensitiveSteering){
+            robotDriveBase.arcadeDrive(forwardVal, rotateVal, squareInputs);
+        }
         follow();
     }
 
@@ -128,7 +145,13 @@ public class DriveBase extends SubsystemBase {
      */
     public void tankDrive(double leftVal, double rightVal, boolean squareInputs){
         setOpenLoopVoltage();
-        robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
+        //steers the robot at a much lower max speed if sensitive control is on
+        if (sensitiveSteering){
+            robotDriveBase.tankDrive(leftVal*DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), -rightVal*DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), squareInputs);
+        } else {
+            robotDriveBase.tankDrive(leftVal, rightVal, squareInputs);
+        }
+        
         follow();
     }
 
@@ -187,6 +210,11 @@ public class DriveBase extends SubsystemBase {
         rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
 
+        SmartDashboard.putNumber("Left Front", leftFrontTalon.getDeviceID());
+        SmartDashboard.putNumber("Left Back", leftRearTalon.getDeviceID());
+        SmartDashboard.putNumber("Right Front", rightFrontTalon.getDeviceID());
+        SmartDashboard.putNumber("Right Back", leftFrontTalon.getDeviceID());
+
     }
 
     /**
@@ -226,10 +254,8 @@ public class DriveBase extends SubsystemBase {
      */
 	public void curvatureDrive(double forwardSpeed, double curveSpeed, boolean override) {
         setOpenLoopVoltage();
-
         robotDriveBase.curvatureDrive(forwardSpeed, curveSpeed, override);
         follow();
-
     }
     
      /**

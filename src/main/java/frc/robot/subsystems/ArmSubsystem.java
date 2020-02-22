@@ -76,7 +76,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         // Number of seconds from 0 to full throttle
         armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
 
-        createCondition("talonFunctional", SubsystemOperation.State.ALWAYS);
+        createCondition("talonFunctional", SubsystemConditionStates.ALWAYS);
 
         SubsystemCondition talonErrorCondition = getCondition("talonFunctional");
 

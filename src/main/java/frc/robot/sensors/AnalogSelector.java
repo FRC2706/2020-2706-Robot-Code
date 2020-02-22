@@ -88,7 +88,7 @@ public class AnalogSelector implements Sendable {
             }
         }
 
-        return index;
+        return index - 1;
     }
 
     public double getVoltage() {

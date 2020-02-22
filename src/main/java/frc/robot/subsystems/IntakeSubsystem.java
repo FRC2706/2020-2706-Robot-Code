@@ -12,17 +12,17 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
      * use the {@link #getInstance()} method to get the instance.
      */
     private final static IntakeSubsystem INSTANCE = new IntakeSubsystem();
-    
+
     // The supplier of the intake speed
     private final static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.25d)
             .registerToTable(Config.constantsTable);
-    
+
     // The intake motor (if any)
     private VictorSPX intakeMotor;
-    
+
     /**
      * Creates a new instance of this IntakeSubsystem.
-     * This constructor is private since this class is a Singleton. External classes 
+     * This constructor is private since this class is a Singleton. External classes
      * should use the {@link #getInstance()} method to get the instance.
      */
     private IntakeSubsystem() {
@@ -31,21 +31,21 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
             intakeMotor = new VictorSPX(Config.INTAKE_MOTOR);
         }
     }
-    
+
     /**
-     * Returns the Singleton instance of this IntakeSubsystem. This static method 
+     * Returns the Singleton instance of this IntakeSubsystem. This static method
      * should be used -- {@code IntakeSubsystem.getInstance();} -- by external
      * classes, rather than the constructor to get the instance of this class.
      */
     public static IntakeSubsystem getInstance() {
         return INSTANCE;
     }
-    
+
     @Override
     public void periodic() {
         // The intakeMotor will be null if the Config entry for it was -1. (Meaning this robot doesn't have an intake)
         if (intakeMotor == null) return;
-        
+
         // If all the conditions are met, set the motor to run at the target speed, otherwise stop.
         if (checkConditions()) {
             intakeMotor.set(ControlMode.PercentOutput, INTAKE_SPEED.get());
@@ -55,3 +55,4 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
     }
 }
 
+//hi
