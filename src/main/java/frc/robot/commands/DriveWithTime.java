@@ -24,7 +24,6 @@ public class DriveWithTime extends CommandBase {
  * @param seconds        amount of seconds the robot motors will be activated for  
  * @param leftSpeeds     when the motor is activated, this is the speed at which the LEFT motors will be. speed can be inbetween -1 to 1.
  * @param rightSpeeds    when the motor is activated, this is the speed at which the RIGHT motors will be. speed can be inbetween -1 to 1.
- *
  */
 
   public DriveWithTime(double seconds, double leftSpeed, double rightSpeed) {
