@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.logging.Logger;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,10 +20,6 @@ import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.subsystems.DriveBase;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.logging.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,6 +39,9 @@ public class Robot extends TimedRobot {
     private Boolean bFromTeleMode;
     //flag to indicate the real match
     private Boolean bRealMatch;
+
+    //create variable for current monitoring
+    double motorCurrent;
 
     /**
      * Determines if the robot is in a real match.
@@ -118,7 +121,7 @@ public class Robot extends TimedRobot {
         bFromTeleMode = false;
         bRealMatch = false;
 
-        logger.addHandler(Config.logFileHandler);
+        logger.addHandler(Config.logFileHandler);   
 
     }
 
@@ -140,6 +143,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
         SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
+
+        //Send motor current levels to shuffleboard.
+        motorCurrent = DriveBase.leftFrontTalon.getSupplyCurrent();
+		SmartDashboard.putNumber("Current (Front Left)", motorCurrent);
     }
 
     /**

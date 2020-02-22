@@ -35,7 +35,8 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+    public static WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+    //These talons have been made public and static so that their current levels can be checked in Robot.java by using periodic functions.
 
     public boolean sensitiveSteering = false;
 
@@ -44,8 +45,9 @@ public class DriveBase extends SubsystemBase {
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
 
-    private DriveBase() {
+    boolean MOTOR_CURRENT_LIMIT = true; //Enable/disable motor current limiting. Not intended to change during robot operation.
 
+    private DriveBase() { 
         // Initialize the talons
         leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
         leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_TALON);
@@ -53,6 +55,27 @@ public class DriveBase extends SubsystemBase {
         rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_TALON);
 
         SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_TALON);
+
+        //Set up the current limiter for all motors:
+        leftFrontTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
+		leftFrontTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
+		leftFrontTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
+        leftFrontTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
+        
+        leftRearTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
+		leftRearTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
+		leftRearTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
+        leftRearTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
+        
+        rightFrontTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
+		rightFrontTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
+		rightFrontTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
+        rightFrontTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
+
+        rightRearTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
+		rightRearTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
+		rightRearTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
+        rightRearTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
 
         talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
 
