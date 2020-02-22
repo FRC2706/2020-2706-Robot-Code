@@ -11,14 +11,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj.Timer;
 
-
-
 public class DriveWithTime extends CommandBase {
 
   // Initialization of the variables which will allow imported variables to be public(making usable throughout the DriveWithTime command).
-  public double seconds = 0;
-  public double leftSpeeds= 0;
-  public double rightSpeeds = 0;
+  private double seconds = 0;
+  private double leftSpeeds= 0;
+  private double rightSpeeds = 0;
 
 /**
  * This command will take in speeds (left and right) and time, for which is will set the motors to the x speed for y seconds.
@@ -64,7 +62,8 @@ public class DriveWithTime extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // If using the withTimeout(); as the timer, return here.
+    // If using the withTimeout(double seconds); as the timer, return here.
+    
   }
 
 

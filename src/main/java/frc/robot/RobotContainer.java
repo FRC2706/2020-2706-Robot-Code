@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DrivetrainPIDTurnDelta;
@@ -49,8 +48,9 @@ public class RobotContainer {
     private Command intakeCommand;
     private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
-
-
+    private final double AUTO_DRIVE_TIME = 1.0;
+    private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
+    private final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -75,7 +75,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-     
+        
         /**
          * Select drive mode for robot
          */       
@@ -93,10 +93,12 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         int selectorOne = 1, selectorTwo = 1;
-        if (analogSelectorOne != null)
+        if (analogSelectorOne != null){
             selectorOne = analogSelectorOne.getIndex();
-        if (analogSelectorTwo != null)
+        }
+        if (analogSelectorTwo != null){
             selectorTwo = analogSelectorTwo.getIndex();
+        }
         logger.info("Selectors: " + selectorOne + " " + selectorTwo);
 
         if (selectorOne == 0 && selectorTwo == 0) {
@@ -104,16 +106,12 @@ public class RobotContainer {
             return null;
         }
 
+        else if (selectorOne == 1 || selectorTwo == 1) {
 
-        if (selectorOne == 1 || selectorTwo == 1) {
- 
-            return new DriveWithTime(1.0, 0.2, 0.2);
+            return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
         }
         // Also return null if this ever gets to here because safety
         return null;
     }
     
-    
 }
-
-
