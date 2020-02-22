@@ -72,13 +72,8 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
         
-        
-        // Instantiate the intake command and bind it 
-        intakeCommand = new OperatorIntakeCommand();
-        
         /**
          * Select drive mode for robot
-<<<<<<< HEAD
          */
       
         // Instantiate the intake command and bind it
@@ -89,13 +84,10 @@ public class RobotContainer {
         rampShooterCommand = new SpinUpShooter();
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
-=======
-         */       
->>>>>>> 5db4699c98d868a8b9a75d8437aa4c462f36949f
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
-        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
+        //sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
     }
     

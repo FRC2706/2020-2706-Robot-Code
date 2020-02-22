@@ -79,10 +79,24 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   /**
-   * Return the motor velocity measured by the encoder
+   * Return the motor velocity (RPM) measured by the encoder
    */
   public double getRPM(){
     return m_encoder.getVelocity();
+  }
+
+  /**
+   * Return the motor temperature (Celsius) as measured by the encoder
+   */
+  public double getTemperature(){
+    return m_shooter.getMotorTemperature();
+  }
+
+  /**
+   * Return the motor current draw measured by the encoder
+   */
+  public double getCurrentDraw(){
+    return m_shooter.getOutputCurrent();
   }
 
   /**
