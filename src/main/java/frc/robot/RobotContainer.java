@@ -75,11 +75,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-        
-        
-        // Instantiate the intake command and bind it 
-       // intakeCommand = new OperatorIntakeCommand();
-        
+     
         /**
          * Select drive mode for robot
          */       
@@ -110,11 +106,7 @@ public class RobotContainer {
 
 
         if (selectorOne == 1 || selectorTwo == 1) {
-        /*
-         * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
-         */
-
-      // for the inputed variables: DriveWithTime(seconds (double), left motors speed (double), right motors speed (double))
+ 
             return new DriveWithTime(1.0, 0.2, 0.2);
         }
         // Also return null if this ever gets to here because safety
