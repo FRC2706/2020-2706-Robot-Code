@@ -42,7 +42,7 @@ public class RobotContainer {
     
     private Joystick driverStick;
     private Joystick controlStick;
-    public static AnalogSelector analogSelectorOne;
+    private AnalogSelector analogSelectorOne;
     private AnalogSelector analogSelectorTwo;
     private Command driveCommand;
     private Command intakeCommand;
