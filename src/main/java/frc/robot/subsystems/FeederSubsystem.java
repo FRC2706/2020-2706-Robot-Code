@@ -46,7 +46,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
                 .registerToTable(Config.constantsTable);
     //Highest speed the motor could reach
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.0) 
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.25)
                 .registerToTable(Config.constantsTable);
 
     private final int kTimeoutMs = 1000;
@@ -58,7 +58,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         createCondition("encoderHealthy", SubsystemConditionStates.ALWAYS);
 
         //Initialize the talon
-        //feederTalon = new WPI_TalonSRX(Config.FEEDER_SUBSYSTEM_TALON);
+        feederTalon = new WPI_TalonSRX(Config.FEEDER_SUBSYSTEM_TALON);
 
         //Initialize the IR sensor
         //indexerIrSensor = new AnalogInput(Config.FEEDERSUBSYSTEM_IR_SENSOR);
@@ -129,5 +129,9 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public void periodic() {
       // Set the default command for a subsystem here.
       // setDefaultCommand(new MySpecialCommand());
+    }
+
+    public void stopFeeder() {
+        feederTalon.stopMotor();
     }
 }

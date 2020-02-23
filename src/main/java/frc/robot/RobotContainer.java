@@ -87,6 +87,9 @@ public class RobotContainer {
         intakeCommand = new OperatorIntakeCommand();
         new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
 
+        emptyFeederCommand = new EmptyFeeder();
+        new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
+
         // Instantiate the shooter ramping command and bind it
        // rampShooterCommand = new SpinUpShooter();
        // new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);

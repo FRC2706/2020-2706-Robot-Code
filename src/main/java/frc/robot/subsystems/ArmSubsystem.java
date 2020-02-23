@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
@@ -20,6 +21,11 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     // TODO Change placeholder value to robotSpecific
     WPI_TalonSRX armTalon;
     ErrorCode errorCode;
+
+    private static final int[] setpoints = {
+            1000,
+            3000,
+        };
 
 
     private ArmSubsystem() {
@@ -99,6 +105,14 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
      */
     public void zeroTalonEncoder() {
         armTalon.setSelectedSensorPosition(0);
+    }
+
+    public void setpoint(int setpointIndex) {
+        if(setpointIndex < setpoints.length) {
+            armTalon.setSelectedSensorPosition(setpointIndex);
+        } else {
+            DriverStation.reportError("Invalid arm position [Array index out of bounds]", false);
+        }
     }
     
     @Override
