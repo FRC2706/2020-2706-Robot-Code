@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
@@ -18,7 +19,7 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
             .registerToTable(Config.constantsTable);
 
     // The intake motor (if any)
-    private VictorSPX intakeMotor;
+    private TalonSRX intakeMotor;
 
     /**
      * Creates a new instance of this IntakeSubsystem.
@@ -26,10 +27,14 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
      * should use the {@link #getInstance()} method to get the instance.
      */
     private IntakeSubsystem() {
+
         createCondition("operatorActivated", SubsystemConditionStates.TELEOP);
         if (Config.INTAKE_MOTOR != -1) {
-            intakeMotor = new VictorSPX(Config.INTAKE_MOTOR);
+            intakeMotor = new TalonSRX(Config.INTAKE_MOTOR);
         }
+
+        intakeMotor.setInverted(true);
+
     }
 
     /**

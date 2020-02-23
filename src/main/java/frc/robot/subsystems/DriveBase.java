@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -35,7 +36,12 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+    private WPI_TalonSRX leftFrontTalon, rightFrontTalon, talon5plyboy;
+
+    // Will be moved later
+    private WPI_TalonSRX climberTalon = new WPI_TalonSRX(Config.CLIMBER_TALON);
+
+    private VictorSPX leftRearVictor, rightRearVictor;
 
     public boolean sensitiveSteering = false;
 
@@ -48,9 +54,9 @@ public class DriveBase extends SubsystemBase {
 
         // Initialize the talons
         leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_MOTOR);
-        leftRearTalon = new WPI_TalonSRX(Config.LEFT_REAR_MOTOR);
+        leftRearVictor = new VictorSPX(Config.LEFT_REAR_MOTOR);
         rightFrontTalon = new WPI_TalonSRX(Config.RIGHT_FRONT_MOTOR);
-        rightRearTalon = new WPI_TalonSRX(Config.RIGHT_REAR_MOTOR);
+        rightRearVictor = new VictorSPX(Config.RIGHT_REAR_MOTOR);
 
         SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_MOTOR);
 
@@ -60,9 +66,10 @@ public class DriveBase extends SubsystemBase {
 
         robotDriveBase = new DifferentialDrive(leftFrontTalon, rightFrontTalon);
 
-        var pigeonTalon = Config.robotSpecific(null, null, rightRearTalon, leftFrontTalon, leftRearTalon, talon5plyboy);
-        if(pigeonTalon != null){
-            _pidgey = new PigeonIMU (pigeonTalon);
+        var pigeonTalon = Config.robotSpecific(climberTalon, null, rightRearVictor, leftFrontTalon, leftRearVictor, talon5plyboy);
+        if(pigeonTalon != null) {
+            // Hardcoded for testing
+            _pidgey = new PigeonIMU (climberTalon);
             _pidgey.setFusedHeading(0.0, 30);
         }
 
@@ -121,8 +128,8 @@ public class DriveBase extends SubsystemBase {
      * Make the back talons follow the front talons
      */
     private void follow() {
-        leftRearTalon.follow(leftFrontTalon);
-        rightRearTalon.follow(rightFrontTalon);
+        leftRearVictor.follow(leftFrontTalon);
+        rightRearVictor.follow(rightFrontTalon);
     }
 
     /**
@@ -160,8 +167,6 @@ public class DriveBase extends SubsystemBase {
      */
     public void stop() {
         leftFrontTalon.stopMotor();
-        leftRearTalon.stopMotor();
-        rightRearTalon.stopMotor();
         rightFrontTalon.stopMotor();
     }
 
@@ -189,9 +194,9 @@ public class DriveBase extends SubsystemBase {
         NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
 
         leftFrontTalon.setNeutralMode(mode);
-        leftRearTalon.setNeutralMode(mode);
+        leftRearVictor.setNeutralMode(mode);
         rightFrontTalon.setNeutralMode(mode);
-        rightRearTalon.setNeutralMode(mode);
+        rightRearVictor.setNeutralMode(mode);
 
         brakeMode = brake;
     }
@@ -201,17 +206,17 @@ public class DriveBase extends SubsystemBase {
      */
     private void selectEncoderStandard() {
         leftFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        leftRearVictor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         rightFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        rightRearVictor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
         leftFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
-        leftRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+        leftRearVictor.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
         rightFrontTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
-        rightRearTalon.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
+        rightRearVictor.configNeutralDeadband(Config.DRIVE_OPEN_LOOP_DEADBAND);
 
         SmartDashboard.putNumber("Left Front", leftFrontTalon.getDeviceID());
-        SmartDashboard.putNumber("Left Back", leftRearTalon.getDeviceID());
+        SmartDashboard.putNumber("Left Back", leftRearVictor.getDeviceID());
         SmartDashboard.putNumber("Right Front", rightFrontTalon.getDeviceID());
         SmartDashboard.putNumber("Right Back", leftFrontTalon.getDeviceID());
 
@@ -221,14 +226,12 @@ public class DriveBase extends SubsystemBase {
      * Reset the talons to factory default
      */
     private void resetTalons() {
-        leftRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        leftRearVictor.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         leftFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightFrontTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-        rightRearTalon.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
+        rightRearVictor.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
 
-        leftRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
         leftFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
-        rightRearTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
         rightFrontTalon.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
     }
 
