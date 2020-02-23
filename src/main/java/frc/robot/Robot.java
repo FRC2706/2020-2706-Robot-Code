@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
+import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 
 import java.io.PrintWriter;
