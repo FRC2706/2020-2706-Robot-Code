@@ -45,6 +45,7 @@ public class RobotContainer {
   private AnalogSelector analogSelectorTwo;
   private Command driveCommand;
   private Command intakeCommand;
+    private Command reverseIntakeCommand;
   private Command emptyFeederCommand;
   private Command incrementFeederCommand;
   private Command rampShooterCommand;
@@ -84,8 +85,11 @@ public class RobotContainer {
          */
       
         // Instantiate the intake command and bind it
-        intakeCommand = new OperatorIntakeCommand();
+        intakeCommand = new OperatorIntakeCommand(0.25);
         new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+
+        reverseIntakeCommand = new OperatorIntakeCommand(-0.25);
+        new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(intakeCommand);
 
         // Instantiate the shooter ramping command and bind it
        // rampShooterCommand = new SpinUpShooter();

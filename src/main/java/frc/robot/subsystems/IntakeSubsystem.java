@@ -14,9 +14,8 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
      */
     private final static IntakeSubsystem INSTANCE = new IntakeSubsystem();
 
-    // The supplier of the intake speed
-    private final static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.25d)
-            .registerToTable(Config.constantsTable);
+    //Init intake speed
+    double INTAKE_SPEED = 0;
 
     // The intake motor (if any)
     private TalonSRX intakeMotor;
@@ -46,6 +45,11 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
         return INSTANCE;
     }
 
+    public double SetIntakeSpeed(double IntakeSpeed){
+        this.INTAKE_SPEED = IntakeSpeed;
+        return(IntakeSpeed);
+    }
+
     @Override
     public void periodic() {
         // The intakeMotor will be null if the Config entry for it was -1. (Meaning this robot doesn't have an intake)
@@ -53,7 +57,7 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
 
         // If all the conditions are met, set the motor to run at the target speed, otherwise stop.
         if (checkConditions()) {
-            intakeMotor.set(ControlMode.PercentOutput, INTAKE_SPEED.get());
+            intakeMotor.set(ControlMode.PercentOutput, INTAKE_SPEED);
         } else {
             intakeMotor.set(ControlMode.PercentOutput, 0d);
         }

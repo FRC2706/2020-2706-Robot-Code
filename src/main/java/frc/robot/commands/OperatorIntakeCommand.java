@@ -8,14 +8,17 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class OperatorIntakeCommand extends CommandBase {
     
     private final static String BUTTON_PRESSED = "buttonPressed";
-    
+
+    // Initiate forwardSpeed
+    private double intakeSpeed;
+
     private IntakeSubsystem intakeSubsystem;
     private ConditionalSubsystemBase.SubsystemCondition condition;
     
-    public OperatorIntakeCommand() {
+    public OperatorIntakeCommand(double intakeSpeed) {
         intakeSubsystem = IntakeSubsystem.getInstance();
         addRequirements(intakeSubsystem);
-        
+        this.intakeSpeed = intakeSpeed;
         // Initialize the condition
         condition = intakeSubsystem.getCondition("operatorActivated");
     }
@@ -28,7 +31,7 @@ public class OperatorIntakeCommand extends CommandBase {
     
     @Override
     public void execute() {
-        
+        intakeSubsystem.SetIntakeSpeed(intakeSpeed);
     }
     
     @Override
