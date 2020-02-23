@@ -97,6 +97,9 @@ public class RobotContainer {
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
+        rampShooterCommand = new SpinUpShooter();
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+
 //        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 //
 //        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
