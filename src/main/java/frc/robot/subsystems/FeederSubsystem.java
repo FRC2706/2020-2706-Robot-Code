@@ -46,7 +46,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
                 .registerToTable(Config.constantsTable);
     //Highest speed the motor could reach
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.0) 
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.1)
                 .registerToTable(Config.constantsTable);
 
     private final int kTimeoutMs = 1000;
