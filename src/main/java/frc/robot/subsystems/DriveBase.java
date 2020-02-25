@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -35,8 +36,16 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    public static WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
-    //These talons have been made public and static so that their current levels can be checked in Robot.java by using periodic functions.
+    private static WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
+    //Talons were made static so that their current levels can be checked in static Driverbase methods.
+
+    //create variable to display motor current levels
+    public static double motorCurrent;
+
+    //create a variable that states if motor current is actively being limited:
+    public static boolean motorLimitActive = false;
+
+    boolean EN_MOTOR_CURRENT_LIM = true; //Enable/disable motor current limiting. Not currently intended to change unless code is redeployed.
 
     public boolean sensitiveSteering = false;
 
@@ -44,8 +53,6 @@ public class DriveBase extends SubsystemBase {
 
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
-
-    boolean MOTOR_CURRENT_LIMIT = true; //Enable/disable motor current limiting. Not intended to change during robot operation.
 
     private DriveBase() { 
         // Initialize the talons
@@ -56,27 +63,12 @@ public class DriveBase extends SubsystemBase {
 
         SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_TALON);
 
-        //Set up the current limiter for all motors:
-        leftFrontTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
-		leftFrontTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
-		leftFrontTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
-        leftFrontTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
-        
-        leftRearTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
-		leftRearTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
-		leftRearTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
-        leftRearTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
-        
-        rightFrontTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
-		rightFrontTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
-		rightFrontTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
-        rightFrontTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
-
-        rightRearTalon.configPeakCurrentLimit(Config.kPeakCurrentAmps, Config.kTimeoutMs);
-		rightRearTalon.configPeakCurrentDuration(Config.kPeakTimeMs, Config.kTimeoutMs);
-		rightRearTalon.configContinuousCurrentLimit(Config.kContinCurrentAmps, Config.kTimeoutMs);
-        rightRearTalon.enableCurrentLimit(MOTOR_CURRENT_LIMIT); // Honor initial setting
-
+        //Set up the current limiter for all motors (limits current SUPPLY).        Enabled? True/false /         Limit (A)        /Surge trigger level (A) /  Max Surge time (sec)
+        leftFrontTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
+		leftRearTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
+		rightFrontTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
+		rightRearTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
+		        
         talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
 
         follow();
@@ -89,6 +81,29 @@ public class DriveBase extends SubsystemBase {
             _pidgey.setFusedHeading(0.0, 30);
         }
 
+    }
+
+    public static double getMotorCurrent() {
+        motorCurrent = DriveBase.leftFrontTalon.getSupplyCurrent();
+
+        SmartDashboard.putNumber("MotorCurrent (FrontLeft)", motorCurrent);
+        
+        return(motorCurrent);
+    }
+
+    public static boolean isMotorLimitActive() {
+        //Check if motor current limiting is active (is current draw over or at current limit)
+        if (motorCurrent > Config.kContinCurrentAmps - 1) {
+            motorLimitActive = true;
+        }
+        else {
+            motorLimitActive = false;
+        }
+
+        //Regardless of whether motor current limiting is active, tell shuffleboard and return the result.
+        SmartDashboard.putBoolean("MotorCurrentLimit T/F", motorLimitActive);
+
+        return(motorLimitActive);
     }
 
     /**

@@ -145,15 +145,9 @@ public class Config {
     // Current limiter values
     public static final int kPeakCurrentAmps = 60; //Peak current threshold to trigger the current limit
         
-    public static final int kPeakTimeMs = 500; /* Time after current exceeds peak current to trigger current limit */
+    public static final double kPeakTimeSec = 1.0; /* Time after current exceeds peak current to trigger current limit */
 
     public static final int kContinCurrentAmps = 40; /* Current to mantain once current limit has been triggered */
-    
-    /**
-     * Timeout value generally used in parameter configs
-     * Non-zero to block the config until success, zero to skip checking 
-     */
-    public static final int kTimeoutMs = 30;
 
 
     /**

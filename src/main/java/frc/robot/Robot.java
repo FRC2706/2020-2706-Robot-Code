@@ -40,8 +40,6 @@ public class Robot extends TimedRobot {
     //flag to indicate the real match
     private Boolean bRealMatch;
 
-    //create variable for current monitoring
-    double motorCurrent;
 
     /**
      * Determines if the robot is in a real match.
@@ -144,9 +142,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
 
-        //Send motor current levels to shuffleboard.
-        motorCurrent = DriveBase.leftFrontTalon.getSupplyCurrent();
-		SmartDashboard.putNumber("Current (Front Left)", motorCurrent);
+        //The following 2 methods run Drivebase methods that tell shuffleboard what the motor current draw is and if motor current limiting is active.
+        DriveBase.getMotorCurrent();
+        DriveBase.isMotorLimitActive();
     }
 
     /**
@@ -200,6 +198,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        //If motor current limiting is active, trigger driver feedback (notify driver that drivetrain power is reduced).
+        if (DriveBase.isMotorLimitActive() == true) {
+            //TODO: Put driver feedback code here. Consult with drive team's preferences.
+        } else {
+            //Disable current limit driver feedback here.
+        }
     }
 
     @Override
