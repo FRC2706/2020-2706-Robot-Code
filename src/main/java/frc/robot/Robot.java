@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
+import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.sensors.AnalogSelector;
-import frc.robot.subsystems.DriveBase;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -108,8 +108,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
-        DriveBase.init();
-
+        DriveBaseHolder.init();
         m_robotContainer = new RobotContainer();
         //create a vision control table
         visionControlNetTable = new VisionCtrlNetTable();
@@ -139,7 +138,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putNumber("Outer Port Yaw", VisionCtrlNetTable.yawToOuterPort.get());
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
-        SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
+        SmartDashboard.putNumber("Pigeon Yaw", DriveBaseHolder.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
     }
 

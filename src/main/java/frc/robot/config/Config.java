@@ -2,8 +2,10 @@ package frc.robot.config;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveBase2020;
+import frc.robot.subsystems.DriveBasePre2020;
+import frc.robot.subsystems.DriveBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,14 +72,18 @@ public class Config {
     }
     
     // Static Constants
+    private static Class<? extends DriveBase> Pre2020DriveBase = DriveBasePre2020.class.asSubclass(DriveBase.class);
+    private static Class<? extends DriveBase> Post2020DriveBase = DriveBase2020.class.asSubclass(DriveBase.class);
+    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Pre2020DriveBase);
     public static int RIGHT_FRONT_MOTOR = robotSpecific(2, 2, 3, 2, 2);
     public static int RIGHT_REAR_MOTOR = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_MOTOR = robotSpecific(1, 1, 1, 1, 1);
     public static int LEFT_REAR_MOTOR = robotSpecific(3, 3, 2, 3, 3);
     public static int INTAKE_MOTOR = robotSpecific(6, 6, -1, 6, -1);
     public static int SHOOTER_MOTOR = robotSpecific(5, 5, -1, -1, 16); //protobot is 16
-
+    public static int CLIMBER_TALON = robotSpecific(10, 10, -1, -1, 16);
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
+    public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
     public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
@@ -142,6 +148,16 @@ public class Config {
     public static FluidConstant<Double> maxTimeOuterPortCommand = new FluidConstant<>("Outer Port Max Time", 1.0)
             .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> maxYawErrorOuterPortCommand = new FluidConstant<>("Outer Port Command Yaw Error", 3.0)
+            .registerToTable(Config.constantsTable);
+    
+    // PID Values for the DrivetrainPIDTurnDelta command
+    public static FluidConstant<Double> PIDTURNDELTA_P = new FluidConstant<>("DrivetrainP", 0.018d)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> PIDTURNDELTA_D = new FluidConstant<>("DrivetrainD", 0.0016d)
+            .registerToTable(Config.constantsTable);
+
+    // Fluid constant for Drivetrains
+    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
     
     /**
