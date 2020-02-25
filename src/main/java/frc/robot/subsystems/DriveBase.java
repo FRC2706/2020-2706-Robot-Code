@@ -110,7 +110,6 @@ public abstract class DriveBase extends SubsystemBase {
      * This should be implemented by the drive base. It will stop all the motors.
      */
     public abstract void stopMotors();
-    
     /**
      * This should be impmenented by the drive base. It will reset all the motors.
      */
