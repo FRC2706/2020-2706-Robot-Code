@@ -36,15 +36,23 @@ public class ShooterSubsystem extends SubsystemBase {
   double kMaxOutput = 1; 
   double kMinOutput = -1;
 
-  private final int RPM_TOLERANCE = 50;
+  private final int RPM_TOLERANCE = 30;
 
   private ShooterSubsystem() {
     
-    // Initialize a private variable for the motor
+    // Initialize the subsystem if the shooter exists
     if (Config.SHOOTER_MOTOR != -1){
-      m_shooter = new CANSparkMax(Config.SHOOTER_MOTOR, MotorType.kBrushless);
+      initializeSubsystem();
     }
+  }
 
+  /**
+   * Initialization process for the shooter to be run on robots with
+   * this mechanism.
+   */
+  private void initializeSubsystem(){
+    m_shooter = new CANSparkMax(Config.SHOOTER_MOTOR, MotorType.kBrushless);
+    
     // Factory Default to prevent unexpected behaviour
     m_shooter.restoreFactoryDefaults();
 
@@ -58,6 +66,10 @@ public class ShooterSubsystem extends SubsystemBase {
     m_pidController.setP(P_SHOOTERSUBSYSTEM.get());
     m_pidController.setI(I_SHOOTERSUBSYSTEM.get());
     m_pidController.setD(D_SHOOTERSUBSYSTEM.get());
+  }
+
+  public boolean isActive(){
+    return m_shooter != null;
   }
 
   private static class ShooterHolder{
@@ -79,10 +91,24 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   /**
-   * Return the motor velocity measured by the encoder
+   * Return the motor velocity (RPM) measured by the encoder
    */
   public double getRPM(){
     return m_encoder.getVelocity();
+  }
+
+  /**
+   * Return the motor temperature (Celsius) as measured by the encoder
+   */
+  public double getTemperature(){
+    return m_shooter.getMotorTemperature();
+  }
+
+  /**
+   * Return the motor current draw measured by the encoder
+   */
+  public double getCurrentDraw(){
+    return m_shooter.getOutputCurrent();
   }
 
   /**
@@ -92,8 +118,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean isAtTargetRPM(){
     double encoderRPM = m_encoder.getVelocity();
     return (Math.abs(SETPOINT_RPM.get() - encoderRPM) < RPM_TOLERANCE);
-      // I have no idea if +/- 50 tolerance around the RPM is accurate enough
-      // Test and change, add setting conditions
   }
 
   @Override

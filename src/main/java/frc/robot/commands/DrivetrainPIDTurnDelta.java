@@ -11,35 +11,45 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.lang.Math;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.DriveBaseHolder;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
-    //Delcare PD variables
-    private Supplier<Double> pGain = Config.PIDTURNDELTA_P;
-    private Supplier<Double> dGain = Config.PIDTURNDELTA_D;
+    // Declare PD variables
+    private Supplier<Double> pGain = Config.DRIVETRAIN_P;
+    private Supplier<Double> dGain = Config.DRIVETRAIN_D;
 
-    //get the drivebase and pigeon
+    // Get the drivebase and pigeon
     private final DriveBase drivebase;
-    private PigeonIMU _pidgey;
+    private PigeonIMU pigeonIMU;
 
     boolean isDone = false;
 
-    //The delta of which you want to turn in degrees
+    // The delta of which you want to turn in degrees
     private double deltaDegree;
 
-    //Target angle in degrees
+    // Target angle in degrees
     private double targetAngle;
 
-    //Current angle in degrees
+    // Current angle in degrees
     private double currentAngle;
 
-    //Initiate forwardSpeed
+    // Initiate forwardSpeed
     private double forwardSpeed;
 
+    // Acceptable error in the angle
+    private double acceptableError;
+
+    // The maximum time the command is allowed to run, set to null for no time limit
+    private Double maxTime;
+
     private Logger logger = Logger.getLogger("DTPIDDelta");
+
+    // A timer to ensure the command doesn't get stuck and the robot cannot drive
+    private Timer timer;
 
 
     /**
@@ -47,51 +57,62 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
      * @param deltaDegree The degree you want the robot to turn, negative is left, positive is right
      * @param forwardSpeed The speed you want the robot to move, (-1 to 1) negative being backwards and positive being forwards
      */
-    public DrivetrainPIDTurnDelta(double deltaDegree, double forwardSpeed) {
-        //Get the supplied delta
+    public DrivetrainPIDTurnDelta(double deltaDegree, double forwardSpeed, double acceptableError, Double maxTime) {
+        //Get the supplied values
         this.deltaDegree = deltaDegree;
-
-        //Get supplied forwardspeed
         this.forwardSpeed = forwardSpeed;
+        this.acceptableError = acceptableError;
+        this.maxTime = maxTime;
 
         //Set the drivebase
         this.drivebase = DriveBaseHolder.getInstance();
         addRequirements(this.drivebase);
-        _pidgey = drivebase.getPigeon();
-        double currentAngle = drivebase.getCurrentAngle();
+        pigeonIMU = drivebase.getPigeon();
+        currentAngle = drivebase.getCurrentAngle();
         logger.addHandler(Config.logFileHandler);
+
+        // Instantiate the timer
+        if(this.maxTime != null) {
+            timer = new Timer();
+        }
+
+
 
     }
 
     @Override
-    public boolean isFinished(){
-
-        return _pidgey == null || isDone;
-
+    public boolean isFinished() {
+        return pigeonIMU == null || isDone || (maxTime != null && timer.get() >= maxTime);
     }
 
     @Override
     public void initialize() {
+
         //Get the target angle
         targetAngle = drivebase.getCurrentAngle() + deltaDegree;
+
         isDone = false;
+
+        if(maxTime != null) {
+            timer.start();
+        }
     }
 
     @Override
     public void execute() {
-        //Set starting throttle
+        // Set starting throttle
         double turnThrottle = 0;
 
-        //Get current angular rate
+        // Get current angular rate
         double[] xyz_dps = new double[3];
-        _pidgey.getRawGyro(xyz_dps);
+        pigeonIMU.getRawGyro(xyz_dps);
         //Get z axis angular rate
         double currentAngularRate = xyz_dps[2];
 
         //Get current angle
         currentAngle = drivebase.getCurrentAngle();
 
-        if(Math.abs(targetAngle - currentAngle) < 1){
+        if(Math.abs(targetAngle - currentAngle) < acceptableError){
             isDone = true;
         }
 
@@ -100,5 +121,6 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
         //Run motors according to the output of PD
         drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);
+
     }
 }
