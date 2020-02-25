@@ -95,7 +95,7 @@ public class RobotContainer {
         DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
         
         sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
-        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
+        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
         turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
     }
 

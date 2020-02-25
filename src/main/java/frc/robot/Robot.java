@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putNumber("Outer Port Yaw", VisionCtrlNetTable.yawToOuterPort.get());
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
-        SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
+        SmartDashboard.putNumber("Pigeon Yaw", DriveBaseHolder.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
     }
 

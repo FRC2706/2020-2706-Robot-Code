@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -16,18 +17,19 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DriveBase2020 extends DriveBase {
-    WPI_TalonSRX leftMaster, rightMaster;
+    WPI_TalonSRX leftMaster, rightMaster, climberTalon;
     WPI_VictorSPX leftSlave, rightSlave;
     
     public DriveBase2020() {
-        leftMaster = new WPI_TalonSRX(Config.LEFT_FRONT_TALON);
-        rightMaster = new WPI_TalonSRX(Config.RIGHT_FRONT_TALON);
-        leftSlave = new WPI_VictorSPX(Config.LEFT_REAR_TALON);
-        rightSlave = new WPI_VictorSPX(Config.RIGHT_REAR_TALON);
+        leftMaster = new WPI_TalonSRX(Config.LEFT_FRONT_MOTOR);
+        rightMaster = new WPI_TalonSRX(Config.RIGHT_FRONT_MOTOR);
+        leftSlave = new WPI_VictorSPX(Config.LEFT_REAR_MOTOR);
+        rightSlave = new WPI_VictorSPX(Config.RIGHT_REAR_MOTOR);
+        climberTalon = new WPI_TalonSRX(Config.CLIMBER_TALON);
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
         
         if (Config.PIGEON_ID != -1) {
-            pigeon = new PigeonIMU(Config.PIGEON_ID);
+            pigeon = new PigeonIMU(new WPI_TalonSRX(Config.PIGEON_ID));
             pigeon.setFusedHeading(0d, Config.CAN_TIMEOUT_LONG);
         }
     }
