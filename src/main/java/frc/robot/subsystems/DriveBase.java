@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.function.Consumer;
@@ -144,7 +145,7 @@ public abstract class DriveBase extends SubsystemBase {
      * @param driveMode the mode we switched into
      */
     protected void driveModeUpdated(DriveMode driveMode) {
-    
+
     }
     
     /**
