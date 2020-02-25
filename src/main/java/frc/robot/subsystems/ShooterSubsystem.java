@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
@@ -9,6 +10,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -123,6 +125,11 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (m_shooter == null) return;
-    m_pidController.setReference(SETPOINT_RPM.get(), ControlType.kVelocity);
+    if(SETPOINT_RPM.get() <= 0.0){
+      m_shooter.set(0.0);
+    } else {
+      m_pidController.setReference(SETPOINT_RPM.get(), ControlType.kVelocity);
+    }
+    SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
   }
 }
