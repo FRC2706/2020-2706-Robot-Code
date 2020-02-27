@@ -125,10 +125,12 @@ public class Config {
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
     // Vision Table Constants
-    public static String VISION_TABLE_NAME = "MergeVision";
-    public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
-    public static String YAW_POWERCELL = "YawToPowerCell";
-    public static String YAW_OUTER_PORT = "YawToTarget";
+    public static String VISION_TABLE_NAME      = "MergeVision";
+    public static String DISTANCE_POWERCELL     = "DistanceToPowerCell";
+    public static String DISTANCE_OUTER_PORT    = "DistanceToOuterPort";
+    public static String YAW_POWERCELL          = "YawToPowerCell";
+    public static String YAW_OUTER_PORT         = "YawToTarget";
+    //public static String ANGLE_OUTER_PORT       = "AngleToOuterPort";
 
     // Drivetrain PID values
     public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.018d, 0.0, 0.25);
