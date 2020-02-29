@@ -1,7 +1,4 @@
-package frc.robot.commands;
 
-
-//import frc.robot.subsystems;
 import frc.robot.config.Config;
 
 import frc.robot.subsystems.DriveBase;
@@ -20,9 +17,11 @@ public class VisionAssistedShooter extends CommandBase {
     
   //todo: can be configured in config file as well
   //todo: measure the radius for the shooting wheel
-  private final double theta  = 60.0;    //unit: degree
-  private final double height = 2.49;    //unit: meter 
-  private final double radius = 10;//unit cm
+  private final double SHOOTER_ANGLE_IN_DEGREES  = 60.0;
+  private final double TARGET_HEIGHT_IN_METERS = 2.49;
+  private final double SHOOTER_WHEEL_RADIUS_IN_CM = 10;
+  private final double HALF_OF_GRAVITY = 4.91;
+  private final double CONVERSION_NUMBER = 3000;
 
   //values from Vision Network Table
   private double distanceToOuterPort;
@@ -36,7 +35,7 @@ public class VisionAssistedShooter extends CommandBase {
 
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new VisionAssistedShooter Command.
    *
    * @param subsystem The subsystem used by this command.
    */
@@ -64,7 +63,7 @@ public class VisionAssistedShooter extends CommandBase {
     //targetDistance
 
     //Calculate the RPM of the shooter wheel.
-    double targetV  = initVelocity( distanceToOuterPort, height, theta);
+    double targetV  = initVelocity( distanceToOuterPort);
     targetRPM     = velocityToRPM (targetV);
     
   }
@@ -91,19 +90,17 @@ public class VisionAssistedShooter extends CommandBase {
     }
 
     //d: unit meter
-    //h: unit meter
-    //theta: unit degree
     //return: unit m/s
-  double initVelocity(double d, double h, double theta) {
-    double dCheck = Math.tan(theta)*d - h;
+  double initVelocity(double d) {
+    double dCheck = Math.tan(SHOOTER_ANGLE_IN_DEGREES)*d - TARGET_HEIGHT_IN_METERS;
     double dTemp;
 
     //unit: m/s
     double dInitVelocity;
     if (dCheck > 0)
     {
-         dTemp = Math.sqrt(4.91/dCheck);
-         dInitVelocity = d/Math.cos(theta) * dTemp;
+         dTemp = Math.sqrt(HALF_OF_GRAVITY/dCheck);
+         dInitVelocity = d/Math.cos(SHOOTER_ANGLE_IN_DEGREES) * dTemp;
     }
     else
     {
@@ -115,12 +112,12 @@ public class VisionAssistedShooter extends CommandBase {
   
  }
 
- // convert velocity t0 RPM
+ // convert velocity to RPM
  // velocity: unit m/s
  // return: unit revolutions per minute
 double velocityToRPM( double velocity)
  {     
-     double rpm = velocity*3000/(Math.PI*radius);
+     double rpm = velocity*CONVERSION_NUMBER/(Math.PI*SHOOTER_WHEEL_RADIUS_IN_CM);
      return rpm;
  }
 
