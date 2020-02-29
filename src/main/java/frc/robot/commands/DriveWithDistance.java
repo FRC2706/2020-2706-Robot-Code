@@ -328,16 +328,13 @@ private final DriveBase driveBase;
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving forward).
         if (!rightBackwards && currentRightDistance >= desiredRightDistance) {
-          driveBase.tankDrive(leftSpeed, 0, false);
-          commandFinished = true;
-
+          rightSpeed = 0;
         }
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving backward).
         else if (rightBackwards && currentRightDistance <= desiredRightDistance) {
-          System.out.println("Left speed is: " + leftSpeed);
-          driveBase.tankDrive(leftSpeed, 0, false);
-          commandFinished = true;
+           rightSpeed = 0;
+          
         } else {
           commandFinished = false;
         }
@@ -345,37 +342,33 @@ private final DriveBase driveBase;
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving forward).
         if (!leftBackwards && currentLeftDistance >= desiredLeftDistance) {
-          driveBase.tankDrive(0, rightSpeed, false);
-          commandFinished = true;
-
+          leftSpeed = 0;
         }
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving backward).
         else if (leftBackwards && currentLeftDistance <= desiredLeftDistance) {
-          driveBase.tankDrive(0, rightSpeed, false);
-          commandFinished = true;
+          leftSpeed = 0;
         } else {
           commandFinished = false;
         }
 
+        //If the left and right speed are zero, just stop the robot
         if(leftSpeed == 0 && rightSpeed == 0){
           commandFinished = true;
           end = true;
         }
 
+        //If the desired and current distance are equal, don't moce the robot
         if(desiredLeftDistance == currentLeftDistance && desiredRightDistance == currentRightDistance)
         {
           commandFinished = true;
           end = true;
         }
 
-        if((leftSpeed == 0 && rightSpeed == 0) || (desiredLeftDistance >= currentLeftDistance && (desiredRightDistance >= currentRightDistance))){
-          commandFinished = false;
+        //Taking the changed left and right speed and adding their updated values to the drivebase
+        driveBase.tankDrive(leftSpeed, rightSpeed, false);
 
-        }
       }
-
-      
     }
     return commandFinished;
   }
