@@ -7,10 +7,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
@@ -24,6 +29,12 @@ public class DriveBase extends SubsystemBase {
 
     // The way the robot drives
     private static DifferentialDrive robotDriveBase;
+
+    private PowerDistributionPanel examplePDP = new PowerDistributionPanel(0);
+
+    private ArrayList<Double> currentList = new ArrayList<>();
+
+    private int index = -1;
 
     /**
      * Indicates whether the robot is in brake mode
@@ -66,6 +77,25 @@ public class DriveBase extends SubsystemBase {
             _pidgey.setFusedHeading(0.0, 30);
         }
 
+    }
+
+    public void getCurrent(){
+        Double curr = examplePDP.getCurrent(0);
+        currentList.add(curr);
+        Double prevCurr = 0.0;
+        if (index != -1){
+            prevCurr = currentList.get(index);
+        }
+        if (curr - prevCurr > 1){
+            System.out.print("Spike \n");
+        }
+        if (currentList.size() == 25){
+            currentList.remove(0);
+            index = 23;
+        } else {
+            index += 1;
+        }
+        System.out.println("Current: " + Double.toString(examplePDP.getCurrent(0)));
     }
 
     /**
