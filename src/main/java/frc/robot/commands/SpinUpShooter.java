@@ -41,10 +41,6 @@ public class SpinUpShooter extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (!shooterSubsystem.isActive()) {
-            return true;
-        } else {
-            return false;
-        }
+        return !shooterSubsystem.isActive();
     }
 }
