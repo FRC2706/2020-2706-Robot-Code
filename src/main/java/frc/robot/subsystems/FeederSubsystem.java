@@ -63,7 +63,8 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         feederTalon = new WPI_TalonSRX(Config.FEEDER_SUBSYSTEM_TALON);
 
         //Initialize the IR sensor
-        //indexerIrSensor = new AnalogInput(Config.FEEDERSUBSYSTEM_IR_SENSOR);
+        // TODO add this once it is in the real robot
+        // indexerIrSensor = new AnalogInput(Config.FEEDERSUBSYSTEM_IR_SENSOR);
 
         //Configure the talon
         if (checkConditions()){
@@ -80,9 +81,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
             feederTalon.config_kI(kPIDLoopIdx, FEEDERSUBSYSTEM_I.get(), kTimeoutMs);
             feederTalon.config_kD(kPIDLoopIdx, FEEDERSUBSYSTEM_D.get(), kTimeoutMs);
             feederTalon.configAllowableClosedloopError(0, 100, Config.CAN_TIMEOUT_SHORT);
-        //    int absolutePosition = feederTalon.getSensorCollection().getPulseWidthPosition();
             feederTalon.setSelectedSensorPosition(0, 0, Config.CAN_TIMEOUT_SHORT);
-        //    feederTalon.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, Config.CAN_TIMEOUT_SHORT);
 
         }
 
