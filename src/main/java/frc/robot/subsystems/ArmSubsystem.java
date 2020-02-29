@@ -63,27 +63,27 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
 
-//
-//        // Set up the close loop period
-//        armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
-//        armTalon.setSensorPhase(true);
-       // armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
-        //armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
-        // Enable forward soft limit and set the value in encoder ticks
-   //     armTalon.configForwardSoftLimitEnable(true);
-     //   armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+        // Set up the close loop period
+        armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
+        armTalon.setSensorPhase(true);
+        armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
+        armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
+
+        //    Enable forward soft limit and set the value in encoder ticks
+        armTalon.configForwardSoftLimitEnable(true);
+        armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
         // Enable reverse soft limit and set the value in encoder ticks
-//        armTalon.configReverseSoftLimitEnable(true);
-//        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+        armTalon.configReverseSoftLimitEnable(true);
+        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
         // Max voltage to apply with the talon. 12 is the maximum
-     //   armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
-       // armTalon.enableVoltageCompensation(true);
+        armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
+        armTalon.enableVoltageCompensation(true);
 
         // Number of seconds from 0 to full throttle
-  //      armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
+        armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
 
         createCondition("talonFunctional", SubsystemConditionStates.ALWAYS);
 
@@ -125,12 +125,6 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-
-      //  armTalon.config_kF(0, 4.186 * Math.cos(toDeg(armTalon.getSelectedSensorPosition())), Config.CAN_TIMEOUT_SHORT);
-
-     //   armTalon.setVoltage(4.186 * Math.toDegrees(Math.cos(toDeg(armTalon.getSelectedSensorPosition()))));
-
-     //   System.out.println("Arm encoder ticks" + armTalon.getSensorCollection().getQuadraturePosition());
 
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition());
         SmartDashboard.putNumber("Arm Angle", toDeg(armTalon.getSelectedSensorPosition()));

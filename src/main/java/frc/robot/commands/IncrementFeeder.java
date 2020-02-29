@@ -32,15 +32,13 @@ public class IncrementFeeder extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        System.out.println("Executing incrementing command!");
-     //   feeder.runFeeder();
-     //   this.feeder.incrementPowerCells();
+        feeder.runFeeder();
+        this.feeder.incrementPowerCells();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Ending command..");
         this.feeder.stopFeeder();
     }
 
