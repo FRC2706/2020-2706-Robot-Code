@@ -125,7 +125,7 @@ public class RobotContainer {
         else if(selectorOne == 2){
 
             //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
-            return new DriveWithDistance(-DISTANCE, DEFAULT_UNIT, RIGHT_SPEED, LEFT_SPEED);
+            return new DriveWithDistance(0, 1, DEFAULT_UNIT, 0, 0.3);
 
         }
         // Also return null if this ever gets to here because safety
