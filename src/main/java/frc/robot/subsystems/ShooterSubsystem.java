@@ -20,19 +20,19 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANEncoder m_encoder;
 
     public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>("P_ShooterSubsystem", 0.002)
-            .registerToTable(Config.constantsTable);
+        .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> I_SHOOTERSUBSYSTEM = new FluidConstant<>("I_ShooterSubsystem", 0.0)
-            .registerToTable(Config.constantsTable);
+        .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> D_SHOOTERSUBSYSTEM = new FluidConstant<>("D_ShooterSubsystem", 0.0002)
-            .registerToTable(Config.constantsTable);
+        .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> F_SHOOTERSUBSYSTEM = new FluidConstant<>("F_ShooterSubsystem", 0.00027)
-            .registerToTable(Config.constantsTable);
+        .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Integer> SETPOINT_RPM = new FluidConstant<>("setpointRPM", 0)
-            .registerToTable(Config.constantsTable);
+        .registerToTable(Config.constantsTable);
 
     double kMaxOutput = 1;
     double kMinOutput = -1;
@@ -131,6 +131,7 @@ public class ShooterSubsystem extends SubsystemBase {
             m_pidController.setReference(SETPOINT_RPM.get(), ControlType.kVelocity);
         }
         SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
-        SmartDashboard.putNumber("shooter motor temp", getTemperature());
+        SmartDashboard.putNumber("shooter temp", getTemperature());
+        SmartDashboard.putNumber("shooter current", getCurrentDraw());
     }
 }
