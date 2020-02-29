@@ -141,9 +141,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
 
-        //The following 2 methods run Drivebase methods that tell shuffleboard what the motor current draw is and if motor current limiting is active.
-        DriveBase.getMotorCurrent();
-        DriveBase.isMotorLimitActive();
+        //The following 2 lines run Drivebase methods that tell shuffleboard what the motor current draw is and if motor current limiting is active.
+        DriveBase.getInstance().getMotorCurrent();
+        DriveBase.getInstance().isMotorLimitActive();
     }
 
     /**
@@ -198,10 +198,10 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         //If motor current limiting is active, trigger driver feedback (notify driver that drivetrain power is reduced).
-        if (DriveBase.isMotorLimitActive() == true) {
+        if (DriveBase.getInstance().isMotorLimitActive() == true) {
             //TODO: Put driver feedback code here. Consult with drive team's preferences.
             
-            //Example driver feedback (if you wish to use this, import joystick and RumbleType libraries)
+            //Example driver feedback (if you wish to use this, import joystick and RumbleType libraries):
             //joystick.setRumble(RumbleType.kLeftRumble, 0.5);
             //joystick.setRumble(RumbleType.kRightRumble, 0.5);
         } else {

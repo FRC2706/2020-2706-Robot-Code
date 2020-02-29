@@ -36,8 +36,7 @@ public class DriveBase extends SubsystemBase {
     private DriveMode driveMode;
 
     // The drivebase talons
-    private static WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
-    //Talons were made static so that their current levels can be checked in static Driverbase methods.
+    private WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
 
     //create variable to display motor current levels
     public static double motorCurrent;
@@ -83,15 +82,15 @@ public class DriveBase extends SubsystemBase {
 
     }
 
-    public static double getMotorCurrent() {
-        motorCurrent = DriveBase.leftFrontTalon.getSupplyCurrent();
+    public double getMotorCurrent() {
+        motorCurrent = leftFrontTalon.getSupplyCurrent();
 
         SmartDashboard.putNumber("MotorCurrent (FrontLeft)", motorCurrent);
         
         return(motorCurrent);
     }
 
-    public static boolean isMotorLimitActive() {
+    public boolean isMotorLimitActive() {
         //Check if motor current limiting is active (is current draw over or at current limit)
         if (motorCurrent >= Config.CONTIN_CURRENT_AMPS) {
             motorLimitActive = true;
