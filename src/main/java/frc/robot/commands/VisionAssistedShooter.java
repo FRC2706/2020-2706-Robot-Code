@@ -23,7 +23,7 @@ public class VisionAssistedShooter extends CommandBase {
   private final double HALF_OF_GRAVITY = 4.91;
   private final double CONVERSION_NUMBER = 3000;
 
-  //values from Vision Network Table
+  // values from Vision Network Table
   private double distanceToOuterPort;
    
   //network table for vision control
@@ -89,10 +89,9 @@ public class VisionAssistedShooter extends CommandBase {
         
     }
 
-    //d: unit meter
-    //return: unit m/s
-  double initVelocity(double d) {
-    double dCheck = Math.tan(SHOOTER_ANGLE_IN_DEGREES)*d - TARGET_HEIGHT_IN_METERS;
+
+  double initVelocity(double distanceToTargetInMeters) {
+    double dCheck = Math.tan(SHOOTER_ANGLE_IN_DEGREES)*distanceToTargetInMeters - TARGET_HEIGHT_IN_METERS;
     double dTemp;
 
     //unit: m/s
@@ -100,7 +99,7 @@ public class VisionAssistedShooter extends CommandBase {
     if (dCheck > 0)
     {
          dTemp = Math.sqrt(HALF_OF_GRAVITY/dCheck);
-         dInitVelocity = d/Math.cos(SHOOTER_ANGLE_IN_DEGREES) * dTemp;
+         dInitVelocity = distanceToTargetInMeters/Math.cos(SHOOTER_ANGLE_IN_DEGREES) * dTemp;
     }
     else
     {
