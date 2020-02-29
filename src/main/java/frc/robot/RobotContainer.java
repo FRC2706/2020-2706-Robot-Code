@@ -15,9 +15,9 @@ import frc.robot.commands.*;
 import frc.robot.commands.OperatorIntakeCommand;
 import frc.robot.commands.SpinUpShooter;
 import frc.robot.config.Config;
-import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 import frc.robot.commands.DriveWithTime;
 import frc.robot.commands.SensitiveDriverControl;
@@ -92,13 +92,11 @@ public class RobotContainer {
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
-        DriveBase.getInstance().setDefaultCommand(driveCommand);
-
+        DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
+        
         sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
-
-        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxValue.XBOX_A_BUTTON.getPort());
+        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
         turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
-
     }
 
     /**

@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.DriveBaseHolder;
 
 public class DriveWithTime extends CommandBase {
 
@@ -45,7 +46,7 @@ public class DriveWithTime extends CommandBase {
 
     // Timer is started and will start counting UP from 0
     timer.start();
-    addRequirements(DriveBase.getInstance());
+    addRequirements(DriveBaseHolder.getInstance());
 
   }
 
@@ -54,7 +55,7 @@ public class DriveWithTime extends CommandBase {
   public void execute() {
    
     // Sets the motor speeds to those of which the user inputed
-    DriveBase.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
+    DriveBaseHolder.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
     
   }
     

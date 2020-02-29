@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 
 public class DrivetrainPIDTurnDelta extends CommandBase {
     // Declare PD variables
@@ -64,8 +65,8 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         this.maxTime = maxTime;
 
         //Set the drivebase
-        addRequirements(DriveBase.getInstance());
-        this.drivebase = DriveBase.getInstance();
+        this.drivebase = DriveBaseHolder.getInstance();
+        addRequirements(this.drivebase);
         pigeonIMU = drivebase.getPigeon();
         currentAngle = drivebase.getCurrentAngle();
         logger.addHandler(Config.logFileHandler);
