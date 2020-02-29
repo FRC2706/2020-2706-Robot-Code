@@ -10,15 +10,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FeederSubsystem;
 
-public class IncrementFeeder extends CommandBase {
+public class ReverseFeeder extends CommandBase {
 
     FeederSubsystem feeder;
-
+    
     /**
      * Creates a new FeederSubsystem.
      */
-    public IncrementFeeder() {
-        System.out.println("Created increment feeder command");
+    public ReverseFeeder() {
         addRequirements(FeederSubsystem.getInstance());
         this.feeder = FeederSubsystem.getInstance();
     }
@@ -26,25 +25,19 @@ public class IncrementFeeder extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        FeederSubsystem.zeroTalon();
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        feeder.runFeeder();
-        this.feeder.incrementPowerCells();
+        this.feeder.reverseFeeder();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         this.feeder.stopFeeder();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return feeder.doneIncrementing();
     }
 
 }

@@ -23,16 +23,17 @@ public class ArcadeDriveWithJoystick extends ArcadeDrive {
    * @param joy2  The joystick that the second ais is on
    * @param axis2 The second axis
    * @param invert2 Whether to negate the second joystick input
+   * @param squareInputs Whether or not to square inputs
    */
-  public ArcadeDriveWithJoystick(Joystick joy1, int axis1, boolean invert1, Joystick joy2, int axis2, boolean invert2) {
-    super(() -> sign(Config.removeJoystickDeadband(joy1.getRawAxis(axis1)), invert1), () -> sign(Config.removeJoystickDeadband(joy1.getRawAxis(axis2)), invert2), false, true);
+  public ArcadeDriveWithJoystick(Joystick joy1, int axis1, boolean invert1, Joystick joy2, int axis2, boolean invert2, boolean squareInputs) {
+    super(() -> sign(Config.removeJoystickDeadband(joy1.getRawAxis(axis1)), invert1), () -> sign(Config.removeJoystickDeadband(joy1.getRawAxis(axis2)), invert2), squareInputs, false);
   }
   
   /**
    * Creates a new ArcadeDriveWithJoystick with only one Joystick
    */
-  public ArcadeDriveWithJoystick(Joystick joy, int axis1, boolean invert1, int axis2, boolean invert2){
-    this(joy, axis1, invert1, joy, axis2, invert2);
+  public ArcadeDriveWithJoystick(Joystick joy, int axis1, boolean invert1, int axis2, boolean invert2, boolean squareInputs){
+    this(joy, axis1, invert1, joy, axis2, invert2, squareInputs);
   }
 
   // Called once the command ends or is interrupted.
