@@ -19,6 +19,7 @@ import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.DriveWithDistance;
 import frc.robot.commands.DriveWithTime;
 import frc.robot.commands.SensitiveDriverControl;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +51,8 @@ public class RobotContainer {
     private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
 
+    private final double RIGHT_SPEED = 0.2;
+    private final double LEFT_SPEED = 0.2;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -96,7 +99,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        int selectorOne = 1, selectorTwo = 1;
+        int selectorOne = 0, selectorTwo = 0;
         if (analogSelectorOne != null)
             selectorOne = analogSelectorOne.getIndex();
         if (analogSelectorTwo != null)
@@ -109,14 +112,25 @@ public class RobotContainer {
         }
 
 
-        if (selectorOne == 1 || selectorTwo == 1) {
-        /*
-         * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
-         */
+         else if (selectorOne == 1) {
+         /*
+          * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
+          */
 
-      // for the inputed variables: DriveWithTime(seconds (double), left motors speed (double), right motors speed (double))
-            return new DriveWithTime(1.0, 0.2, 0.2);
+              // for the inputed variables: DriveWithTime(seconds (double), left motors speed (double), right motors speed (double))
+              return new DriveWithTime(1.0, 0.2, 0.2);
+         }
+
+        else if(selectorOne == 2){
+
+           
+
+            //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
+            return new DriveWithDistance(53, DriveBase.DistanceType.INCHES, RIGHT_SPEED, LEFT_SPEED);
+
         }
+
+
         // Also return null if this ever gets to here because safety
         return null;
     }

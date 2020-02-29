@@ -263,4 +263,86 @@ public class DriveBase extends SubsystemBase {
     public boolean isBrakeMode() {
         return brakeMode;
     }
+
+    /**
+     * Get the distance travelled by the left encoder in encoder ticks
+     *
+     * @return The distance of the left encoder
+     */
+    public double getLeftDistance() {
+        return (-leftFrontTalon.getSensorCollection().getQuadraturePosition());
+    }
+
+    /**
+     * Get the distance travelled by the right encoder in encoder ticks
+     *
+     * @return The distance of the right encoder
+     */
+    public double getRightDistance() {
+        return rightFrontTalon.getSensorCollection().getQuadraturePosition();
+    }
+
+    /**
+     * Get the speed of the left encoder in encoder ticks per second
+     *
+     * @return The speed of the left encoder
+     */
+    public double getLeftSpeed() {
+        return (-leftFrontTalon.getSensorCollection().getQuadratureVelocity());
+    }
+
+    /**
+     * Get the speed of the right encoder in encoder ticks per second
+     *
+     * @return The speed of the right encoder
+     */
+    public double getRightSpeed() {
+        return rightFrontTalon.getSensorCollection().getQuadratureVelocity();
+    }
+
+    //Reset encoder values
+    public void resetEncoders() {
+        leftFrontTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
+        rightFrontTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
+    }
+
+
+    /**
+     * Measured distance units for converting ticks to units or units to encoder ticks
+     * 
+     */
+    public enum DistanceUnit {
+
+        //Encoder tick is equal to itself
+        ENCODER_TICKS(1d),
+        
+        //Measured value of 8583 ticks per meter
+        METERS(8583.1d),
+
+        //1 cm = 0.01 meters. 8583 * 0.01 = 858.3. Rounding to 858 ticks.
+        CENTIMETERS(858.1d),
+
+        //1 foot is equal to 0.3048 meters. 8583 * 0.3048 = 2616.1 (approx). Rounding to 2616 ticks per foot
+        FEET(2616.1d),
+
+        //39.3701 inches is equal to 1 meter. 8583 / 39.3701 = 218.008 (approx). Rounding to 218 ticks per inch
+        INCHES(218.1d);
+
+        //Update encoder ticks with unit
+        public double encoderTicks;
+        DistanceUnit(double encoderTicks) {
+            this.encoderTicks = encoderTicks;
+        }
+    }
+
+    /**
+     * Distance unts to travel 
+     * 
+     */
+    public enum DistanceType {
+
+        //Different distance units
+        CENTIMETERS, METERS, INCHES, FEET; 
+
+    }
 }

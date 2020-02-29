@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,10 +71,10 @@ public class Config {
     }
     
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
+    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 3, 3);
     public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
+    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 2, 2);
     public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
 
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
@@ -94,7 +95,7 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_X = 4;
     
     public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, false, false);
     
     public static double CONTROLLER_DEADBAND = 0.05;
     
