@@ -39,9 +39,9 @@ public class VisionCtrlNetTable {
         mergeVisionTable = inst.getTable(Config.VISION_TABLE_NAME);
         distanceToPowerCell = () -> mergeVisionTable.getEntry(Config.DISTANCE_POWERCELL).getDouble(-1);
         distanceToOuterPort = () -> mergeVisionTable.getEntry(Config.DISTANCE_OUTER_PORT).getDouble(-1);
-        yawToPowerCell      = () -> mergeVisionTable.getEntry(Config.YAW_POWERCELL).getDouble(-1);
-        yawToOuterPort      = () -> mergeVisionTable.getEntry(Config.YAW_OUTER_PORT).getDouble(-1);
-    //    angleToOuterPort    = () -> mergeVisionTable.getEntry(Config.ANGLE_OUTER_PORT).getDouble(-1);
+        yawToPowerCell = () -> mergeVisionTable.getEntry(Config.YAW_POWERCELL).getDouble(-1);
+        yawToOuterPort = () -> mergeVisionTable.getEntry(Config.YAW_OUTER_PORT).getDouble(-99);
+
     }
 
     public static void setTapeMode() {

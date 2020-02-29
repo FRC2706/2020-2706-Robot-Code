@@ -14,6 +14,7 @@ public class EmptyFeeder extends CommandBase {
 
     FeederSubsystem feeder;
 
+
     /**
      * Creates a new FeederSubsystem.
      */
@@ -37,7 +38,7 @@ public class EmptyFeeder extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-
+        this.feeder.stopFeeder();
     }
 
 }

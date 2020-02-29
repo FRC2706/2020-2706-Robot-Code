@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
+import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.sensors.AnalogSelector;
-import frc.robot.subsystems.DriveBase;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -40,6 +41,8 @@ public class Robot extends TimedRobot {
     private Boolean bFromTeleMode;
     //flag to indicate the real match
     private Boolean bRealMatch;
+
+    AnalogInput analogInput;
 
     /**
      * Determines if the robot is in a real match.
@@ -108,8 +111,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
-        DriveBase.init();
-
+        DriveBaseHolder.init();
         m_robotContainer = new RobotContainer();
         //create a vision control table
         visionControlNetTable = new VisionCtrlNetTable();
@@ -120,6 +122,8 @@ public class Robot extends TimedRobot {
         bRealMatch = false;
 
         logger.addHandler(Config.logFileHandler);
+
+        analogInput = new AnalogInput(3);
 
     }
 
@@ -139,7 +143,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putNumber("Outer Port Yaw", VisionCtrlNetTable.yawToOuterPort.get());
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
-        SmartDashboard.putNumber("Pigeon Yaw", DriveBase.getInstance().getCurrentAngle());
+        SmartDashboard.putNumber("Pigeon Yaw", DriveBaseHolder.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
     }
 
@@ -211,7 +215,12 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
 
+
+
         CommandScheduler.getInstance().run();
+
+
+        SmartDashboard.putNumber("Analog Light Sensor", analogInput.getValue());
     }
 
     @Override
