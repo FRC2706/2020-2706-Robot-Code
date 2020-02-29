@@ -142,12 +142,12 @@ public class Config {
     public static FluidConstant<Double> maxYawErrorOuterPortCommand = new FluidConstant<>("Outer Port Command Yaw Error", 3.0)
             .registerToTable(Config.constantsTable);
 
-    // Current limiter values
-    public static final int kPeakCurrentAmps = 60; //Peak current threshold to trigger the current limit
+    // Current limiter Constants
+    public static final int PEAK_CURRENT_AMPS = 60; //Peak current threshold to trigger the current limit
         
-    public static final double kPeakTimeSec = 1.0; /* Time after current exceeds peak current to trigger current limit */
+    public static final double PEAK_TIME_SEC = 1.0; //Time after current exceeds peak current to trigger current limit
 
-    public static final int kContinCurrentAmps = 40; /* Current to mantain once current limit has been triggered */
+    public static final int CONTIN_CURRENT_AMPS = 40; //Current to mantain once current limit has been triggered
 
 
     /**

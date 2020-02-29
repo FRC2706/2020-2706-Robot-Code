@@ -7,10 +7,6 @@
 
 package frc.robot;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.logging.Logger;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +16,10 @@ import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.subsystems.DriveBase;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.logging.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
     private Boolean bFromTeleMode;
     //flag to indicate the real match
     private Boolean bRealMatch;
-
 
     /**
      * Determines if the robot is in a real match.
@@ -201,8 +200,14 @@ public class Robot extends TimedRobot {
         //If motor current limiting is active, trigger driver feedback (notify driver that drivetrain power is reduced).
         if (DriveBase.isMotorLimitActive() == true) {
             //TODO: Put driver feedback code here. Consult with drive team's preferences.
+            
+            //Example driver feedback (if you wish to use this, import joystick and RumbleType libraries)
+            //joystick.setRumble(RumbleType.kLeftRumble, 0.5);
+            //joystick.setRumble(RumbleType.kRightRumble, 0.5);
         } else {
-            //Disable current limit driver feedback here.
+            //Turn off driver feedback for the current limiter once the current limiter turns off. Example:
+            //joystick.setRumble(RumbleType.kLeftRumble, 0);
+            //joystick.setRumble(RumbleType.kRightRumble, 0);
         }
     }
 

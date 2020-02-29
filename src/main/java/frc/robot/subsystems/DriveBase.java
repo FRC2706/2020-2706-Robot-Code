@@ -63,11 +63,11 @@ public class DriveBase extends SubsystemBase {
 
         SmartDashboard.putNumber("Right Front Talon", Config.RIGHT_FRONT_TALON);
 
-        //Set up the current limiter for all motors (limits current SUPPLY).        Enabled? True/false /         Limit (A)        /Surge trigger level (A) /  Max Surge time (sec)
-        leftFrontTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
-		leftRearTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
-		rightFrontTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
-		rightRearTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.kContinCurrentAmps, Config.kPeakCurrentAmps, Config.kPeakTimeSec));
+        //Set up the current limiter for all motors (limits current SUPPLY).        Enabled? True/false /         Limit (A)         /Surge trigger level (A) /  Max Surge time (sec)
+        leftFrontTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.CONTIN_CURRENT_AMPS, Config.PEAK_CURRENT_AMPS, Config.PEAK_TIME_SEC));
+		leftRearTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.CONTIN_CURRENT_AMPS, Config.PEAK_CURRENT_AMPS, Config.PEAK_TIME_SEC));
+		rightFrontTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.CONTIN_CURRENT_AMPS, Config.PEAK_CURRENT_AMPS, Config.PEAK_TIME_SEC));
+		rightRearTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(EN_MOTOR_CURRENT_LIM, Config.CONTIN_CURRENT_AMPS, Config.PEAK_CURRENT_AMPS, Config.PEAK_TIME_SEC));
 		        
         talon5plyboy = new WPI_TalonSRX(Config.TALON_5_PLYBOY);
 
@@ -93,14 +93,14 @@ public class DriveBase extends SubsystemBase {
 
     public static boolean isMotorLimitActive() {
         //Check if motor current limiting is active (is current draw over or at current limit)
-        if (motorCurrent > Config.kContinCurrentAmps - 1) {
+        if (motorCurrent >= Config.CONTIN_CURRENT_AMPS) {
             motorLimitActive = true;
         }
         else {
             motorLimitActive = false;
         }
 
-        //Regardless of whether motor current limiting is active, tell shuffleboard and return the result.
+        //Regardless of whether motor current limiting is active or not, tell shuffleboard and return the result.
         SmartDashboard.putBoolean("MotorCurrentLimit T/F", motorLimitActive);
 
         return(motorLimitActive);
