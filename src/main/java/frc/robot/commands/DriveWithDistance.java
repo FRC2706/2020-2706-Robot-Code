@@ -28,6 +28,8 @@ private final DriveBase driveBase;
   public double rightSpeed = 0;
   public DistanceType currentType;
   public double currentConversion;
+  public boolean backWards = false;
+  public boolean commandFinished = false;
 
   /**
    * Constructor to be used when the input specifications do not provide the right and left speed (assumed to be 0.5)
@@ -39,6 +41,13 @@ private final DriveBase driveBase;
    */
 
   public DriveWithDistance(double distance, DistanceType currentType) {
+
+    //If you have to move backwards
+    if(distance < 0){
+      //Error since you can't move backwards with positive speeds (0.5 is default in this constructor)
+      commandFinished = true;
+
+    }
 
     //Setting current unit type and drive base variables
     this.currentType = currentType;
@@ -87,6 +96,21 @@ private final DriveBase driveBase;
    * @param leftSpeed The left motor speed
    */
   public DriveWithDistance(double distance, DistanceType currentType, double rightSpeed, double leftSpeed) {
+
+
+    //If all the values for distance and speeds are the same magnitude (+/-) then run the robot, otherwise do not.
+    if(distance < 0 && rightSpeed < 0 && leftSpeed < 0){
+      backWards = true;
+    }
+    else if(distance < 0 && rightSpeed < 0 && leftSpeed < 0){
+      backWards = false;
+    }
+    //The robot should not move if it has inverse speeds and desired distances since that must be an error
+    else{
+      commandFinished = true;
+    }
+
+   
 
     //Setting current distance unit
     this.currentType = currentType;
@@ -169,7 +193,7 @@ private final DriveBase driveBase;
     
   }
 
-  }
+  
   
   /**
    * Determines when the command is finished using the current distnce and desired distance
@@ -182,16 +206,23 @@ private final DriveBase driveBase;
     //Update to the current right distance that the robot has driven
     currentRightDistance = DriveBase.getInstance().getRightDistance();
 
-    //If the robot has reached or surpassed the desired distance, then stop the robot. Otherwise, keep moving.
-    if(currentRightDistance >= desiredRightDistance){
-
+    //If the robot has reached or surpassed the desired distance, then stop the robot. Otherwise, keep moving (moving forward). 
+    if(!backWards && currentRightDistance >= desiredRightDistance){
         driveBase.tankDrive(0, 0, false);
-        return true;
+        commandFinished = true;
 
-    }else{
-        return false;
+    }
+    //If the robot has reached or surpassed the desired distance, then stop the robot. Otherwise, keep moving (moving backward).
+    else if(backWards && currentRightDistance <= desiredRightDistance){
+        driveBase.tankDrive(0, 0, false);
+        commandFinished = true;
+    }
+    else{
+        commandFinished = false;
     }
 
+
+    return commandFinished;
   }
 
     // Called once the command ends or is interrupted.

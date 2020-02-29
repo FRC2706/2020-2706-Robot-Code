@@ -53,6 +53,8 @@ public class RobotContainer {
 
     private final double RIGHT_SPEED = 0.2;
     private final double LEFT_SPEED = 0.2;
+    private final double DISTANCE = 1;
+    private final DriveBase.DistanceType DEFAULT_UNIT= DriveBase.DistanceType.METERS;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -111,7 +113,6 @@ public class RobotContainer {
             return null;
         }
 
-
          else if (selectorOne == 1) {
          /*
           * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
@@ -123,14 +124,10 @@ public class RobotContainer {
 
         else if(selectorOne == 2){
 
-           
-
             //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
-            return new DriveWithDistance(53, DriveBase.DistanceType.INCHES, RIGHT_SPEED, LEFT_SPEED);
+            return new DriveWithDistance(-DISTANCE, DEFAULT_UNIT, RIGHT_SPEED, LEFT_SPEED);
 
         }
-
-
         // Also return null if this ever gets to here because safety
         return null;
     }
