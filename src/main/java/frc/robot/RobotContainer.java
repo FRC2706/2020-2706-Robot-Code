@@ -17,7 +17,12 @@ import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveBase;
-
+import frc.robot.subsystems.DriveBaseHolder;
+import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.DriveWithTime;
+import frc.robot.commands.SensitiveDriverControl;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.logging.Logger;
 
 /**
@@ -41,7 +46,8 @@ public class RobotContainer {
   private Command driveCommand;
   private Command intakeCommand;
   private Command emptyFeederCommand;
-    private Command reverseFeeder;
+  private Command reverseFeeder;
+    private Command sensitiveDriverControlCommand;
   private Command moveArm;
   private Command rampShooterCommand;
   private Command incrementFeeder;
@@ -77,10 +83,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-
-        /**
-         * Select drive mode for robot
-         */
       
         // Instantiate the intake command and bind it
         intakeCommand = new OperatorIntakeCommand();
@@ -92,13 +94,17 @@ public class RobotContainer {
         reverseFeeder = new ReverseFeeder();
         new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(reverseFeeder);
 
-        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
-        DriveBase.getInstance().setDefaultCommand(driveCommand);
-
         rampShooterCommand = new SpinUpShooter();
 
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
+        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
+        DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
+        
+        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
+
+        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
+        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
     }
 
     /**
