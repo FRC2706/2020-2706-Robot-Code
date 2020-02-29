@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +41,8 @@ public class Robot extends TimedRobot {
     private Boolean bFromTeleMode;
     //flag to indicate the real match
     private Boolean bRealMatch;
+
+    AnalogInput analogInput;
 
     /**
      * Determines if the robot is in a real match.
@@ -120,6 +123,8 @@ public class Robot extends TimedRobot {
         bRealMatch = false;
 
         logger.addHandler(Config.logFileHandler);
+
+        analogInput = new AnalogInput(3);
 
     }
 
@@ -211,7 +216,12 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
 
+
+
         CommandScheduler.getInstance().run();
+
+
+        SmartDashboard.putNumber("Analog Light Sensor", analogInput.getValue());
     }
 
     @Override

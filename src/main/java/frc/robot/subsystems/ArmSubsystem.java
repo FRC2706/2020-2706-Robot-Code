@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
@@ -9,6 +10,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
+
+import javax.naming.ldap.Control;
 
 public class ArmSubsystem extends ConditionalSubsystemBase {
 
@@ -40,47 +43,47 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.setNeutralMode(NeutralMode.Coast);
 
         // Setup the talon, recording the error code
-        errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
                 0, Config.CAN_TIMEOUT_SHORT);
 
-        armTalon.setSelectedSensorPosition(0);
+        SmartDashboard.putNumber("Arm Error Code", errorCode.value);
 
         armTalon.setInverted(Config.INVERT_ARM_TALON);
 
-        /* Config the peak and nominal outputs, 12V means full */
-        armTalon.configNominalOutputForward(0, Config.CAN_TIMEOUT_SHORT);
-        armTalon.configNominalOutputReverse(0, Config.CAN_TIMEOUT_SHORT);
-        armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
-        armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
-
-        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
-
+//        /* Config the peak and nominal outputs, 12V means full */
+//        armTalon.configNominalOutputForward(0, Config.CAN_TIMEOUT_SHORT);
+//        armTalon.configNominalOutputReverse(0, Config.CAN_TIMEOUT_SHORT);
+//        armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
+//        armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
+//
+//        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
+//
         //  Config the PID Values based on constants
         armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kF(0, Config.ARM_PID_F, Config.CAN_TIMEOUT_SHORT);
 
-        // Set up the close loop period
-        armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
-        armTalon.setSensorPhase(true);
-        armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
-        armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
+//
+//        // Set up the close loop period
+//        armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
+//        armTalon.setSensorPhase(true);
+       // armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
+        //armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
         // Enable forward soft limit and set the value in encoder ticks
-        armTalon.configForwardSoftLimitEnable(true);
-        armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+   //     armTalon.configForwardSoftLimitEnable(true);
+     //   armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
         // Enable reverse soft limit and set the value in encoder ticks
-        armTalon.configReverseSoftLimitEnable(true);
-        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+//        armTalon.configReverseSoftLimitEnable(true);
+//        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
         // Max voltage to apply with the talon. 12 is the maximum
-        armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
-        armTalon.enableVoltageCompensation(true);
+     //   armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
+       // armTalon.enableVoltageCompensation(true);
 
         // Number of seconds from 0 to full throttle
-        armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
+  //      armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
 
         createCondition("talonFunctional", SubsystemConditionStates.ALWAYS);
 
@@ -109,16 +112,42 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
     public void setpoint(int setpointIndex) {
         if(setpointIndex < setpoints.length) {
-            armTalon.setSelectedSensorPosition(setpointIndex);
+            armTalon.set(ControlMode.Position, setpointIndex);
         } else {
             DriverStation.reportError("Invalid arm position [Array index out of bounds]", false);
         }
+    }
+
+    public void moveArm(double speed) {
+        armTalon.set(speed);
     }
     
     @Override
     public void periodic() {
         super.periodic();
 
-        SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition(0));
+      //  armTalon.config_kF(0, 4.186 * Math.cos(toDeg(armTalon.getSelectedSensorPosition())), Config.CAN_TIMEOUT_SHORT);
+
+     //   armTalon.setVoltage(4.186 * Math.toDegrees(Math.cos(toDeg(armTalon.getSelectedSensorPosition()))));
+
+     //   System.out.println("Arm encoder ticks" + armTalon.getSensorCollection().getQuadraturePosition());
+
+        SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Arm Angle", toDeg(armTalon.getSelectedSensorPosition()));
+    }
+
+    /**
+     * @param units CTRE mag encoder sensor units
+     * @return degrees rounded to tenths.
+     */
+    Double toDeg(int units) {
+        double deg = units * 360.0 / 4096.0;
+
+        /* truncate to 0.1 res */
+        deg *= 10;
+        deg = (int) deg;
+        deg /= 10;
+
+        return deg;
     }
 }

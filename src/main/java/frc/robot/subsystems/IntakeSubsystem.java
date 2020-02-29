@@ -15,7 +15,7 @@ public class IntakeSubsystem extends ConditionalSubsystemBase {
     private final static IntakeSubsystem INSTANCE = new IntakeSubsystem();
 
     // The supplier of the intake speed
-    private final static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.25d)
+    private final static FluidConstant<Double> INTAKE_SPEED = new FluidConstant<>("intake-target-speed", 0.80d)
             .registerToTable(Config.constantsTable);
 
     // The intake motor (if any)

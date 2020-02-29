@@ -9,9 +9,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
 
@@ -32,21 +34,21 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     private static AnalogInput indexerIrSensor;
 
     //How much to shift the feeder wheel when incrementing
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 0.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 1200.0)
                 .registerToTable(Config.constantsTable);
     //Max distance at which the robot knows a ball is at the indexer
     public static FluidConstant<Integer> FEEDERSUBSYSTEM_IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
                 .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.1)
                 .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> FEEDERSUBSYSTEM_I = new FluidConstant<>("FeederSubsystemI", 0.0)
                 .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 0.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 0.05)
                 .registerToTable(Config.constantsTable);
     public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
                 .registerToTable(Config.constantsTable);
     //Highest speed the motor could reach
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.25)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.35)
                 .registerToTable(Config.constantsTable);
 
     private final int kTimeoutMs = 1000;
@@ -71,17 +73,23 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
             feederTalon.configNominalOutputForward(0, kTimeoutMs);
             feederTalon.configNominalOutputReverse(0, kTimeoutMs);
             feederTalon.configPeakOutputForward(FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
-            feederTalon.configPeakOutputReverse(-FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
+            feederTalon.configPeakOutputReverse(-(FEEDERSUBSYSTEM_PEAK_OUTPUT.get()), kTimeoutMs);
             feederTalon.configAllowableClosedloopError(0, 0, kTimeoutMs);
             feederTalon.config_kF(kPIDLoopIdx, FEEDERSUBSYSTEM_F.get(), kTimeoutMs);
             feederTalon.config_kP(kPIDLoopIdx, FEEDERSUBSYSTEM_P.get(), kTimeoutMs);
             feederTalon.config_kI(kPIDLoopIdx, FEEDERSUBSYSTEM_I.get(), kTimeoutMs);
             feederTalon.config_kD(kPIDLoopIdx, FEEDERSUBSYSTEM_D.get(), kTimeoutMs);
-            int absolutePosition = feederTalon.getSensorCollection().getPulseWidthPosition();
-            feederTalon.setSelectedSensorPosition(absolutePosition, kPIDLoopIdx, kTimeoutMs);
-            feederTalon.setSelectedSensorPosition(0, 0, 10);
+            feederTalon.configAllowableClosedloopError(0, 100, Config.CAN_TIMEOUT_SHORT);
+        //    int absolutePosition = feederTalon.getSensorCollection().getPulseWidthPosition();
+            feederTalon.setSelectedSensorPosition(0, 0, Config.CAN_TIMEOUT_SHORT);
+        //    feederTalon.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, Config.CAN_TIMEOUT_SHORT);
+
         }
 
+    }
+
+    public static void zeroTalon() {
+        feederTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
     }
 
     public static void init() {
@@ -99,7 +107,8 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
      * Moves the power cells along the feeder track a certain amount
      */
     public void incrementPowerCells(){
-        feederTalon.setSelectedSensorPosition(0, 0, 10);
+        System.out.println("Incrementing power cells...");
+
         feederTalon.set(ControlMode.Position, FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
@@ -114,8 +123,12 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     /**
      * Runs the feeder motor at a certain speed
      */
-    public void runFeeder(){
-        feederTalon.set(FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
+    public void runFeeder() {
+        feederTalon.set(ControlMode.PercentOutput, FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
+    }
+
+    public void reverseFeeder(){
+        feederTalon.set(ControlMode.PercentOutput, -FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
     }
 
     /**
@@ -126,12 +139,29 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         feederTalon.set(ControlMode.Position, 6*FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
+    /**
+     * Determines if the lift has reached the given setpoint.
+     *
+     * @return True if the lift has reached the setpoint, false otherwise.
+     */
+    public boolean doneIncrementing() {
+        boolean done = false;
+
+        if(feederTalon.getSelectedSensorPosition() >= FEEDERSUBSYSTEM_INCREMENT_TICKS.get() - 100 && feederTalon.getSelectedSensorPosition() <= feederTalon.getSelectedSensorPosition() + 100) {
+            done = true;
+        }
+        return done;
+    }
+
+
     public void periodic() {
       // Set the default command for a subsystem here.
       // setDefaultCommand(new MySpecialCommand());
+        SmartDashboard.putNumber("Feeder encoder ticks", feederTalon.getSelectedSensorPosition());
     }
 
     public void stopFeeder() {
         feederTalon.stopMotor();
     }
+
 }

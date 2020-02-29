@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.commands.OperatorIntakeCommand;
@@ -17,6 +18,7 @@ import frc.robot.commands.SpinUpShooter;
 import frc.robot.config.Config;
 import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 import frc.robot.commands.DriveWithTime;
@@ -46,9 +48,10 @@ public class RobotContainer {
   private Command driveCommand;
   private Command intakeCommand;
   private Command emptyFeederCommand;
-  private Command incrementFeederCommand;
+    private Command reverseFeeder;
+  private Command moveArm;
   private Command rampShooterCommand;
-  private Command sensitiveDriverControlCommand;
+  private Command incrementFeeder;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
@@ -66,6 +69,9 @@ public class RobotContainer {
         if (Config.ANALOG_SELECTOR_TWO != -1) {
             analogSelectorTwo = new AnalogSelector(Config.ANALOG_SELECTOR_TWO);
         }
+
+        ArmSubsystem armSubsystem = ArmSubsystem.getInstance();
+
         configureButtonBindings();
     }
 
@@ -78,27 +84,38 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
-        
+
         /**
          * Select drive mode for robot
          */
       
         // Instantiate the intake command and bind it
         intakeCommand = new OperatorIntakeCommand();
-        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+        new JoystickButton(controlStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
 
         emptyFeederCommand = new EmptyFeeder();
-        new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
+        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
+
+        reverseFeeder = new ReverseFeeder();
+        new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(reverseFeeder);
 
         // Instantiate the shooter ramping command and bind it
-       // rampShooterCommand = new SpinUpShooter();
-       // new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+//        rampShooterCommand = new SpinUpShooter();
+//        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
-        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS);
+        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
         DriveBase.getInstance().setDefaultCommand(driveCommand);
 
         rampShooterCommand = new SpinUpShooter();
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+        new JoystickButton(controlStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+
+//        moveArm = new MoveArmManuallyCommand();
+//        new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(moveArm);
+
+//        incrementFeeder = new IncrementFeeder();
+//        new JoystickButton(driverStick, XboxController.Button.kY.value).whenPressed(incrementFeeder, false);
+
+
 
 //        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 //

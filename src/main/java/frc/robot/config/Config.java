@@ -98,14 +98,14 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
     
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, true, true);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, true, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;
     
     public static double CURVATURE_OVERRIDE = 0.25;
     
-    public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
+    public static boolean INVERT_ARM_TALON = robotSpecific(true, false, false);
     
     public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
     
@@ -118,9 +118,9 @@ public class Config {
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
     
     // PIDF values for the arm
-    public static double ARM_PID_P = robotSpecific(0.2);
+    public static double ARM_PID_P = robotSpecific(0.0);
     public static double ARM_PID_I = robotSpecific(0.0);
-    public static double ARM_PID_D = robotSpecific(0.1);
+    public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.0);
     
     // Define a global constants table for subsystems to use

@@ -9,7 +9,7 @@ public class SpinUpShooter extends CommandBase {
   private ShooterSubsystem shooterSubsystem;
 
   boolean doneRamping;
-  int RPM = 500;
+  int RPM = 1000;
 
   public SpinUpShooter() {
     shooterSubsystem = ShooterSubsystem.getInstance();
@@ -25,7 +25,8 @@ public class SpinUpShooter extends CommandBase {
   @Override
   public void execute() {
     shooterSubsystem.setTargetRPM(RPM);
-    SmartDashboard.putNumber("shooter RPM", shooterSubsystem.getRPM());
+    SmartDashboard.putNumber("Shooter RPM", shooterSubsystem.getRPM());
+    SmartDashboard.putNumber("Shooter motor temp", shooterSubsystem.getTemperature());
     doneRamping = shooterSubsystem.isAtTargetRPM();
     if(doneRamping){
       // Print to console
