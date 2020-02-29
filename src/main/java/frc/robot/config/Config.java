@@ -3,6 +3,7 @@ package frc.robot.config;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class Config {
     
     /**
      * Instructions for set up of robot.conf file on robot
-     * <p>
+     *
      * 0. Connect to the robot to the robot using a usb cable or the wifi network.
      * 1. Using a tool like Git Bash or putty, ssh into admin@roboRIO-2706-FRC.local (ssh admin@roboRIO-2706-FRC.local)
      * a. There is no password on a freshly flashed roboRIO
@@ -69,18 +70,23 @@ public class Config {
     }
     
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 2, 2);
-    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
-    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 3, 3);
-    public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
+    public static int RIGHT_FRONT_MOTOR = robotSpecific(2, 2, 3, 2, 2);
+    public static int RIGHT_REAR_MOTOR = robotSpecific(4, 4, 4, 4, 4);
+    public static int LEFT_FRONT_MOTOR = robotSpecific(1, 1, 1, 1, 1);
+    public static int LEFT_REAR_MOTOR = robotSpecific(3, 3, 2, 3, 3);
+    public static int INTAKE_MOTOR = robotSpecific(6, 6, -1, 6, -1);
+    public static int SHOOTER_MOTOR = robotSpecific(5, 5, -1, -1, 16); //protobot is 16
+    public static int CLIMBER_TALON = robotSpecific(10, 10, -1, -1, 16);
+
 
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     
-    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0);
+    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
     
-    public static int ARM_TALON = robotSpecific(12, 12, 12);
+    public static int ARM_TALON = robotSpecific(7, 7, 12);
+
+    public static int FEEDER_SUBSYSTEM_TALON = robotSpecific(8, 8);
     
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
     
@@ -119,6 +125,26 @@ public class Config {
     
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+
+    // Vision Table Constants
+    public static String VISION_TABLE_NAME = "MergeVision";
+    public static String DISTANCE_POWERCELL = "DistanceToPowerCell";
+    public static String YAW_POWERCELL = "YawToPowerCell";
+    public static String YAW_OUTER_PORT = "YawToTarget";
+
+    // Drivetrain PID values
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", DRIVETRAIN_D_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+
+    public static FluidConstant<Double> maxTimeOuterPortCommand = new FluidConstant<>("Outer Port Max Time", 1.0)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> maxYawErrorOuterPortCommand = new FluidConstant<>("Outer Port Command Yaw Error", 3.0)
+            .registerToTable(Config.constantsTable);
     
     /**
      * Returns one of the values passed based on the robot ID
@@ -147,9 +173,8 @@ public class Config {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
-            } catch (IOException | NumberFormatException e) {
-                robotId = 0;
-                DriverStation.reportError("Could not find robot configuration file.", false);
+            } catch (Exception e) {
+                Robot.haltRobot("Can't load Robot ID", e);
             }
         }
         return robotId;
