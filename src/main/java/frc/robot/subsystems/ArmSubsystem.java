@@ -8,10 +8,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
-
-import javax.naming.ldap.Control;
 
 public class ArmSubsystem extends ConditionalSubsystemBase {
 
@@ -50,14 +47,14 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
         armTalon.setInverted(Config.INVERT_ARM_TALON);
 
-//        /* Config the peak and nominal outputs, 12V means full */
-//        armTalon.configNominalOutputForward(0, Config.CAN_TIMEOUT_SHORT);
-//        armTalon.configNominalOutputReverse(0, Config.CAN_TIMEOUT_SHORT);
-//        armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
-//        armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
-//
-//        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
-//
+        /* Config the peak and nominal outputs, 12V means full */
+        armTalon.configNominalOutputForward(0, Config.CAN_TIMEOUT_SHORT);
+        armTalon.configNominalOutputReverse(0, Config.CAN_TIMEOUT_SHORT);
+        armTalon.configPeakOutputForward(1, Config.CAN_TIMEOUT_SHORT);
+        armTalon.configPeakOutputReverse(-1, Config.CAN_TIMEOUT_SHORT);
+
+        armTalon.configAllowableClosedloopError(0, Config.ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS, Config.CAN_TIMEOUT_SHORT);
+
         //  Config the PID Values based on constants
         armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
