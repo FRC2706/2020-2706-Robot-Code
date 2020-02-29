@@ -8,6 +8,7 @@ public class SpinUpShooter extends CommandBase {
     private ShooterSubsystem shooterSubsystem;
 
     boolean doneRamping;
+    
     int RPM = 2000;
 
     public SpinUpShooter() {

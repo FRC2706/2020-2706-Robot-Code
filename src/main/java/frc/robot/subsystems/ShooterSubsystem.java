@@ -134,4 +134,4 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());
     }
-}
+  }

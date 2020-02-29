@@ -74,7 +74,7 @@ public class Config {
     // Static Constants
     private static Class<? extends DriveBase> Pre2020DriveBase = DriveBasePre2020.class.asSubclass(DriveBase.class);
     private static Class<? extends DriveBase> Post2020DriveBase = DriveBase2020.class.asSubclass(DriveBase.class);
-    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Pre2020DriveBase);
+    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Post2020DriveBase, Post2020DriveBase, Pre2020DriveBase);
     public static int RIGHT_FRONT_MOTOR = robotSpecific(2, 2, 3, 2, 2);
     public static int RIGHT_REAR_MOTOR = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_MOTOR = robotSpecific(1, 1, 1, 1, 1);
@@ -82,6 +82,7 @@ public class Config {
     public static int INTAKE_MOTOR = robotSpecific(6, 6, -1, 6, -1);
     public static int SHOOTER_MOTOR = robotSpecific(5, 5, -1, -1, 16); //protobot is 16
     public static int CLIMBER_TALON = robotSpecific(10, 10, -1, -1, 16);
+
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
@@ -102,14 +103,14 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
     
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, true, true);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, true, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;
     
     public static double CURVATURE_OVERRIDE = 0.25;
     
-    public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
+    public static boolean INVERT_ARM_TALON = robotSpecific(true, false, false);
     
     public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
     
@@ -122,9 +123,9 @@ public class Config {
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
     
     // PIDF values for the arm
-    public static double ARM_PID_P = robotSpecific(0.2);
+    public static double ARM_PID_P = robotSpecific(0.0);
     public static double ARM_PID_I = robotSpecific(0.0);
-    public static double ARM_PID_D = robotSpecific(0.1);
+    public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.0);
     
     // Define a global constants table for subsystems to use

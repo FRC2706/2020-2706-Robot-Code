@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
 
 public class ArmSubsystem extends ConditionalSubsystemBase {
@@ -21,6 +22,11 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     WPI_TalonSRX armTalon;
     ErrorCode errorCode;
 
+    private static final int[] setpoints = {
+            1000,
+            3000,
+        };
+
 
     private ArmSubsystem() {
 
@@ -34,10 +40,10 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.setNeutralMode(NeutralMode.Coast);
 
         // Setup the talon, recording the error code
-        errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        errorCode = armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
                 0, Config.CAN_TIMEOUT_SHORT);
 
-        armTalon.setSelectedSensorPosition(0);
+        SmartDashboard.putNumber("Arm Error Code", errorCode.value);
 
         armTalon.setInverted(Config.INVERT_ARM_TALON);
 
@@ -53,7 +59,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
-        armTalon.config_kF(0, Config.ARM_PID_F, Config.CAN_TIMEOUT_SHORT);
+
 
         // Set up the close loop period
         armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
@@ -61,7 +67,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
         armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
-        // Enable forward soft limit and set the value in encoder ticks
+        //    Enable forward soft limit and set the value in encoder ticks
         armTalon.configForwardSoftLimitEnable(true);
         armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
 
@@ -100,11 +106,39 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     public void zeroTalonEncoder() {
         armTalon.setSelectedSensorPosition(0);
     }
+
+    public void setpoint(int setpointIndex) {
+        if(setpointIndex < setpoints.length) {
+            armTalon.set(ControlMode.Position, setpointIndex);
+        } else {
+            DriverStation.reportError("Invalid arm position [Array index out of bounds]", false);
+        }
+    }
+
+    public void moveArm(double speed) {
+        armTalon.set(speed);
+    }
     
     @Override
     public void periodic() {
         super.periodic();
 
-        SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition(0));
+        SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Arm Angle", toDeg(armTalon.getSelectedSensorPosition()));
+    }
+
+    /**
+     * @param units CTRE mag encoder sensor units
+     * @return degrees rounded to tenths.
+     */
+    Double toDeg(int units) {
+        double deg = units * 360.0 / 4096.0;
+
+        /* truncate to 0.1 res */
+        deg *= 10;
+        deg = (int) deg;
+        deg /= 10;
+
+        return deg;
     }
 }
