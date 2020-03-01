@@ -204,16 +204,10 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         //If motor current limiting is active, trigger driver feedback (notify driver that drivetrain power is reduced).
-        if (DriveBase2020.getInstance().isMotorLimitActive() == true) {
-            //TODO: Put driver feedback code here. Consult with drive team's preferences.
-            
-            //Example driver feedback (if you wish to use this, import joystick and RumbleType libraries):
-            //joystick.setRumble(RumbleType.kLeftRumble, 0.5);
-            //joystick.setRumble(RumbleType.kRightRumble, 0.5);
+        if (DriveBase2020.getInstance().isMotorLimitActive() == true) {           
+            RobotContainer.getInstance().joystickRumble(0.5,0.5); //TODO: EXPERIMENTAL
         } else {
-            //Turn off driver feedback for the current limiter once the current limiter turns off. Example:
-            //joystick.setRumble(RumbleType.kLeftRumble, 0);
-            //joystick.setRumble(RumbleType.kRightRumble, 0);
+            RobotContainer.getInstance().joystickRumble(0,0); //TODO: EXPERIMENTAL //Turn off driver feedback once the current limiting stops:
         }
     }
 
