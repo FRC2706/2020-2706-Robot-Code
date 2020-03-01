@@ -97,8 +97,8 @@ public class RobotContainer {
         incrementFeeder = new IncrementFeeder();
         new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
 
-        rampShooterCommand = new SpinUpShooter(1750);
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+        rampShooterCommand = new SpinUpShooter(1200);
+        new JoystickButton(driverStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
         DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);

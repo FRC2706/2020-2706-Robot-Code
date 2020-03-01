@@ -48,7 +48,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
                 .registerToTable(Config.constantsTable);
     //Highest speed the motor could reach
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.4)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.6)
                 .registerToTable(Config.constantsTable);
 
     private final int kTimeoutMs = 1000;
@@ -126,8 +126,12 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     }
 
     public void reverseFeeder(){
-        System.out.println("Feeder at :" + feederTalon.getSelectedSensorPosition());
+     //   System.out.println("Feeder at :" + feederTalon.getSelectedSensorPosition());
         feederTalon.set(ControlMode.PercentOutput, -FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
+    }
+
+    public void slowReverseFeeder() {
+        feederTalon.set(ControlMode.PercentOutput, -0.2);
     }
 
     /**
