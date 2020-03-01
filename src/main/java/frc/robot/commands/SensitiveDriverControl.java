@@ -40,7 +40,7 @@ public class SensitiveDriverControl extends CommandBase {
     @Override
     public void execute() {
         this.driveBase.setSensitiveSteering(true);
-        this.driveBase.tankDrive(this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X), this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X), false);
+        this.driveBase.tankDrive(this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X)*Config.DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), this.joystick.getRawAxis(Config.RIGHT_CONTROL_STICK_X)*Config.DRIVETRAIN_SENSITIVE_MAX_SPEED.get(), false);
     }
 
     @Override

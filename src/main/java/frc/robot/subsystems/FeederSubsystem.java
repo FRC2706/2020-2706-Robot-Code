@@ -33,24 +33,6 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     //IR sensor that monitors the indexer
     private static AnalogInput indexerIrSensor;
 
-    //How much to shift the feeder wheel when incrementing
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 1200.0)
-                .registerToTable(Config.constantsTable);
-    //Max distance at which the robot knows a ball is at the indexer
-    public static FluidConstant<Integer> FEEDERSUBSYSTEM_IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
-                .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.1)
-                .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_I = new FluidConstant<>("FeederSubsystemI", 0.0)
-                .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 0.05)
-                .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
-                .registerToTable(Config.constantsTable);
-    //Highest speed the motor could reach
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.35)
-                .registerToTable(Config.constantsTable);
-
     private final int kTimeoutMs = 1000;
 
     private final int kPIDLoopIdx = 0;
@@ -73,13 +55,13 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
             feederTalon.setSensorPhase(true);
             feederTalon.configNominalOutputForward(0, kTimeoutMs);
             feederTalon.configNominalOutputReverse(0, kTimeoutMs);
-            feederTalon.configPeakOutputForward(FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
-            feederTalon.configPeakOutputReverse(-(FEEDERSUBSYSTEM_PEAK_OUTPUT.get()), kTimeoutMs);
+            feederTalon.configPeakOutputForward(Config.FEEDERSUBSYSTEM_PEAK_OUTPUT.get(), kTimeoutMs);
+            feederTalon.configPeakOutputReverse(-(Config.FEEDERSUBSYSTEM_PEAK_OUTPUT.get()), kTimeoutMs);
             feederTalon.configAllowableClosedloopError(0, 0, kTimeoutMs);
-            feederTalon.config_kF(kPIDLoopIdx, FEEDERSUBSYSTEM_F.get(), kTimeoutMs);
-            feederTalon.config_kP(kPIDLoopIdx, FEEDERSUBSYSTEM_P.get(), kTimeoutMs);
-            feederTalon.config_kI(kPIDLoopIdx, FEEDERSUBSYSTEM_I.get(), kTimeoutMs);
-            feederTalon.config_kD(kPIDLoopIdx, FEEDERSUBSYSTEM_D.get(), kTimeoutMs);
+            feederTalon.config_kF(kPIDLoopIdx, Config.FEEDERSUBSYSTEM_F.get(), kTimeoutMs);
+            feederTalon.config_kP(kPIDLoopIdx, Config.FEEDERSUBSYSTEM_P.get(), kTimeoutMs);
+            feederTalon.config_kI(kPIDLoopIdx, Config.FEEDERSUBSYSTEM_I.get(), kTimeoutMs);
+            feederTalon.config_kD(kPIDLoopIdx, Config.FEEDERSUBSYSTEM_D.get(), kTimeoutMs);
             feederTalon.configAllowableClosedloopError(0, 100, Config.CAN_TIMEOUT_SHORT);
             feederTalon.setSelectedSensorPosition(0, 0, Config.CAN_TIMEOUT_SHORT);
 
@@ -108,7 +90,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public void incrementPowerCells(){
         System.out.println("Incrementing power cells...");
 
-        feederTalon.set(ControlMode.Position, FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
+        feederTalon.set(ControlMode.Position, Config.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
     /**
@@ -116,18 +98,18 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
      * @return whether a power cell has reached the indexer or not
      */
     public boolean isBallAtIndexer(){
-        return indexerIrSensor.getVoltage() > FEEDERSUBSYSTEM_IR_MAX_DISTANCE.get();
+        return indexerIrSensor.getVoltage() > Config.FEEDERSUBSYSTEM_IR_MAX_DISTANCE.get();
     }
 
     /**
      * Runs the feeder motor at a certain speed
      */
     public void runFeeder() {
-        feederTalon.set(ControlMode.PercentOutput, FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
+        feederTalon.set(ControlMode.PercentOutput, Config.FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
     }
 
     public void reverseFeeder(){
-        feederTalon.set(ControlMode.PercentOutput, -FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
+        feederTalon.set(ControlMode.PercentOutput, -Config.FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
     }
 
     /**
@@ -135,7 +117,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
      */
     public void emptyFeeder(){
         feederTalon.setSelectedSensorPosition(0, 0, 10);
-        feederTalon.set(ControlMode.Position, 6*FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
+        feederTalon.set(ControlMode.Position, 6*Config.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
     /**
@@ -146,7 +128,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public boolean doneIncrementing() {
         boolean done = false;
 
-        if(feederTalon.getSelectedSensorPosition() >= FEEDERSUBSYSTEM_INCREMENT_TICKS.get() - 100 && feederTalon.getSelectedSensorPosition() <= feederTalon.getSelectedSensorPosition() + 100) {
+        if (feederTalon.getSelectedSensorPosition() >= Config.FEEDERSUBSYSTEM_INCREMENT_TICKS.get() - 100 && feederTalon.getSelectedSensorPosition() <= feederTalon.getSelectedSensorPosition() + 100) {
             done = true;
         }
         return done;
