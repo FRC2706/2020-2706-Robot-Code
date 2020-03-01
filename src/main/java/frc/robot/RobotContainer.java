@@ -39,8 +39,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
     
-    // RobotContainer is a singleton class as there is only one robot
-    //TODO: CHECK THIS
+    // RobotContainer is a singleton class
     private static RobotContainer currentInstance;
 
   // The robot's subsystems and commands are defined here...    

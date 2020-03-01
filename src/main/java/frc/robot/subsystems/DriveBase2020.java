@@ -58,7 +58,7 @@ public class DriveBase2020 extends DriveBase {
     public boolean isMotorLimitActive() {
         //Check if motor current limiting is active (is current draw over or at current limit)
         if (motorCurrent >= Config.CONTIN_CURRENT_AMPS) {
-            motorLimitActive = true;
+            motorLimitActive = true; //For driver feedback purposes only.
         }
         else {
             motorLimitActive = false;
