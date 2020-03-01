@@ -9,10 +9,11 @@ public class SpinUpShooter extends CommandBase {
 
     boolean doneRamping;
     
-    int RPM = 2000;
+    int RPM;
 
-    public SpinUpShooter() {
+    public SpinUpShooter(int RPM) {
         shooterSubsystem = ShooterSubsystem.getInstance();
+        this.RPM = RPM;
         if (shooterSubsystem.isActive()) {
             addRequirements(shooterSubsystem);
         }
@@ -28,7 +29,7 @@ public class SpinUpShooter extends CommandBase {
         doneRamping = shooterSubsystem.isAtTargetRPM();
         if (doneRamping) {
             // Print to console
-            System.out.println("calculatedRPM is within 30 units of targetRPM");
+          //  System.out.println("calculatedRPM is within 30 units of targetRPM");
         }
     }
 

@@ -61,12 +61,18 @@ public class ShooterSubsystem extends SubsystemBase {
         m_pidController = m_shooter.getPIDController();
         m_encoder = m_shooter.getEncoder();
 
+        m_shooter.setInverted(true);
+
         m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
         m_pidController.setFF(F_SHOOTERSUBSYSTEM.get());
         m_pidController.setP(P_SHOOTERSUBSYSTEM.get());
         m_pidController.setI(I_SHOOTERSUBSYSTEM.get());
         m_pidController.setD(D_SHOOTERSUBSYSTEM.get());
+
+        m_shooter.setSmartCurrentLimit(60);
+
+
     }
 
     public boolean isActive() {
@@ -123,13 +129,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (m_shooter == null)
+        if (m_shooter == null) {
             return;
+        }
         if (SETPOINT_RPM.get() <= 0.0) {
             m_shooter.set(0.0);
         } else {
             m_pidController.setReference(SETPOINT_RPM.get(), ControlType.kVelocity);
         }
+
+        SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
         SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());

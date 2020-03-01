@@ -86,25 +86,27 @@ public class RobotContainer {
       
         // Instantiate the intake command and bind it
         intakeCommand = new OperatorIntakeCommand();
-        new JoystickButton(controlStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
 
         emptyFeederCommand = new EmptyFeeder();
-        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
+        new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
 
         reverseFeeder = new ReverseFeeder();
-        new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(reverseFeeder);
+        new JoystickButton(driverStick, XboxController.Button.kY.value).whenHeld(reverseFeeder);
 
-        rampShooterCommand = new SpinUpShooter();
+        incrementFeeder = new IncrementFeeder();
+        new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
 
+        rampShooterCommand = new SpinUpShooter(1750);
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
         DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
         
-        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
+     //   sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
-        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
-        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
+//        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
+//        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
     }
 
     /**
