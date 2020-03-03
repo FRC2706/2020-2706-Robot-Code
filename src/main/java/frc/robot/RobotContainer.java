@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
@@ -38,9 +37,6 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-    
-    // RobotContainer is a singleton class
-    private static RobotContainer currentInstance;
 
   // The robot's subsystems and commands are defined here...    
   private Joystick driverStick;
@@ -138,26 +134,5 @@ public class RobotContainer {
         // Also return null if this ever gets to here because safety
         return null;
     }
-
-    public void joystickRumble(double leftValue, double rightValue) {
-        //Joystick rumble (driver feedback). leftValue/rightValue sets vibration force.
-        driverStick.setRumble(RumbleType.kLeftRumble, leftValue);
-        driverStick.setRumble(RumbleType.kRightRumble, rightValue);
-    }
-
-    /**
-     * Initialize the current RobotContainer instance
-     */
-    public static void init() {
-        if (currentInstance == null) {
-            currentInstance = new RobotContainer();
-        }
-    }
-
-    public static RobotContainer getInstance() {
-        init();
-        return currentInstance;
-    }
-    
     
 }
