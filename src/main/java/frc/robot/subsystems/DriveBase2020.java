@@ -48,24 +48,24 @@ public class DriveBase2020 extends DriveBase {
     }
 
     public double getMotorCurrent() {
-        motorCurrent = leftMaster.getSupplyCurrent();
-
-        //Send motor current to shuffleboard and return it
-        SmartDashboard.putNumber("MotorCurrent (FrontLeft)", motorCurrent);
-        return(motorCurrent);
+        //Get motor supply current, send it to shuffleboard, and return it.
+        SmartDashboard.putNumber("MotorCurrent (LeftMaster)", leftMaster.getSupplyCurrent());
+        SmartDashboard.putNumber("MotorCurrent (RightMaster)", rightMaster.getSupplyCurrent());
+        return((leftMaster.getSupplyCurrent() + rightMaster.getSupplyCurrent())/2); //Returns average motor current draw.
     }
 
     public boolean isMotorLimitActive() {
-        //Check if motor current limiting is active (is current draw over or at current limit)
-        if (motorCurrent >= Config.CONTIN_CURRENT_AMPS) {
-            motorLimitActive = true; //For driver feedback purposes only.
+        //Checks if motor currents are at or above the continuous limit (checks if current limiting is imminent or ongoing)
+        //This method does not limit motor current. It monitors current for driver feedback purposes.
+        if (leftMaster.getSupplyCurrent() >= Config.CONTIN_CURRENT_AMPS || rightMaster.getSupplyCurrent() >= Config.CONTIN_CURRENT_AMPS) {
+            motorLimitActive = true;
         }
         else {
             motorLimitActive = false;
         }
 
         //Tell shuffleboard if current limting is active and return the result.
-        SmartDashboard.putBoolean("MotorCurrentLimit T/F", motorLimitActive);
+        SmartDashboard.putBoolean("MotorCurrentLimitActive T/F", motorLimitActive);
         return(motorLimitActive);
     }
 
