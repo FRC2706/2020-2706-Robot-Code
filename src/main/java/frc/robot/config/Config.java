@@ -104,7 +104,7 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
     
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, true, true);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
     public static boolean INVERT_SECOND_AXIS = robotSpecific(false, true, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
@@ -12,6 +14,9 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.sensors.AnalogSelector;
+
+import java.util.function.Supplier;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -38,6 +43,12 @@ public class ShooterSubsystem extends SubsystemBase {
     double kMinOutput = -1;
 
     private final int RPM_TOLERANCE = 30;
+
+    private AnalogInput shooterAnalogSensor;
+
+    private DigitalInput shooterDigitalInput;
+
+    public Supplier<Boolean> isAtLimitSwitch;
 
     private ShooterSubsystem() {
 
@@ -71,6 +82,12 @@ public class ShooterSubsystem extends SubsystemBase {
         m_pidController.setD(D_SHOOTERSUBSYSTEM.get());
 
         m_shooter.setSmartCurrentLimit(60);
+
+        shooterAnalogSensor = new AnalogInput(2);
+
+        shooterDigitalInput = new DigitalInput(0);
+
+        isAtLimitSwitch = () -> shooterDigitalInput.get();
 
 
     }
@@ -127,6 +144,10 @@ public class ShooterSubsystem extends SubsystemBase {
         return (Math.abs(SETPOINT_RPM.get() - encoderRPM) < RPM_TOLERANCE);
     }
 
+    public int getAnalogSensorValue() {
+        return shooterAnalogSensor.getValue();
+    }
+
     @Override
     public void periodic() {
         if (m_shooter == null) {
@@ -142,5 +163,6 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());
+        SmartDashboard.putNumber("Shooter Analog Sensor", shooterAnalogSensor.getValue());
     }
   }
