@@ -46,7 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private AnalogInput shooterAnalogSensor;
 
-    private DigitalInput shooterDigitalInput;
+    public DigitalInput shooterDigitalInput;
 
     public Supplier<Boolean> isAtLimitSwitch;
 
@@ -85,7 +85,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterAnalogSensor = new AnalogInput(2);
 
-        shooterDigitalInput = new DigitalInput(0);
+        shooterDigitalInput = new DigitalInput(8);
 
         isAtLimitSwitch = () -> shooterDigitalInput.get();
 

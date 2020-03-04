@@ -8,12 +8,13 @@ public class RunFeederCommand extends CommandBase {
 
     private double speed;
     public RunFeederCommand(double speed) {
+        addRequirements(FeederSubsystem.getInstance());
         this.speed = speed;
     }
 
     @Override
     public void initialize() {
-        addRequirements(FeederSubsystem.getInstance());
+
     }
 
     @Override

@@ -25,7 +25,7 @@ public class PositionPowercellCommand extends CommandBase {
      */
     @Override
     public void execute() {
-        FeederSubsystem.getInstance().runFeeder(-0.15);
+        FeederSubsystem.getInstance().runFeeder(-0.35);
     }
 
     /**
@@ -44,7 +44,8 @@ public class PositionPowercellCommand extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return ShooterSubsystem.getInstance().isAtLimitSwitch.get();
+      //  return false;
+           return !ShooterSubsystem.getInstance().shooterDigitalInput.get();
     }
 
     /**
