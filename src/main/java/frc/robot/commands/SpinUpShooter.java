@@ -27,10 +27,6 @@ public class SpinUpShooter extends CommandBase {
     public void execute() {
         shooterSubsystem.setTargetRPM(RPM);
         doneRamping = shooterSubsystem.isAtTargetRPM();
-        if (doneRamping) {
-            // Print to console
-          //  System.out.println("calculatedRPM is within 30 units of targetRPM");
-        }
     }
 
     // Called once the command ends or is interrupted.
