@@ -35,27 +35,30 @@ import java.util.logging.Logger;
  */
 public class RobotContainer {
 
-    /**
-    * The container for the robot. Contains subsystems, OI devices, and commands.
-    */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+    
+    // RobotContainer is a singleton class
+    private static RobotContainer currentInstance;
 
-    // The robot's subsystems and commands are defined here...    
-    private Joystick driverStick;
-    private Joystick controlStick;
-    private AnalogSelector analogSelectorOne;
-    private AnalogSelector analogSelectorTwo;
-    private Command driveCommand;
-    private Command intakeCommand;
-    private Command emptyFeederCommand;
-    private Command reverseFeeder;
+  // The robot's subsystems and commands are defined here...    
+  private Joystick driverStick;
+  private Joystick controlStick;
+  private AnalogSelector analogSelectorOne;
+  private AnalogSelector analogSelectorTwo;
+  private Command driveCommand;
+  private Command intakeCommand;
+  private Command emptyFeederCommand;
+  private Command reverseFeeder;
     private Command sensitiveDriverControlCommand;
-    private Command moveArm;
-    private Command rampShooterCommand;
-    private Command incrementFeeder;
-    private Logger logger = Logger.getLogger("RobotContainer");
-    private final double AUTO_DRIVE_TIME = 1.0;
-    private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
-    private final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
+  private Command moveArm;
+  private Command rampShooterCommand;
+  private Command incrementFeeder;
+  private Logger logger = Logger.getLogger("RobotContainer");
+  private final double AUTO_DRIVE_TIME = 1.0;
+  private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
+  private final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -137,8 +140,24 @@ public class RobotContainer {
     }
 
     public void joystickRumble(double leftValue, double rightValue) {
-        //Joystick rumble (driver feedback). leftValue/rightValue sets vibration force (0.0-1.0).
+        //Joystick rumble (driver feedback). leftValue/rightValue sets vibration force.
         driverStick.setRumble(RumbleType.kLeftRumble, leftValue);
         driverStick.setRumble(RumbleType.kRightRumble, rightValue);
     }
+
+    /**
+     * Initialize the current RobotContainer instance
+     */
+    public static void init() {
+        if (currentInstance == null) {
+            currentInstance = new RobotContainer();
+        }
+    }
+
+    public static RobotContainer getInstance() {
+        init();
+        return currentInstance;
+    }
+    
+    
 }
