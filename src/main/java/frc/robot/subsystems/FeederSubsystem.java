@@ -114,7 +114,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
      * @return whether a power cell has reached the indexer or not
      */
     public boolean isBallAtIndexer(){
-        return indexerIrSensor.getVoltage() > FEEDERSUBSYSTEM_IR_MAX_DISTANCE.get();
+        return indexerIrSensor.getVoltage() > Config.FEEDERSUBSYSTEM_IR_MAX_DISTANCE.get();
     }
 
     public void runFeeder(){
@@ -131,12 +131,16 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         feederTalon.set(ControlMode.PercentOutput, FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
     }
 
+    public void reverseFeeder(){
+        feederTalon.set(ControlMode.PercentOutput, -Config.FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
+    }
+
     /**
      * Runs the feeder motor just enough to empty 5 balls out of the feeder
      */
     public void emptyFeeder(){
         feederTalon.setSelectedSensorPosition(0, 0, 10);
-        feederTalon.set(ControlMode.Position, 6*FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
+        feederTalon.set(ControlMode.Position, 6*Config.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
     }
 
     /**
@@ -156,7 +160,6 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public int getCurrentPosition() {
         return feederTalon.getSelectedSensorPosition();
     }
-
 
     public void periodic() {
         SmartDashboard.putNumber("Feeder encoder ticks", feederTalon.getSelectedSensorPosition());

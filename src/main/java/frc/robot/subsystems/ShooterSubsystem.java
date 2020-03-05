@@ -1,5 +1,11 @@
 package frc.robot.subsystems;
 
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.config.Config;
+import frc.robot.config.FluidConstant;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -17,20 +23,21 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANPIDController m_pidController;
     private CANEncoder m_encoder;
 
-    public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>("P_ShooterSubsystem", 0.002)
-        .registerToTable(Config.constantsTable);
+    // PID values (currently set for protobot's shooter)
+    public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>
+            ("P_ShooterSubsystem", 0.002).registerToTable(Config.constantsTable);
 
-    public static FluidConstant<Double> I_SHOOTERSUBSYSTEM = new FluidConstant<>("I_ShooterSubsystem", 0.0)
-        .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> I_SHOOTERSUBSYSTEM = new FluidConstant<>
+            ("I_ShooterSubsystem", 0.0).registerToTable(Config.constantsTable);
 
-    public static FluidConstant<Double> D_SHOOTERSUBSYSTEM = new FluidConstant<>("D_ShooterSubsystem", 0.0002)
-        .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> D_SHOOTERSUBSYSTEM = new FluidConstant<>
+            ("D_ShooterSubsystem", 0.0002).registerToTable(Config.constantsTable);
 
-    public static FluidConstant<Double> F_SHOOTERSUBSYSTEM = new FluidConstant<>("F_ShooterSubsystem", 0.00027)
-        .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> F_SHOOTERSUBSYSTEM = new FluidConstant<>
+            ("F_ShooterSubsystem", 0.00027).registerToTable(Config.constantsTable);
 
-    public static FluidConstant<Integer> SETPOINT_RPM = new FluidConstant<>("setpointRPM", 0)
-        .registerToTable(Config.constantsTable);
+    public static FluidConstant<Integer> SETPOINT_RPM = new FluidConstant<>
+            ("setpointRPM", 0).registerToTable(Config.constantsTable);
 
     double kMaxOutput = 1;
     double kMinOutput = -1;
@@ -144,4 +151,10 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());
     }
-  }
+
+
+    /**
+     * Initialization process for the shooter to be run on robots with
+     * this mechanism.
+     */
+}

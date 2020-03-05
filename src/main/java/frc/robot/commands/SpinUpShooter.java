@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -19,6 +20,13 @@ public class SpinUpShooter extends CommandBase {
         }
     }
 
+    public SpinUpShooter() {
+        shooterSubsystem = ShooterSubsystem.getInstance();
+        if (shooterSubsystem.isActive()) {
+            addRequirements(shooterSubsystem);
+        }
+    }
+
     @Override
     public void initialize() {
     }
@@ -26,7 +34,13 @@ public class SpinUpShooter extends CommandBase {
     @Override
     public void execute() {
         shooterSubsystem.setTargetRPM(RPM);
+        SmartDashboard.putNumber("Shooter RPM", shooterSubsystem.getRPM());
+        SmartDashboard.putNumber("Shooter motor temp", shooterSubsystem.getTemperature());
         doneRamping = shooterSubsystem.isAtTargetRPM();
+        if (doneRamping) {
+            // Print to console
+            System.out.println("calculatedRPM is within 30 units of targetRPM");
+        }
     }
 
     // Called once the command ends or is interrupted.
