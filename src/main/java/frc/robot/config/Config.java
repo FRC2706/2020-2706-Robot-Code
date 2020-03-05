@@ -82,6 +82,7 @@ public class Config {
     public static int INTAKE_MOTOR = robotSpecific(6, 6, -1, 6, -1);
     public static int SHOOTER_MOTOR = robotSpecific(5, 5, -1, -1, 16); //protobot is 16
     public static int CLIMBER_TALON = robotSpecific(10, 10, -1, -1, 16);
+    public static int AGITATOR_MOTOR = robotSpecific(9, 9);
 
     // Current limiter Constants
     public static int PEAK_CURRENT_AMPS = 60; //Peak current threshold to trigger the current limit
@@ -109,7 +110,7 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
     
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, true, true);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
     public static boolean INVERT_SECOND_AXIS = robotSpecific(false, true, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;
@@ -167,6 +168,9 @@ public class Config {
     // Fluid constant for Drivetrains
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
+
+    public static int shooterAnalogSensor = robotSpecific(8, 8);
+
     public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 0.8)
             .registerToTable(Config.constantsTable);
 
