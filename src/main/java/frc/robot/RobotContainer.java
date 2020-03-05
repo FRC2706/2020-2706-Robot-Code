@@ -19,6 +19,7 @@ import frc.robot.config.XboxValue;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.CollectCenterBalls;
 import frc.robot.commands.DriveWithDistance;
 import frc.robot.commands.DriveWithTime;
 import frc.robot.commands.SensitiveDriverControl;
@@ -125,7 +126,13 @@ public class RobotContainer {
         else if(selectorOne == 2){
 
             //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
-            return new DriveWithDistance(0, 1, DEFAULT_UNIT, 0, 0.3);
+            return new DriveWithDistance(1, 1, DEFAULT_UNIT, 0.2, 0.2);
+
+        }
+        else if(selectorOne == 3){
+
+            return new CollectCenterBalls();
+
 
         }
         // Also return null if this ever gets to here because safety
