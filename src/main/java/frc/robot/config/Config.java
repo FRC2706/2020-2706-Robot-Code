@@ -161,6 +161,8 @@ public class Config {
     // Fluid constant for Drivetrains
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
+
+    public static int shooterAnalogSensor = robotSpecific(8, 8);
     
     /**
      * Returns one of the values passed based on the robot ID

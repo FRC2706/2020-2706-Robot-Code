@@ -1,22 +1,15 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
-
-import frc.robot.config.Config;
-import frc.robot.config.FluidConstant;
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.sensors.AnalogSelector;
-
-import java.util.function.Supplier;
+import com.revrobotics.ControlType;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.config.Config;
+import frc.robot.config.FluidConstant;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -44,11 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final int RPM_TOLERANCE = 30;
 
-    private AnalogInput shooterAnalogSensor;
-
     public DigitalInput shooterDigitalInput;
-
-    public Supplier<Boolean> isAtLimitSwitch;
 
     private ShooterSubsystem() {
 
@@ -83,12 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         m_shooter.setSmartCurrentLimit(60);
 
-        shooterAnalogSensor = new AnalogInput(2);
-
-        shooterDigitalInput = new DigitalInput(8);
-
-        isAtLimitSwitch = () -> shooterDigitalInput.get();
-
+        shooterDigitalInput = new DigitalInput(Config.shooterAnalogSensor);
 
     }
 
@@ -144,10 +128,6 @@ public class ShooterSubsystem extends SubsystemBase {
         return (Math.abs(SETPOINT_RPM.get() - encoderRPM) < RPM_TOLERANCE);
     }
 
-    public int getAnalogSensorValue() {
-        return shooterAnalogSensor.getValue();
-    }
-
     @Override
     public void periodic() {
         if (m_shooter == null) {
@@ -163,6 +143,5 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());
-        SmartDashboard.putNumber("Shooter Analog Sensor", shooterAnalogSensor.getValue());
     }
   }
