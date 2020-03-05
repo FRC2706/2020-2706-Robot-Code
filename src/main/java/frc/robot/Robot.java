@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.config.Config;
 import frc.robot.nettables.ControlCtrlNetTable;
 import frc.robot.nettables.VisionCtrlNetTable;
+import frc.robot.subsystems.DriveBase2020;
 import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.sensors.AnalogSelector;
 
@@ -145,6 +146,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
         SmartDashboard.putNumber("Pigeon Yaw", DriveBaseHolder.getInstance().getCurrentAngle());
         CommandScheduler.getInstance().run();
+
+        //The following 2 lines run Drivebase methods that tell shuffleboard what the motor current draw is and if motor current limiting is active.
+        DriveBase2020.getInstance().getMotorCurrent();
+        DriveBase2020.getInstance().isMotorLimitActive();
     }
 
     /**
@@ -198,6 +203,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        //If motor current limiting is active, trigger driver feedback (warn that drivetrain power is reduced).
+        if (DriveBase2020.getInstance().isMotorLimitActive() == true) {           
+            RobotContainer.getInstance().joystickRumble(0.5,0.5);
+        } else {
+            RobotContainer.getInstance().joystickRumble(0,0);
+        }
     }
 
     @Override
