@@ -104,10 +104,6 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
-//        visionAssistOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
-//        new JoystickButton(driverStick, XboxController.Button.kA.value).whenPressed(stopFeeder);
-
-
     }
 
     /**
