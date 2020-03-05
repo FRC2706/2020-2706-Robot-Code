@@ -50,12 +50,6 @@ public class RobotContainer {
     private Command intakeCommand;
     private Command sensitiveDriverControlCommand;
     private Logger logger = Logger.getLogger("RobotContainer");
-
-    private final double RIGHT_SPEED = 0.2;
-    private final double LEFT_SPEED = 0.2;
-    private final double DISTANCE = 1;
-    private final DriveBase.DistanceType DEFAULT_UNIT= DriveBase.DistanceType.METERS;
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -101,14 +95,14 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        int selectorOne = 0, selectorTwo = 0;
+
+        //Robot has only one selector
+        int selectorOne = 0;
         if (analogSelectorOne != null)
             selectorOne = analogSelectorOne.getIndex();
-        if (analogSelectorTwo != null)
-            selectorTwo = analogSelectorTwo.getIndex();
-        logger.info("Selectors: " + selectorOne + " " + selectorTwo);
+        logger.info("Selectors: " + selectorOne);
 
-        if (selectorOne == 0 && selectorTwo == 0) {
+        if (selectorOne == 0) {
             // This is our 'do nothing' selector
             return null;
         }
@@ -119,16 +113,15 @@ public class RobotContainer {
           */
 
               // for the inputed variables: DriveWithTime(seconds (double), left motors speed (double), right motors speed (double))
-              return new DriveWithTime(1.0, 0.2, 0.2);
+              return new DriveWithTime(Config.AUTO_DRIVE_TIME, Config.AUTO_LEFT_MOTOR_SPEED, Config.AUTO_RIGHT_MOTOR_SPEED);
          }
 
         else if(selectorOne == 2){
 
             //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
-            return new DriveWithDistance(0, 1, DEFAULT_UNIT, 0, 0.3);
-
+            return new DriveWithDistance(Config.AUTO_DISTANCE, Config.DEFAULT_UNIT, Config.AUTO_RIGHT_MOTOR_SPEED, Config.AUTO_LEFT_MOTOR_SPEED);
         }
-        // Also return null if this ever gets to here because safety
+        // Also return null (do nothing) if this ever gets to here because safety
         return null;
     }
     

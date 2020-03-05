@@ -18,37 +18,45 @@ public class DriveWithDistance extends CommandBase {
 //Initializing private version of drivebase object
 private final DriveBase driveBase;
 
+//The distance that the robot must move below to move backwards
+private final double DISTANCE_NOT_MOVING = 0;
+
+//The speed that the robot must move below to move backwards
+private final double SPEED_NOT_MOVING = 0;
+
+private final double DEFAULT_RIGHT_SPEED = 0.5;
+private final double DEFAULT_LEFT_SPEED = 0.5;
+
 // initialization of the variables 
   public double currentRightDistance = 0;
   public double currentLeftDistance = 0;
   public double desiredLeftDistance = 0;
   public double desiredRightDistance = 0;
   public double encoderTicks;
-  public double rightEncoderTicks, leftEncoderTicks;
+  public double desiredRightEncoderTicks, desiredLeftEncoderTicks;
   public double leftSpeed = 0;
   public double rightSpeed = 0;
-  public DistanceType currentType;
+  public DistanceType distanceType;
   public double currentConversion;
-  public boolean rightBackwards = false;
-  public boolean leftBackwards = false;
-  public boolean backWards = false;
-  public boolean commandFinished = false;
+  public boolean rightMotorMovingBackwards = false;
+  public boolean leftMotorMovingBackwards = false;
+  public boolean robotMovingBackWards = false;
   public boolean isTurning = false;
   public boolean end = false;
+  public boolean commandFinished = false;
 
+  
   /**
    * Constructor to be used when the input specifications do not provide the right and left speed (assumed to be 0.5)
    * 
    * @param distance The distance to drive
-   * @param currentType The distance unit type to drive in
-   * @param rightSpeed The right motor speed
-   * @param leftSpeed The left motor speed
+   * @param distanceType The distance unit type to drive in
    */
 
-  public DriveWithDistance(double distance, DistanceType currentType) {
+  public DriveWithDistance(double distance, DistanceType distanceType) {
 
     //If you have to move backwards
-    if(distance < 0){
+    if(distance < DISTANCE_NOT_MOVING){
       //Error since you can't move backwards with positive speeds (0.5 is default in this constructor)
       commandFinished = true;
       end = true;
@@ -56,12 +64,12 @@ private final DriveBase driveBase;
     }
 
     //Setting current unit type and drive base variables
-    this.currentType = currentType;
+    this.distanceType = distanceType;
     this.driveBase = DriveBase.getInstance();
     addRequirements(driveBase);
     
     //Setting the current conversion type according to the chosen distance unit
-    switch (currentType) {
+    switch (distanceType) {
       case FEET:
         this.currentConversion = DriveBase.DistanceUnit.FEET.encoderTicks;    
         
@@ -88,8 +96,8 @@ private final DriveBase driveBase;
     }
 
     //default speed is 0.5 for the left and right talons
-    rightSpeed = 0.5;
-    leftSpeed = 0.5;
+    rightSpeed = DEFAULT_RIGHT_SPEED;
+    leftSpeed = DEFAULT_LEFT_SPEED;
     this.encoderTicks = distance * this.currentConversion;   
   }
 
@@ -97,37 +105,37 @@ private final DriveBase driveBase;
    * Constructor to be used when the input gives the right and left speed
    * 
    * @param distance The distance to drive
-   * @param currentType The distance unit type to drive in
+   * @param distanceType The distance unit type to drive in
    * @param rightSpeed The right motor speed
    * @param leftSpeed The left motor speed
    */
-  public DriveWithDistance(double distance, DistanceType currentType, double rightSpeed, double leftSpeed) {
+  public DriveWithDistance(double distance, DistanceType distanceType, double rightSpeed, double leftSpeed) {
 
     //Initating drivebase
     this.driveBase = DriveBase.getInstance();
 
     //If all the values for distance and speeds are the same magnitude (+/-) then run the robot, otherwise do not.
-    if(distance < 0 && rightSpeed < 0 && leftSpeed < 0){
-      backWards = true;
+    if(distance < DISTANCE_NOT_MOVING && rightSpeed < SPEED_NOT_MOVING && leftSpeed < SPEED_NOT_MOVING){
+      robotMovingBackWards = true;
     }
-    else if(distance > 0 && rightSpeed > 0 && leftSpeed > 0){
-      backWards = false;
+    else if(distance > DISTANCE_NOT_MOVING && rightSpeed > SPEED_NOT_MOVING && leftSpeed > SPEED_NOT_MOVING){
+      robotMovingBackWards = false;
     }
     //The robot should not move if it has inverse speeds and desired distances since that must be an error
     else{
-      driveBase.tankDrive(0, 0, false);
+      driveBase.tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
       commandFinished = true;
       end = true;
       
     }
 
     //Setting current distance unit
-    this.currentType = currentType;
+    this.distanceType = distanceType;
 
     addRequirements(driveBase);
     
     //Setting the current conversion type according to the chosen distance unit
-    switch (currentType) {
+    switch (distanceType) {
       case FEET:
         this.currentConversion = DriveBase.DistanceUnit.FEET.encoderTicks;    
         
@@ -158,7 +166,7 @@ private final DriveBase driveBase;
     this.leftSpeed = leftSpeed;
 
     //Determing the amount of desired encoder ticks to drive by getting the distnace and multiplying by the chosen distance unit
-    this.rightEncoderTicks = distance * this.currentConversion;
+    this.desiredRightEncoderTicks = distance * this.currentConversion;
     this.encoderTicks = distance * this.currentConversion;
   }
 
@@ -166,53 +174,52 @@ private final DriveBase driveBase;
    /**
    * Constructor to be used when the input gives the right and left distance
    * 
-   * @param distance The distance to drive
-   * @param currentType The distance unit type to drive in
+   * @param rightDistance The distance to drive for right motor
+   * @param leftDistance The distance to drive for left motor
+   * @param distanceType The distance unit type to drive in
    * @param rightSpeed The right motor speed
    * @param leftSpeed The left motor speed
    */
-  public DriveWithDistance(double rightDistance, double leftDistance, DistanceType currentType, double rightSpeed, double leftSpeed) {
+  public DriveWithDistance(double rightDistance, double leftDistance, DistanceType distanceType, double rightSpeed, double leftSpeed) {
     isTurning = true;
 
-    if(rightDistance < 0 && rightSpeed < 0){
-        rightBackwards = true;
+    if(rightDistance < DISTANCE_NOT_MOVING && rightSpeed < DISTANCE_NOT_MOVING){
+      rightMotorMovingBackwards = true;
     }
-    else if(rightDistance > 0 && rightSpeed > 0){
-        rightBackwards = false;
+    else if(rightDistance > DISTANCE_NOT_MOVING && rightSpeed > SPEED_NOT_MOVING){
+      rightMotorMovingBackwards = false;
     }
     //The robot should not move if it has inverse speeds and desired distances since that must be an error
     else{
-      DriveBase.getInstance().tankDrive(0, 0, false);
+      DriveBase.getInstance().tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
       commandFinished = true;
       end = true;
     }
 
-    if(leftDistance < 0 && leftSpeed < 0){
-        leftBackwards = true;
+    if(leftDistance < SPEED_NOT_MOVING && leftSpeed < SPEED_NOT_MOVING){
+      leftMotorMovingBackwards = true;
 
     }
-    else if(leftDistance > 0 && leftSpeed > 0){
+    else if(leftDistance > DISTANCE_NOT_MOVING && leftSpeed > SPEED_NOT_MOVING){
 
-      leftBackwards = false;
+      leftMotorMovingBackwards = false;
   }
     //The robot should not move if it has inverse speeds and desired distances since that must be an error
     else{
-      DriveBase.getInstance().tankDrive(0, 0, false);
+      DriveBase.getInstance().tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
       commandFinished = true;
       end = true;
     }
 
-   
-
     //Setting current distance unit
-    this.currentType = currentType;
+    this.distanceType = distanceType;
 
     //Initating drivebase
     this.driveBase = DriveBase.getInstance();
     addRequirements(driveBase);
     
     //Setting the current conversion type according to the chosen distance unit
-    switch (currentType) {
+    switch (distanceType) {
       case FEET:
         this.currentConversion = DriveBase.DistanceUnit.FEET.encoderTicks;    
         
@@ -243,11 +250,10 @@ private final DriveBase driveBase;
     this.leftSpeed = leftSpeed;
 
     //Determing the amount of desired encoder ticks to drive by getting the distnace and multiplying by the chosen distance unit
-    this.rightEncoderTicks = rightDistance * this.currentConversion;   
-    this.leftEncoderTicks = leftDistance * this.currentConversion;
+    this.desiredRightEncoderTicks = rightDistance * this.currentConversion;   
+    this.desiredLeftEncoderTicks = leftDistance * this.currentConversion;
 
   }
-
   
   /**
    * Called  one when the command is initially scheduled and determines the desired distance to travel
@@ -257,13 +263,11 @@ private final DriveBase driveBase;
   public void initialize() {
 
     //Add the desired amount of encoder ticks to the current distance to get the amount of encoder ticks that the robot needs to drive
-    desiredRightDistance = driveBase.getRightDistance() + rightEncoderTicks;
-    desiredLeftDistance = driveBase.getLeftDistance() + leftEncoderTicks;
+    desiredRightDistance = driveBase.getRightDistance() + desiredRightEncoderTicks;
+    desiredLeftDistance = driveBase.getLeftDistance() + desiredLeftEncoderTicks;
 
     addRequirements(DriveBase.getInstance());
 
-    //Dashboard
-    SmartDashboard.putBoolean("Running", true);
   }
 
   /**
@@ -298,6 +302,8 @@ private final DriveBase driveBase;
   @Override
   public boolean isFinished() {
 
+    
+
     if (!end) {
       // Update to the current right/left distance that the robot has driven
       currentRightDistance = DriveBase.getInstance().getRightDistance();
@@ -307,15 +313,15 @@ private final DriveBase driveBase;
       if (!isTurning) {
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving forward).
-        if (!backWards && currentRightDistance >= desiredRightDistance) {
-          driveBase.tankDrive(0, 0, false);
+        if (!robotMovingBackWards && currentRightDistance >= desiredRightDistance) {
+          driveBase.tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
           commandFinished = true;
 
         }
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving backward).
-        else if (backWards && currentRightDistance <= desiredRightDistance) {
-          driveBase.tankDrive(0, 0, false);
+        else if (robotMovingBackWards && currentRightDistance <= desiredRightDistance) {
+          driveBase.tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
           commandFinished = true;
         } else {
           commandFinished = false;
@@ -326,34 +332,25 @@ private final DriveBase driveBase;
       else {
 
         // If the robot has reached or surpassed the desired distance, then stop the
-        // robot. Otherwise, keep moving (moving forward).
-        if (!rightBackwards && currentRightDistance >= desiredRightDistance) {
-          rightSpeed = 0;
+        // robot. Otherwise, keep moving (moving forward OR moving backwards).
+        if ((!rightMotorMovingBackwards && currentRightDistance >= desiredRightDistance) || (rightMotorMovingBackwards && currentRightDistance <= desiredRightDistance)) {
+          rightSpeed = SPEED_NOT_MOVING;
         }
-        // If the robot has reached or surpassed the desired distance, then stop the
-        // robot. Otherwise, keep moving (moving backward).
-        else if (rightBackwards && currentRightDistance <= desiredRightDistance) {
-           rightSpeed = 0;
-          
-        } else {
+        else {
           commandFinished = false;
         }
 
         // If the robot has reached or surpassed the desired distance, then stop the
         // robot. Otherwise, keep moving (moving forward).
-        if (!leftBackwards && currentLeftDistance >= desiredLeftDistance) {
-          leftSpeed = 0;
+        if ((!leftMotorMovingBackwards && currentLeftDistance >= desiredLeftDistance) || (leftMotorMovingBackwards && currentLeftDistance <= desiredLeftDistance)) {
+          leftSpeed = SPEED_NOT_MOVING;
         }
-        // If the robot has reached or surpassed the desired distance, then stop the
-        // robot. Otherwise, keep moving (moving backward).
-        else if (leftBackwards && currentLeftDistance <= desiredLeftDistance) {
-          leftSpeed = 0;
-        } else {
+        else {
           commandFinished = false;
         }
 
         //If the left and right speed are zero, just stop the robot
-        if(leftSpeed == 0 && rightSpeed == 0){
+        if(leftSpeed == SPEED_NOT_MOVING && rightSpeed == SPEED_NOT_MOVING){
           commandFinished = true;
           end = true;
         }
