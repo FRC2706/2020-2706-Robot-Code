@@ -64,7 +64,6 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
 
         //Initialize the IR sensor
         // TODO add this once it is in the real robot
-        // indexerIrSensor = new AnalogInput(Config.FEEDERSUBSYSTEM_IR_SENSOR);
 
         //Configure the talon
         if (checkConditions()){
@@ -118,13 +117,6 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         return indexerIrSensor.getVoltage() > FEEDERSUBSYSTEM_IR_MAX_DISTANCE.get();
     }
 
-//    /**
-//     * Runs the feeder motor at a certain speed
-//     */
-//    public void runFeeder() {
-//        feederTalon.set(ControlMode.PercentOutput, FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
-//    }
-
     public void runFeeder(){
      //   System.out.println("Feeder at :" + feederTalon.getSelectedSensorPosition());
         feederTalon.set(ControlMode.PercentOutput, -FEEDERSUBSYSTEM_PEAK_OUTPUT.get());
@@ -155,11 +147,6 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     public boolean doneIncrementing(double lowerLimit) {
         boolean done = false;
 
-//        double lowerLimit = -(FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
-//        double upperLimit = -(FEEDERSUBSYSTEM_INCREMENT_TICKS.get() + 100);
-
-       // System.out.println("Is " + lowerLimit  +" <= " + feederTalon.getSelectedSensorPosition() + " <= " + upperLimit);
-
         if(feederTalon.getSelectedSensorPosition() <= lowerLimit) {
             done = true;
         }
@@ -172,8 +159,6 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
 
 
     public void periodic() {
-      // Set the default command for a subsystem here.
-      // setDefaultCommand(new MySpecialCommand());
         SmartDashboard.putNumber("Feeder encoder ticks", feederTalon.getSelectedSensorPosition());
     }
 

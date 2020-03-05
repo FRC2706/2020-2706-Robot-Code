@@ -42,8 +42,8 @@ public class RobotContainer {
   private Command driveCommand;
   private Command intakeCommand;
   private Command emptyFeederCommand;
-  private Command reverseFeeder;
-    private Command sensitiveDriverControlCommand;
+  private Command stopFeeder;
+    private Command visionAssistOuterPort;
   private Command positionPowercell;
   private Command rampShooterCommand;
   private Command incrementFeeder;
@@ -102,7 +102,12 @@ public class RobotContainer {
         DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
 
         positionPowercell = new PositionPowercellCommand();
-        new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).whenPressed(positionPowercell);
+        new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
+
+//        visionAssistOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+//        new JoystickButton(driverStick, XboxController.Button.kA.value).whenPressed(stopFeeder);
+
+
     }
 
     /**

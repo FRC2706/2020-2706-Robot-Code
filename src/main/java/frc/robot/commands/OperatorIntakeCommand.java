@@ -29,7 +29,7 @@ public class OperatorIntakeCommand extends CommandBase {
     
     @Override
     public void execute() {
-        //AgitatorSubsystem.INSTANCE.runAgitator();
+
     }
     
     @Override
