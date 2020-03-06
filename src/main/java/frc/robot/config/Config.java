@@ -74,7 +74,7 @@ public class Config {
     // Static Constants
     private static Class<? extends DriveBase> Pre2020DriveBase = DriveBasePre2020.class.asSubclass(DriveBase.class);
     private static Class<? extends DriveBase> Post2020DriveBase = DriveBase2020.class.asSubclass(DriveBase.class);
-    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Post2020DriveBase, Post2020DriveBase, Pre2020DriveBase);
+    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Post2020DriveBase, Post2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase);
     public static int RIGHT_FRONT_MOTOR = robotSpecific(2, 2, 3, 2, 2);
     public static int RIGHT_REAR_MOTOR = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_MOTOR = robotSpecific(1, 1, 1, 1, 1);
@@ -93,7 +93,7 @@ public class Config {
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
-    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
+    public static int ANALOG_SELECTOR_ONE = robotSpecific(-1, 0, -1, -1, -1, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
     
     public static int ARM_TALON = robotSpecific(7, 7, 12);
@@ -111,7 +111,7 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_X = 4;
     
     public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, true, true);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, false, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;
     

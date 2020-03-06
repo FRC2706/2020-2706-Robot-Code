@@ -37,10 +37,6 @@ public class DriveBase2020 extends DriveBase {
         climberTalon = new WPI_TalonSRX(Config.CLIMBER_TALON);
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
-        //Current limiting for drivetrain master motors (limits current SUPPLY).    Enabled? True/false   /         Limit (A)         / Surge trigger level (A) /  Max Surge time (sec)
-        leftMaster.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Config.MOTOR_CURRENT_LIMIT, Config.CONTIN_CURRENT_AMPS, Config.PEAK_CURRENT_AMPS, Config.PEAK_TIME_SEC));
-        rightMaster.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Config.MOTOR_CURRENT_LIMIT, Config.CONTIN_CURRENT_AMPS, Config.PEAK_CURRENT_AMPS, Config.PEAK_TIME_SEC));
-
         if (Config.PIGEON_ID != -1) {
             pigeon = new PigeonIMU(new WPI_TalonSRX(Config.PIGEON_ID));
             pigeon.setFusedHeading(0d, Config.CAN_TIMEOUT_LONG);
@@ -98,8 +94,8 @@ public class DriveBase2020 extends DriveBase {
         leftSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         
-        leftMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
-        rightMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+//        leftMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+//        rightMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
         this.followMotors();
     }
     

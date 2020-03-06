@@ -7,9 +7,12 @@ import frc.robot.subsystems.ArmSubsystem;
 public class MoveArmManuallyCommand extends CommandBase {
     private final ArmSubsystem armSubsystem;
 
-    public MoveArmManuallyCommand() {
+    private double speed;
+
+    public MoveArmManuallyCommand(double speed) {
         addRequirements(ArmSubsystem.getInstance());
         armSubsystem = ArmSubsystem.getInstance();
+        this.speed = speed;
     }
 
     /**
@@ -26,7 +29,7 @@ public class MoveArmManuallyCommand extends CommandBase {
      */
     @Override
     public void execute() {
-        armSubsystem.moveArm(0.7);
+        armSubsystem.moveArm(speed);
     }
 
     /**
