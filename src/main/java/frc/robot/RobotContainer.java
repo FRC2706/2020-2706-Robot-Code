@@ -45,9 +45,9 @@ public class RobotContainer {
   private AnalogSelector analogSelectorTwo;
   private Command driveCommand;
   private Command intakeCommand;
-  private Command emptyFeederCommand;
-  private Command stopFeeder;
-    private Command visionAssistOuterPort;
+  private Command reverseFeeder;
+  private Command moveArmToSetpoint;
+    private Command reverseArmManually;
   private Command positionPowercell;
   private Command rampShooterCommand;
   private Command incrementFeeder;
@@ -86,12 +86,12 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
       
-        // Instantiate the intake command and bind it
+//        // Instantiate the intake command and bind it
         intakeCommand = new OperatorIntakeCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
 
-        emptyFeederCommand = new ReverseFeeder();
-        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
+        reverseFeeder = new ReverseFeeder();
+        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(reverseFeeder);
 
         runFeeder = new RunFeederCommand(-0.2);
         new JoystickButton(controlStick, XboxController.Button.kY.value).whenHeld(runFeeder);
@@ -99,7 +99,7 @@ public class RobotContainer {
         incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
         new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
 
-        rampShooterCommand = new SpinUpShooter(1200);
+        rampShooterCommand = new SpinUpShooter(1500);
         new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
@@ -107,6 +107,7 @@ public class RobotContainer {
 
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
+
 
     }
 
