@@ -93,9 +93,7 @@ public class DriveBase2020 extends DriveBase {
         rightMaster.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         leftSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
-        
-//        leftMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
-//        rightMaster.configPeakCurrentLimit(2, Config.CAN_TIMEOUT_LONG);
+
         this.followMotors();
     }
     

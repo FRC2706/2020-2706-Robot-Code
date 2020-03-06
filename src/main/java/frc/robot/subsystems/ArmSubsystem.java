@@ -72,11 +72,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         //    Enable forward soft limit and set the value in encoder ticks
         armTalon.configForwardSoftLimitEnable(true);
         armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
-
-        // Enable reverse soft limit and set the value in encoder ticks
-//        armTalon.configReverseSoftLimitEnable(true);
-//        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
-
+        
         // Max voltage to apply with the talon. 12 is the maximum
         armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
         armTalon.enableVoltageCompensation(true);
