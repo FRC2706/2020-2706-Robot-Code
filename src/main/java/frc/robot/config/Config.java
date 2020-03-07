@@ -134,7 +134,7 @@ public class Config {
     // Vision Table Constants
     public static String VISION_TABLE_NAME      = "MergeVision";
     public static String DISTANCE_POWERCELL     = "DistanceToPowerCell";
-    public static String DISTANCE_OUTER_PORT    = "DistanceToOuterPort";
+    public static String DISTANCE_OUTER_PORT    = "DistanceToTarget";
     public static String YAW_POWERCELL          = "YawToPowerCell";
     public static String YAW_OUTER_PORT         = "YawToTarget";
 

@@ -3,20 +3,18 @@ package frc.robot.commands;
 import frc.robot.config.Config;
 
 import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.nettables.VisionCtrlNetTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * VisionAssistedShooter command.
+ * VisionAssistedTargetRPM command.
  * NOTE: this command should be run after command TurnToOuterPortCommand
  */
-public class VisionAssistedShooter extends CommandBase {
+public class VisionAssistedTargetRPM implements Runnable {
   
   //subsystem
-  private final ShooterSubsystem shooter;
-  
+    
   //todo: can be configured in config file as well
   private final double SHOOTER_ANGLE_IN_DEGREES  = 46.88;
   private final double TARGET_HEIGHT_IN_METERS = 2.02;
@@ -41,72 +39,45 @@ public class VisionAssistedShooter extends CommandBase {
 
 
   /**
-   * Creates a new VisionAssistedShooter Command.
+   * Creates a new VisionAssistedTargetRPM Command.
    *
+   * @param subsystem The subsystem used by this command.
    */
-  public VisionAssistedShooter( ) {
-   
-    //subsystem
-    shooter = ShooterSubsystem.getInstance();
-   
-    if (shooter.isActive()){
-      // Use addRequirements() here to declare subsystem dependencies.
-      addRequirements(shooter);
-    }
-  }
-
-  @Override
-  public void initialize() {
+  public VisionAssistedTargetRPM() {
 
     // Ensure the vision is running in tape mode
     visionControlNetTable.setTapeMode();
+    
+  }
+   
+  public void run() {
 
-    //Read the network table from vision to get the distance from the target.
-    distanceToOuterPortInMeters = visionControlNetTable.distanceToOuterPort.get();
-    if ( distanceToOuterPortInMeters < 0.0 )
-    {
-      //Vision can not provide valid detection
-      targetRPM = 0;
-    }
-    else
-    {
-      //NOTE: unit in the vision network table is feet. Convert it to meters.
-      distanceToOuterPortInMeters = distanceToOuterPortInMeters * METER_PER_FOOT ;
+      //Read the network table from vision to get the distance from the target.
+      distanceToOuterPortInMeters = visionControlNetTable.distanceToOuterPort.get();
+      if ( distanceToOuterPortInMeters < 0.0 )
+      {
+        //Vision can not provide valid detection
+        targetRPM = 0;
+      }
+      else
+      {
+        //NOTE: unit in the vision network table is feet. Convert it to meters.
+        distanceToOuterPortInMeters = distanceToOuterPortInMeters * METER_PER_FOOT ;
+  
+        //todo: to adjuste the distance for the shooter 
+        //adjustedDistanceToOutPortInMeters = ;
+  
+        //Calculate the RPM of the shooter wheel.
+        double targetV  = initVelocity( distanceToOuterPortInMeters);
+        targetRPM     = velocityToRPM (targetV);
+      }
 
-      //todo: to adjuste the distance for the shooter 
-      //adjustedDistanceToOutPortInMeters = ;
-
-      //Calculate the RPM of the shooter wheel.
-      double targetV  = initVelocity( distanceToOuterPortInMeters);
-      targetRPM     = velocityToRPM (targetV);
-    }
+    // provide feedback to the shuffleboard for Driver Team
+    // vision assisted RPM
+    SmartDashboard.putNumber("Info: Vision Assisted Target RPM", targetRPM);
   }
 
-  @Override
-  public void execute() {
-
-    //Set the shooter to the target RPM.
-    shooter.setTargetRPM((int) targetRPM);
-
-    //todo: provide feedback to the shuffleboard for Driver Team
-    //vision assisted RPM
-
-    SmartDashboard.putNumber("Vision Assisted Target Shooter RPM", targetRPM);
-  }
-
-  @Override
-  public boolean isFinished() {
-      // This command should only be run once
-      return true;
-  }
-
-  @Override
-    public void end(boolean interrupted) {
-        
-    }
-
-
-  double initVelocity(double distanceToTargetInMeters) {
+ private double initVelocity(double distanceToTargetInMeters) {
     double dTemp;
     //unit: m/s
     double dInitVelocity;
@@ -130,7 +101,7 @@ public class VisionAssistedShooter extends CommandBase {
  // convert velocity to RPM
  // velocity: unit m/s
  // return: unit revolutions per minute
-double velocityToRPM( double velocity)
+private double velocityToRPM( double velocity)
  {     
      double rpm = velocity*CONVERSION_NUMBER/(Math.PI*SHOOTER_WHEEL_RADIUS_IN_CM);
      return rpm;

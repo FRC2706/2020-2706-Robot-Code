@@ -18,10 +18,8 @@ import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.DriveBaseHolder;
-import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.DriveWithTime;
-import frc.robot.commands.SensitiveDriverControl;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.logging.Logger;
 
@@ -47,10 +45,11 @@ public class RobotContainer {
   private Command intakeCommand;
   private Command emptyFeederCommand;
   private Command reverseFeeder;
-    private Command sensitiveDriverControlCommand;
+  private Command sensitiveDriverControlCommand;
   private Command moveArm;
   private Command rampShooterCommand;
   private Command incrementFeeder;
+  private VisionAssistedTargetRPM targetRPM;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
@@ -105,6 +104,13 @@ public class RobotContainer {
 
         JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
         turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
+
+        //todo:
+        // targetRPMShooter = new JoystickButton(driverStick, XboxController.Button.kA.value);
+        //targetRPMShooter.whenPressed(new VisionAssistedShooter( ));
+    
+        targetRPM = new VisionAssistedTargetRPM();
+        new RunCommand(targetRPM);
     }
 
     /**
