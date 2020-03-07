@@ -2,8 +2,9 @@ package frc.robot.config;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveBase2020;
+import frc.robot.subsystems.DriveBasePre2020;
 import frc.robot.subsystems.DriveBase;
 
 import java.io.BufferedReader;
@@ -23,7 +24,7 @@ public class Config {
     
     /**
      * Instructions for set up of robot.conf file on robot
-     * <p>
+     *
      * 0. Connect to the robot to the robot using a usb cable or the wifi network.
      * 1. Using a tool like Git Bash or putty, ssh into admin@roboRIO-2706-FRC.local (ssh admin@roboRIO-2706-FRC.local)
      * a. There is no password on a freshly flashed roboRIO
@@ -71,18 +72,33 @@ public class Config {
     }
     
     // Static Constants
-    public static int RIGHT_FRONT_TALON = robotSpecific(3, 3, 3, 3, 3);
-    public static int RIGHT_REAR_TALON = robotSpecific(4, 4, 4, 4, 4);
-    public static int LEFT_FRONT_TALON = robotSpecific(1, 1, 1, 1, 1);
-    public static int LEFT_REAR_TALON = robotSpecific(2, 2, 2, 2, 2);
-    public static int INTAKE_MOTOR = robotSpecific(-1, -1, -1, 6, -1);
+    private static Class<? extends DriveBase> Pre2020DriveBase = DriveBasePre2020.class.asSubclass(DriveBase.class);
+    private static Class<? extends DriveBase> Post2020DriveBase = DriveBase2020.class.asSubclass(DriveBase.class);
+    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Post2020DriveBase, Post2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase);
+    public static int RIGHT_FRONT_MOTOR = robotSpecific(2, 2, 3, 2, 2);
+    public static int RIGHT_REAR_MOTOR = robotSpecific(4, 4, 4, 4, 4);
+    public static int LEFT_FRONT_MOTOR = robotSpecific(1, 1, 1, 1, 1);
+    public static int LEFT_REAR_MOTOR = robotSpecific(3, 3, 2, 3, 3);
+    public static int INTAKE_MOTOR = robotSpecific(6, 6, -1, 6, -1);
+    public static int SHOOTER_MOTOR = robotSpecific(5, 5, -1, -1, 16); //protobot is 16
+    public static int CLIMBER_TALON = robotSpecific(10, 10, -1, -1, 16);
+    public static int AGITATOR_MOTOR = robotSpecific(9, 9);
+
+    // Current limiter Constants
+    public static int PEAK_CURRENT_AMPS = 60; //Peak current threshold to trigger the current limit
+    public static double PEAK_TIME_SEC = 1.0; //Time after current exceeds peak current to trigger current limit
+    public static int CONTIN_CURRENT_AMPS = 40; //Current to mantain once current limit has been triggered 
+    public static boolean MOTOR_CURRENT_LIMIT = true; //Enable or disable motor current limiting.
 
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
+    public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
-    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0);
+    public static int ANALOG_SELECTOR_ONE = robotSpecific(-1, 0, -1, -1, -1, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
     
-    public static int ARM_TALON = robotSpecific(12, 12, 12);
+    public static int ARM_TALON = robotSpecific(7, 7, 12);
+
+    public static int FEEDER_SUBSYSTEM_TALON = robotSpecific(8, 8);
     
     public static Double DRIVE_OPEN_LOOP_DEADBAND = 0.04;
     
@@ -95,13 +111,13 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_X = 4;
     
     public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, false, false);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, false, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;
     
     public static double CURVATURE_OVERRIDE = 0.25;
     
-    public static boolean INVERT_ARM_TALON = robotSpecific(false, false, false);
+    public static boolean INVERT_ARM_TALON = robotSpecific(true, false, false);
     
     public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
     
@@ -114,9 +130,9 @@ public class Config {
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
     
     // PIDF values for the arm
-    public static double ARM_PID_P = robotSpecific(0.2);
+    public static double ARM_PID_P = robotSpecific(0.0);
     public static double ARM_PID_I = robotSpecific(0.0);
-    public static double ARM_PID_D = robotSpecific(0.1);
+    public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.0);
 
     public static final double AUTO_LEFT_MOTOR_SPEED = 0.2;
@@ -125,10 +141,61 @@ public class Config {
     public static final double AUTO_DRIVE_TIME = 1.0;
     public static final DriveBase.DistanceType DEFAULT_UNIT= DriveBase.DistanceType.METERS;
 
-
-
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
+
+    // Vision Table Constants
+    public static String VISION_TABLE_NAME      = "MergeVision";
+    public static String DISTANCE_POWERCELL     = "DistanceToPowerCell";
+    public static String DISTANCE_OUTER_PORT    = "DistanceToOuterPort";
+    public static String YAW_POWERCELL          = "YawToPowerCell";
+    public static String YAW_OUTER_PORT         = "YawToTarget";
+
+    // Drivetrain PID values
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+
+    public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> DRIVETRAIN_D = new FluidConstant<>("DrivetrainD", DRIVETRAIN_D_SPECIFIC)
+            .registerToTable(Config.constantsTable);
+
+    public static FluidConstant<Double> maxTimeOuterPortCommand = new FluidConstant<>("Outer Port Max Time", 1.0)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> maxYawErrorOuterPortCommand = new FluidConstant<>("Outer Port Command Yaw Error", 3.0)
+            .registerToTable(Config.constantsTable);
+    
+    // PID Values for the DrivetrainPIDTurnDelta command
+    public static FluidConstant<Double> PIDTURNDELTA_P = new FluidConstant<>("DrivetrainP", 0.018d)
+            .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> PIDTURNDELTA_D = new FluidConstant<>("DrivetrainD", 0.0016d)
+            .registerToTable(Config.constantsTable);
+
+    // Fluid constant for Drivetrains
+    public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
+            .registerToTable(Config.constantsTable);
+
+    public static int shooterAnalogSensor = robotSpecific(8, 8);
+
+    public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 0.8)
+            .registerToTable(Config.constantsTable);
+
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 1200.0)
+            .registerToTable(Config.constantsTable);
+    //Max distance at which the robot knows a ball is at the indexer
+    public static FluidConstant<Integer> FEEDERSUBSYSTEM_IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.1)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_I = new FluidConstant<>("FeederSubsystemI", 0.0)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 0.05)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
+                .registerToTable(Config.constantsTable);
+    //Highest speed the motor could reach
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.35)
+                .registerToTable(Config.constantsTable);
     
     /**
      * Returns one of the values passed based on the robot ID
@@ -157,7 +224,7 @@ public class Config {
         if (robotId < 0) {
             try (BufferedReader reader = Files.newBufferedReader(ROBOT_ID_LOC)) {
                 robotId = Integer.parseInt(reader.readLine());
-            } catch (IOException | NumberFormatException e) {
+            } catch (Exception e) {
                 Robot.haltRobot("Can't load Robot ID", e);
             }
         }

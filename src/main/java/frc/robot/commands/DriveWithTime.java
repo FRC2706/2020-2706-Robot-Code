@@ -10,15 +10,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj.Timer;
-
-
+import frc.robot.subsystems.DriveBaseHolder;
 
 public class DriveWithTime extends CommandBase {
 
-// initialization of the variables which will allow imported variables to be public(making usable throughout the DriveWithTime command).
-  public double seconds = 0;
-  public double leftSpeeds= 0;
-  public double rightSpeeds = 0;
+  // Initialization of the variables which will allow imported variables to be public(making usable throughout the DriveWithTime command).
+  private double seconds = 0;
+  private double leftSpeeds= 0;
+  private double rightSpeeds = 0;
 
 /**
  * This command will take in speeds (left and right) and time, for which is will set the motors to the x speed for y seconds.
@@ -26,12 +25,11 @@ public class DriveWithTime extends CommandBase {
  * @param seconds        amount of seconds the robot motors will be activated for  
  * @param leftSpeeds     when the motor is activated, this is the speed at which the LEFT motors will be. speed can be inbetween -1 to 1.
  * @param rightSpeeds    when the motor is activated, this is the speed at which the RIGHT motors will be. speed can be inbetween -1 to 1.
- *
  */
 
   public DriveWithTime(double seconds, double leftSpeed, double rightSpeed) {
 
-    //set variables to public to allow their usage throughout the DriveWithTime command.
+    // Sets the variables to public to allow their usage throughout the DriveWithTime command.
     this.seconds = seconds;
     this.leftSpeeds = leftSpeed;
     this.rightSpeeds = rightSpeed;
@@ -39,16 +37,16 @@ public class DriveWithTime extends CommandBase {
   }
 
   //Initializes a timer
-  private Timer m_timer = new Timer();
+  private Timer timer = new Timer();
 
 
   // Called  one when the command is initially scheduled.
   @Override
   public void initialize() {
 
-    //timer is started and will start counting UP from 0
-    m_timer.start();
-    addRequirements(DriveBase.getInstance());
+    // Timer is started and will start counting UP from 0
+    timer.start();
+    addRequirements(DriveBaseHolder.getInstance());
 
   }
 
@@ -56,24 +54,25 @@ public class DriveWithTime extends CommandBase {
   @Override
   public void execute() {
    
-    //sets motor speeds to those of which the user inputed
-    DriveBase.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
+    // Sets the motor speeds to those of which the user inputed
+    DriveBaseHolder.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
     
   }
     
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-  //if using the withTimeout(); as the timer, return here.
+    // If using the withTimeout(double seconds); as the timer, return here.
+    
   }
 
 
   @Override
   public boolean isFinished() {
    /*
-    *will return true when the timer's count reaches the inputed seconds, this will stop the command, disabling the motors.
+    *Will return true when the timer's count reaches the inputed seconds, this will stop the command, disabling the motors.
     *when returning false, the command will continue to run, and the motors will continue to spin at thei inputed rate.
     */
-    return m_timer.get() >= seconds;
+    return timer.get() >= seconds;
   }
 }
