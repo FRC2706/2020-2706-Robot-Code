@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ConditionalSubsystemBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -28,7 +29,7 @@ public class OperatorIntakeCommand extends CommandBase {
     
     @Override
     public void execute() {
-        
+
     }
     
     @Override
@@ -39,6 +40,7 @@ public class OperatorIntakeCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         // When the command stops, tell the intake to not go
+        AgitatorSubsystem.INSTANCE.stopAgitator();
         condition.setState(false);
     }
 }
