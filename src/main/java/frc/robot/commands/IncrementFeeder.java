@@ -13,14 +13,15 @@ import frc.robot.subsystems.FeederSubsystem;
 public class IncrementFeeder extends CommandBase {
 
     FeederSubsystem feeder;
+    private Double incrementTicks;
 
     /**
      * Creates a new FeederSubsystem.
      */
-    public IncrementFeeder() {
-        System.out.println("Created increment feeder command");
+    public IncrementFeeder(Double incrementTicks) {
         addRequirements(FeederSubsystem.getInstance());
         this.feeder = FeederSubsystem.getInstance();
+        this.incrementTicks = incrementTicks;
     }
 
     // Called when the command is initially scheduled.
@@ -29,11 +30,9 @@ public class IncrementFeeder extends CommandBase {
         FeederSubsystem.zeroTalon();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        feeder.runFeeder();
-        this.feeder.incrementPowerCells();
+        this.feeder.runFeeder();
     }
 
     // Called once the command ends or is interrupted.
@@ -44,7 +43,7 @@ public class IncrementFeeder extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return feeder.doneIncrementing();
+        return feeder.doneIncrementing(incrementTicks);
     }
 
 }

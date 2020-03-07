@@ -10,17 +10,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.DriveBaseHolder;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.*;
+import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.DriveWithTime;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import java.util.logging.Logger;
 
 /**
@@ -35,6 +35,9 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+    
+    // RobotContainer is a singleton class
+    private static RobotContainer currentInstance;
 
   // The robot's subsystems and commands are defined here...    
   private Joystick driverStick;
@@ -43,17 +46,19 @@ public class RobotContainer {
   private AnalogSelector analogSelectorTwo;
   private Command driveCommand;
   private Command intakeCommand;
-  private Command emptyFeederCommand;
   private Command reverseFeeder;
-  private Command sensitiveDriverControlCommand;
-  private Command moveArm;
+  private Command moveArmToSetpoint;
+    private Command reverseArmManually;
+  private Command positionPowercell;
   private Command rampShooterCommand;
   private Command incrementFeeder;
+  private Command perfectPosition;
   private VisionAssistedTargetRPM targetRPM;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
   private final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
+    private Command runFeeder;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -83,34 +88,36 @@ public class RobotContainer {
         driverStick = new Joystick(0);
         controlStick = new Joystick(1);
       
-        // Instantiate the intake command and bind it
+//        // Instantiate the intake command and bind it
         intakeCommand = new OperatorIntakeCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
 
-        emptyFeederCommand = new EmptyFeeder();
-        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(emptyFeederCommand);
-
         reverseFeeder = new ReverseFeeder();
-        new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(reverseFeeder);
+        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(reverseFeeder);
 
-        rampShooterCommand = new SpinUpShooter();
+        runFeeder = new RunFeederCommand(-0.2);
+        new JoystickButton(controlStick, XboxController.Button.kY.value).whenHeld(runFeeder);
 
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(rampShooterCommand);
+        incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
+        new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
+
+        rampShooterCommand = new SpinUpShooter(1500);
+        new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
         DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
-        
-        sensitiveDriverControlCommand = new SensitiveDriverControl(driverStick);
 
-        JoystickButton turnToYaw = new JoystickButton(driverStick, XboxController.Button.kA.value);
-        turnToYaw.whenPressed(new TurnToOuterPortCommand(true, Config.maxYawErrorOuterPortCommand.get(), Config.maxTimeOuterPortCommand.get()));
+        positionPowercell = new PositionPowercellCommand();
+        new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
-        //todo:
+        //todo: need jawToOuterPort 
+        //?? Button value???
         // targetRPMShooter = new JoystickButton(driverStick, XboxController.Button.kA.value);
         //targetRPMShooter.whenPressed(new VisionAssistedShooter( ));
     
         targetRPM = new VisionAssistedTargetRPM();
         new RunCommand(targetRPM);
+
     }
 
     /**
@@ -140,5 +147,26 @@ public class RobotContainer {
         // Also return null if this ever gets to here because safety
         return null;
     }
+
+    public void joystickRumble(double leftValue, double rightValue) {
+        //Joystick rumble (driver feedback). leftValue/rightValue sets vibration force.
+        driverStick.setRumble(RumbleType.kLeftRumble, leftValue);
+        driverStick.setRumble(RumbleType.kRightRumble, rightValue);
+    }
+
+    /**
+     * Initialize the current RobotContainer instance
+     */
+    public static void init() {
+        if (currentInstance == null) {
+            currentInstance = new RobotContainer();
+        }
+    }
+
+    public static RobotContainer getInstance() {
+        init();
+        return currentInstance;
+    }
+    
     
 }

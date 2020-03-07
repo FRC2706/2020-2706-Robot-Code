@@ -74,7 +74,7 @@ public class Config {
     // Static Constants
     private static Class<? extends DriveBase> Pre2020DriveBase = DriveBasePre2020.class.asSubclass(DriveBase.class);
     private static Class<? extends DriveBase> Post2020DriveBase = DriveBase2020.class.asSubclass(DriveBase.class);
-    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Post2020DriveBase, Post2020DriveBase, Pre2020DriveBase);
+    public static Class<? extends DriveBase> DRIVEBASE_CLASS = robotSpecific(Post2020DriveBase, Post2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase, Pre2020DriveBase);
     public static int RIGHT_FRONT_MOTOR = robotSpecific(2, 2, 3, 2, 2);
     public static int RIGHT_REAR_MOTOR = robotSpecific(4, 4, 4, 4, 4);
     public static int LEFT_FRONT_MOTOR = robotSpecific(1, 1, 1, 1, 1);
@@ -82,11 +82,18 @@ public class Config {
     public static int INTAKE_MOTOR = robotSpecific(6, 6, -1, 6, -1);
     public static int SHOOTER_MOTOR = robotSpecific(5, 5, -1, -1, 16); //protobot is 16
     public static int CLIMBER_TALON = robotSpecific(10, 10, -1, -1, 16);
+    public static int AGITATOR_MOTOR = robotSpecific(9, 9);
+
+    // Current limiter Constants
+    public static int PEAK_CURRENT_AMPS = 60; //Peak current threshold to trigger the current limit
+    public static double PEAK_TIME_SEC = 1.0; //Time after current exceeds peak current to trigger current limit
+    public static int CONTIN_CURRENT_AMPS = 40; //Current to mantain once current limit has been triggered 
+    public static boolean MOTOR_CURRENT_LIMIT = true; //Enable or disable motor current limiting.
 
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
-    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
+    public static int ANALOG_SELECTOR_ONE = robotSpecific(-1, 0, -1, -1, -1, 0);
     public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
     
     public static int ARM_TALON = robotSpecific(7, 7, 12);
@@ -103,8 +110,8 @@ public class Config {
     public static int RIGHT_CONTROL_STICK_Y = 5;
     public static int RIGHT_CONTROL_STICK_X = 4;
     
-    public static boolean INVERT_FIRST_AXIS = robotSpecific(false, true, true);
-    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, true, true);
+    public static boolean INVERT_FIRST_AXIS = robotSpecific(true, true, true);
+    public static boolean INVERT_SECOND_AXIS = robotSpecific(false, false, true);
     
     public static double CONTROLLER_DEADBAND = 0.05;
     
@@ -161,6 +168,28 @@ public class Config {
     // Fluid constant for Drivetrains
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
+
+    public static int shooterAnalogSensor = robotSpecific(8, 8);
+
+    public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 0.8)
+            .registerToTable(Config.constantsTable);
+
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 1200.0)
+            .registerToTable(Config.constantsTable);
+    //Max distance at which the robot knows a ball is at the indexer
+    public static FluidConstant<Integer> FEEDERSUBSYSTEM_IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.1)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_I = new FluidConstant<>("FeederSubsystemI", 0.0)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 0.05)
+                .registerToTable(Config.constantsTable);
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.0)
+                .registerToTable(Config.constantsTable);
+    //Highest speed the motor could reach
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.35)
+                .registerToTable(Config.constantsTable);
     
     /**
      * Returns one of the values passed based on the robot ID

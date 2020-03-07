@@ -13,7 +13,8 @@ import frc.robot.subsystems.FeederSubsystem;
 public class ReverseFeeder extends CommandBase {
 
     FeederSubsystem feeder;
-    
+
+
     /**
      * Creates a new FeederSubsystem.
      */
@@ -25,13 +26,13 @@ public class ReverseFeeder extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
+        
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        this.feeder.reverseFeeder();
+        this.feeder.slowReverseFeeder();
     }
 
     // Called once the command ends or is interrupted.

@@ -13,8 +13,10 @@ import frc.robot.config.Config;
 public class ArmSubsystem extends ConditionalSubsystemBase {
 
     // TODO Change placeholder values to actual limits
-    private static final int FORWARD_LIMIT_TICKS = 100000;
-    private static final int REVERSE_LIMIT_TICKS = 0;
+    private static final int FORWARD_LIMIT_TICKS = 2000;
+    private static final int REVERSE_LIMIT_TICKS = 1300;
+
+    private static final int acceptableError = 50;
 
     private static ArmSubsystem INSTANCE = new ArmSubsystem();
 
@@ -23,7 +25,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     ErrorCode errorCode;
 
     private static final int[] setpoints = {
-            1000,
+            1500,
             3000,
         };
 
@@ -63,18 +65,14 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
         // Set up the close loop period
         armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
-        armTalon.setSensorPhase(true);
+        armTalon.setSensorPhase(false);
         armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
         armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
         //    Enable forward soft limit and set the value in encoder ticks
         armTalon.configForwardSoftLimitEnable(true);
         armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
-
-        // Enable reverse soft limit and set the value in encoder ticks
-        armTalon.configReverseSoftLimitEnable(true);
-        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
-
+        
         // Max voltage to apply with the talon. 12 is the maximum
         armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
         armTalon.enableVoltageCompensation(true);
@@ -125,6 +123,14 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition());
         SmartDashboard.putNumber("Arm Angle", toDeg(armTalon.getSelectedSensorPosition()));
+    }
+
+    public boolean reachedSetpoint(int index) {
+        return reachedPosition(setpoints[index]);
+    }
+
+    public boolean reachedPosition(int position) {
+        return position - acceptableError <= armTalon.getSelectedSensorPosition() && position + acceptableError >= armTalon.getSelectedSensorPosition();
     }
 
     /**

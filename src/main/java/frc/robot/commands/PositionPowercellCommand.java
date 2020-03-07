@@ -1,18 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 
-public class MoveArmManuallyCommand extends CommandBase {
-    private final ArmSubsystem armSubsystem;
+public class PositionPowercellCommand extends CommandBase {
 
-    private double speed;
+    public PositionPowercellCommand() {
 
-    public MoveArmManuallyCommand(double speed) {
-        addRequirements(ArmSubsystem.getInstance());
-        armSubsystem = ArmSubsystem.getInstance();
-        this.speed = speed;
     }
 
     /**
@@ -29,7 +25,7 @@ public class MoveArmManuallyCommand extends CommandBase {
      */
     @Override
     public void execute() {
-        armSubsystem.moveArm(speed);
+        FeederSubsystem.getInstance().runFeeder(-0.35);
     }
 
     /**
@@ -48,8 +44,7 @@ public class MoveArmManuallyCommand extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return false;
+           return !ShooterSubsystem.getInstance().shooterDigitalInput.get();
     }
 
     /**
@@ -62,6 +57,6 @@ public class MoveArmManuallyCommand extends CommandBase {
      */
     @Override
     public void end(boolean interrupted) {
-        armSubsystem.moveArm(0d);
+        FeederSubsystem.getInstance().stopFeeder();
     }
 }
