@@ -154,6 +154,47 @@ public abstract class DriveBase extends SubsystemBase {
     protected void driveModeUpdated(DriveMode driveMode) {
 
     }
+
+    /**
+     * Get the distance travelled by the left encoder in encoder ticks
+     *
+     * @return The distance of the right encoder (0 before overide)
+     */
+    public double getLeftDistance(){
+        return 0;
+    }
+
+    /**
+     * Get the distance travelled by the right encoder in encoder ticks
+     *
+     * @return The distance of the right encoder (0 before overide)
+     */
+    public double getRightDistance() {
+        return 0;
+    }
+
+    /**
+     * Get the speed of the left encoder in encoder ticks per second
+     *
+     * @return The speed of the left encoder (0 before overide)
+     */
+    public double getLeftSpeed() {
+        return 0;
+    }
+
+    /**
+     * Get the speed of the right encoder in encoder ticks per second
+     *
+     * @return The speed of the right encoder (0 before overide)
+     */
+    public double getRightSpeed() {
+        return 0;
+    }
+
+    //Reset encoder values
+    public void resetEncoders() {
+
+    }
     
     /**
      * This is a callback for the drive base to update their motors with the new neutral mode.
@@ -163,49 +204,6 @@ public abstract class DriveBase extends SubsystemBase {
     protected void neutralModeUpdated(NeutralMode neutralMode) {
     
     }
-
-    /**
-     * Get the distance travelled by the left encoder in encoder ticks
-     *
-     * @return The distance of the left encoder
-     */
-    public double getLeftDistance() {
-        return (-leftFrontTalon.getSensorCollection().getQuadraturePosition());
-    }
-
-    /**
-     * Get the distance travelled by the right encoder in encoder ticks
-     *
-     * @return The distance of the right encoder
-     */
-    public double getRightDistance() {
-        return rightFrontTalon.getSensorCollection().getQuadraturePosition();
-    }
-
-    /**
-     * Get the speed of the left encoder in encoder ticks per second
-     *
-     * @return The speed of the left encoder
-     */
-    public double getLeftSpeed() {
-        return (-leftFrontTalon.getSensorCollection().getQuadratureVelocity());
-    }
-
-    /**
-     * Get the speed of the right encoder in encoder ticks per second
-     *
-     * @return The speed of the right encoder
-     */
-    public double getRightSpeed() {
-        return rightFrontTalon.getSensorCollection().getQuadratureVelocity();
-    }
-
-    //Reset encoder values
-    public void resetEncoders() {
-        leftFrontTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
-        rightFrontTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
-    }
-
 
     /**
      * Measured distance units for converting ticks to units or units to encoder ticks
