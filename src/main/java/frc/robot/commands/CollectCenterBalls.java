@@ -22,7 +22,7 @@ public class CollectCenterBalls extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     //super( new DriveWithTime(1.0, 0.2, 0.2));
     super(
-      new DriveWithDistance( 1, DriveBase.DistanceType.METERS, 0.2, 0.2),
-      new DriveWithDistance( -1, DriveBase.DistanceType.METERS, -0.2, -0.2));
+      new DriveWithDistance( 1.6, DriveBase.DistanceType.METERS, 1, 1),
+      new DriveWithDistance( 2, DriveBase.DistanceType.METERS, 0.58, 0.12));
   }
 }

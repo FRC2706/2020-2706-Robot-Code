@@ -135,6 +135,10 @@ public class RobotContainer {
 
 
         }
+        else if(selectorOne == 4){
+
+            return new DriveWithDistance(1.5, DEFAULT_UNIT, 0.2, 0.2);
+        }
         // Also return null if this ever gets to here because safety
         return null;
     }
