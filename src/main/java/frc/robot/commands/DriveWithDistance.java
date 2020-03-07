@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.subsystems.DriveBase.DistanceType;
 
 
@@ -62,38 +63,11 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
       end = true;
 
     }
-
     //Setting current unit type and drive base variables
     this.distanceType = distanceType;
-    this.driveBase = DriveBase.getInstance();
+    this.driveBase = DriveBaseHolder.getInstance();
     addRequirements(driveBase);
-    
-    //Setting the current conversion type according to the chosen distance unit
-    switch (distanceType) {
-      case FEET:
-        this.currentConversion = DriveBase.DistanceUnit.FEET.encoderTicks;    
-        
-        break;
-        case METERS:
-        this.currentConversion = DriveBase.DistanceUnit.METERS.encoderTicks;    
-        
-        break;
-        case CENTIMETERS:
-        this.currentConversion = DriveBase.DistanceUnit.CENTIMETERS.encoderTicks;    
-        
-        break;
-        case INCHES:
-        this.currentConversion = DriveBase.DistanceUnit.INCHES.encoderTicks;    
-        
-        break;
-
-      //Default is meters
-      default:
-
-        this.currentConversion = DriveBase.DistanceUnit.METERS.encoderTicks;   
-        break;
-        
-    }
+    assignDistanceType(distanceType);
 
     //default speed is 0.5 for the left and right talons
     rightSpeed = DEFAULT_RIGHT_SPEED;
@@ -101,40 +75,14 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
     this.encoderTicks = distance * this.currentConversion;   
   }
 
-  /**
-   * Constructor to be used when the input gives the right and left speed
+
+   /**
+   * Assigns the current conversion from encoder ticks to distance type
    * 
-   * @param distance The distance to drive
-   * @param distanceType The distance unit type to drive in
-   * @param rightSpeed The right motor speed
-   * @param leftSpeed The left motor speed
+   * @param distanceType    The distance unit that the robot is using for driving
    */
-  public DriveWithDistance(double distance, DistanceType distanceType, double rightSpeed, double leftSpeed) {
-
-    //Initating drivebase
-    this.driveBase = DriveBase.getInstance();
-
-    //If all the values for distance and speeds are the same magnitude (+/-) then run the robot, otherwise do not.
-    if(distance < DISTANCE_NOT_MOVING && rightSpeed < SPEED_NOT_MOVING && leftSpeed < SPEED_NOT_MOVING){
-      robotMovingBackWards = true;
-    }
-    else if(distance > DISTANCE_NOT_MOVING && rightSpeed > SPEED_NOT_MOVING && leftSpeed > SPEED_NOT_MOVING){
-      robotMovingBackWards = false;
-    }
-    //The robot should not move if it has inverse speeds and desired distances since that must be an error
-    else{
-      driveBase.tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
-      commandFinished = true;
-      end = true;
-      
-    }
-
-    //Setting current distance unit
-    this.distanceType = distanceType;
-
-    addRequirements(driveBase);
-    
-    //Setting the current conversion type according to the chosen distance unit
+private void assignDistanceType(DistanceType distanceType) {
+	//Setting the current conversion type according to the chosen distance unit
     switch (distanceType) {
       case FEET:
         this.currentConversion = DriveBase.DistanceUnit.FEET.encoderTicks;    
@@ -156,10 +104,47 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
       //Default is meters
       default:
 
-        this.currentConversion = DriveBase.DistanceUnit.METERS.encoderTicks;   
-        break;
-        
+      this.currentConversion = DriveBase.DistanceUnit.METERS.encoderTicks;
+      break;
+
     }
+  }
+
+  /**
+   * Constructor to be used when the input gives the right and left speed
+   * 
+   * @param distance     The distance to drive
+   * @param distanceType The distance unit type to drive in
+   * @param rightSpeed   The right motor speed
+   * @param leftSpeed    The left motor speed
+   */
+  public DriveWithDistance(double distance, DistanceType distanceType, double rightSpeed, double leftSpeed) {
+
+    // Initating drivebase
+    this.driveBase = DriveBaseHolder.getInstance();
+
+    // If all the values for distance and speeds are the same magnitude (+/-) then
+    // run the robot, otherwise do not.
+    if (distance < DISTANCE_NOT_MOVING && rightSpeed < SPEED_NOT_MOVING && leftSpeed < SPEED_NOT_MOVING) {
+      robotMovingBackWards = true;
+    } else if (distance > DISTANCE_NOT_MOVING && rightSpeed > SPEED_NOT_MOVING && leftSpeed > SPEED_NOT_MOVING) {
+      robotMovingBackWards = false;
+    }
+    // The robot should not move if it has inverse speeds and desired distances
+    // since that must be an error
+    else {
+      driveBase.tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
+      commandFinished = true;
+      end = true;
+      
+    }
+
+    // Setting current distance unit
+    this.distanceType = distanceType;
+
+    addRequirements(driveBase);
+    
+    assignDistanceType(distanceType);
 
     //Setting the right speed and left speed according to input specifications
     this.rightSpeed = rightSpeed;
@@ -191,7 +176,7 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
     }
     //The robot should not move if it has inverse speeds and desired distances since that must be an error
     else{
-      DriveBase.getInstance().tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
+      DriveBaseHolder.getInstance().tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
       commandFinished = true;
       end = true;
     }
@@ -206,7 +191,7 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
   }
     //The robot should not move if it has inverse speeds and desired distances since that must be an error
     else{
-      DriveBase.getInstance().tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
+      DriveBaseHolder.getInstance().tankDrive(SPEED_NOT_MOVING, SPEED_NOT_MOVING, false);
       commandFinished = true;
       end = true;
     }
@@ -215,35 +200,10 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
     this.distanceType = distanceType;
 
     //Initating drivebase
-    this.driveBase = DriveBase.getInstance();
+    this.driveBase = DriveBaseHolder.getInstance();
     addRequirements(driveBase);
     
-    //Setting the current conversion type according to the chosen distance unit
-    switch (distanceType) {
-      case FEET:
-        this.currentConversion = DriveBase.DistanceUnit.FEET.encoderTicks;    
-        
-        break;
-        case METERS:
-        this.currentConversion = DriveBase.DistanceUnit.METERS.encoderTicks;    
-        
-        break;
-        case CENTIMETERS:
-        this.currentConversion = DriveBase.DistanceUnit.CENTIMETERS.encoderTicks;    
-        
-        break;
-        case INCHES:
-        this.currentConversion = DriveBase.DistanceUnit.INCHES.encoderTicks;    
-        
-        break;
-
-      //Default is meters
-      default:
-
-        this.currentConversion = DriveBase.DistanceUnit.METERS.encoderTicks;   
-        break;
-        
-    }
+    assignDistanceType(distanceType);
 
     //Setting the right speed and left speed according to input specifications
     this.rightSpeed = rightSpeed;
@@ -266,7 +226,7 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
     desiredRightDistance = driveBase.getRightDistance() + desiredRightEncoderTicks;
     desiredLeftDistance = driveBase.getLeftDistance() + desiredLeftEncoderTicks;
 
-    addRequirements(DriveBase.getInstance());
+    addRequirements(DriveBaseHolder.getInstance());
 
   }
 
@@ -278,8 +238,8 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
   public void execute() {
    
     //Get the current distance of the right encoder and store value in variable
-    double currentRightDistance = DriveBase.getInstance().getRightDistance();  
-    double currentLeftDistance = DriveBase.getInstance().getLeftDistance();
+    double currentRightDistance = DriveBaseHolder.getInstance().getRightDistance();  
+    double currentLeftDistance = DriveBaseHolder.getInstance().getLeftDistance();
 
     //Run motors according to output of the speeds
     driveBase.tankDrive(leftSpeed, rightSpeed, false);
@@ -289,25 +249,14 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
     SmartDashboard.putNumber("Right Speed", rightSpeed);
     SmartDashboard.putNumber("Left Error", desiredLeftDistance - currentLeftDistance);
     SmartDashboard.putNumber("Right Error", desiredRightDistance - currentRightDistance);
-    
-  }
 
-  
-  
-  /**
-   * Determines when the command is finished using the current distnce and desired distance
-   * 
-   */
 
-  @Override
-  public boolean isFinished() {
-
-    
+    //Code for figuring out when the robot is finished driving and handeling user input validation
 
     if (!end) {
       // Update to the current right/left distance that the robot has driven
-      currentRightDistance = DriveBase.getInstance().getRightDistance();
-      currentLeftDistance = DriveBase.getInstance().getLeftDistance();
+      currentRightDistance = DriveBaseHolder.getInstance().getRightDistance();
+      currentLeftDistance = DriveBaseHolder.getInstance().getLeftDistance();
 
       // The robot is moving forward
       if (!isTurning) {
@@ -355,7 +304,7 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
           end = true;
         }
 
-        //If the desired and current distance are equal, don't moce the robot
+        //If the desired and current distance are equal, don't move the robot
         if(desiredLeftDistance == currentLeftDistance && desiredRightDistance == currentRightDistance)
         {
           commandFinished = true;
@@ -367,13 +316,23 @@ private final double DEFAULT_LEFT_SPEED = 0.5;
 
       }
     }
+    
+  }
+  
+  /**
+   * Determines when the command is finished using the current distnce and desired distance
+   * 
+   */
+
+  @Override
+  public boolean isFinished() {
+
     return commandFinished;
   }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putBoolean("Running", false);
     }
   
 }
