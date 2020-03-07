@@ -19,6 +19,8 @@ public class VisionAssistedTargetRPM implements Runnable {
   private final double SHOOTER_ANGLE_IN_DEGREES  = 46.88;
   private final double TARGET_HEIGHT_IN_METERS = 2.02;
   private final double SHOOTER_WHEEL_RADIUS_IN_CM = 5.5;
+  private final double D_CAMERA_SHOOTER_IN_METERS = 0.26;
+  private final double ANGLE_CAMERA_SHOOTER = 46.37;
 
   private final double HALF_OF_GRAVITY = 4.91;
   private final double CONVERSION_NUMBER = 3000;
@@ -26,6 +28,7 @@ public class VisionAssistedTargetRPM implements Runnable {
 
   // values from Vision Network Table
   private double distanceToOuterPortInMeters;
+  private double yawToOutperPort;
 
   //adjusted value
   private double adjustedDistanceToOutPortInMeters;
@@ -52,25 +55,39 @@ public class VisionAssistedTargetRPM implements Runnable {
    
   public void run() {
 
-      //Read the network table from vision to get the distance from the target.
-      distanceToOuterPortInMeters = visionControlNetTable.distanceToOuterPort.get();
-      if ( distanceToOuterPortInMeters < 0.0 )
+    yawToOutperPort = visionControlNetTable.yawToOuterPort.get();
+
+    //Read the network table from vision to get the distance from the target.
+    distanceToOuterPortInMeters = visionControlNetTable.distanceToOuterPort.get();
+    if ( distanceToOuterPortInMeters < 0.0 )
+    {
+      //Vision can not provide valid detection
+      targetRPM = 0;
+    }
+    else
+    {
+      //NOTE: unit in the vision network table is feet. Convert it to meters.
+      distanceToOuterPortInMeters = distanceToOuterPortInMeters * METER_PER_FOOT ;
+  
+      //todo: to adjuste the distance for the shooter 
+        //adjustedDistanceToOutPortInMeters = ;
+      double temp = 2*distanceToOuterPortInMeters * Math.cos(180-ANGLE_CAMERA_SHOOTER);
+      double check = distanceToOuterPortInMeters*distanceToOuterPortInMeters 
+                    + D_CAMERA_SHOOTER_IN_METERS*D_CAMERA_SHOOTER_IN_METERS - temp;
+      if (check<0)
       {
-        //Vision can not provide valid detection
-        targetRPM = 0;
+        adjustedDistanceToOutPortInMeters = distanceToOuterPortInMeters;
       }
       else
       {
-        //NOTE: unit in the vision network table is feet. Convert it to meters.
-        distanceToOuterPortInMeters = distanceToOuterPortInMeters * METER_PER_FOOT ;
-  
-        //todo: to adjuste the distance for the shooter 
-        //adjustedDistanceToOutPortInMeters = ;
-  
-        //Calculate the RPM of the shooter wheel.
-        double targetV  = initVelocity( distanceToOuterPortInMeters);
-        targetRPM     = velocityToRPM (targetV);
+        adjustedDistanceToOutPortInMeters = Math.sqrt(check);
+
       }
+      
+      //Calculate the RPM of the shooter wheel.
+      double targetV  = initVelocity( adjustedDistanceToOutPortInMeters);
+      targetRPM     = velocityToRPM (targetV);
+    }
 
     // provide feedback to the shuffleboard for Driver Team
     // vision assisted RPM
