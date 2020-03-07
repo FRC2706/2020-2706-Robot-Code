@@ -108,6 +108,11 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
+        moveArmToSetpoint = new MoveArmManuallyCommand(0.3);
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveArmToSetpoint);
+
+        reverseArmManually = new MoveArmManuallyCommand(-0.3);
+        new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(moveArmToSetpoint);
 
     }
 
