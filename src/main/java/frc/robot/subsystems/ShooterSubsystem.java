@@ -42,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double kMaxOutput = 1;
     double kMinOutput = -1;
 
-    private final int RPM_TOLERANCE = 30;
+    private final int RPM_TOLERANCE = 75;
 
     public DigitalInput shooterDigitalInput;
 
@@ -132,7 +132,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public boolean isAtTargetRPM() {
         double encoderRPM = m_encoder.getVelocity();
-        return (Math.abs(SETPOINT_RPM.get() - encoderRPM) < RPM_TOLERANCE);
+        return (Math.abs(Config.RPM - encoderRPM) < RPM_TOLERANCE);
     }
 
     @Override
@@ -150,6 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());
+        SmartDashboard.putBoolean("Is at target RPM", isAtTargetRPM());
     }
 
 

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.RobotContainer;
 
 public class Shuffleboard extends SubsystemBase {
   private final Joystick joystick = new Joystick(0);
@@ -101,6 +102,8 @@ public class Shuffleboard extends SubsystemBase {
       SmartDashboard.putBoolean("X", buttonValueX);
       buttonValueY = joystick.getRawButton(4); // Button Y
       SmartDashboard.putBoolean("Y", buttonValueY);
+
+      SmartDashboard.putNumber("Auto Selector", RobotContainer.getInstance().analogSelectorOne.getIndex());
 
     } else {
       // game over signal can be added here

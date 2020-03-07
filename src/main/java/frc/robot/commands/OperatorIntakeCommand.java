@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ConditionalSubsystemBase;
@@ -25,6 +26,7 @@ public class OperatorIntakeCommand extends CommandBase {
     public void initialize() {
         // When the command starts, tell the intake it can go
         condition.setState(true);
+
     }
     
     @Override
