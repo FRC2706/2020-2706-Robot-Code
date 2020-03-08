@@ -13,8 +13,8 @@ import frc.robot.config.Config;
 public class ArmSubsystem extends ConditionalSubsystemBase {
 
     // TODO Change placeholder values to actual limits
-    private static final int FORWARD_LIMIT_TICKS = 2000;
-    private static final int REVERSE_LIMIT_TICKS = 570;
+    private static final int FORWARD_LIMIT_TICKS = 4150;
+    private static final int REVERSE_LIMIT_TICKS = 3420;
 
     private static final int acceptableError = 50;
 

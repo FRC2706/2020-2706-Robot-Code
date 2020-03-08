@@ -134,8 +134,7 @@ public class Config {
     public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.0);
 
-    public static final int RPM = 2100;
-    
+
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
@@ -150,6 +149,9 @@ public class Config {
     // Drivetrain PID values
     public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.037, 0.0, 0.0, 0.018d, 0.0, 0.25);
     public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0023, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+
+    public static final FluidConstant<Integer> RPM = new FluidConstant<>("Shooter RPM", 1300)
+            .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
             .registerToTable(Config.constantsTable);
@@ -171,7 +173,7 @@ public class Config {
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
 
-    public static int shooterAnalogSensor = robotSpecific(8, 8);
+    public static int shooterAnalogSensor = robotSpecific(8, 9);
 
     public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 0.8)
             .registerToTable(Config.constantsTable);

@@ -29,7 +29,6 @@ public class IncrementFeeder extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-     //   FeederSubsystem.zeroTalon();
         currentPosition = FeederSubsystem.getInstance().getCurrentPosition();
     }
 

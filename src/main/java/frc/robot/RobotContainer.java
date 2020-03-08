@@ -50,7 +50,8 @@ public class RobotContainer {
   private Command positionPowercell;
   private Command rampShooterCommand;
   private Command incrementFeeder;
-  private Command perfectPosition;
+  private Command moveArm;
+  private Command sensitiveDriving;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
@@ -83,32 +84,39 @@ public class RobotContainer {
         controlStick = new Joystick(1);
       
 //        // Instantiate the intake command and bind it
-        intakeCommand = new OperatorIntakeCommand();
-        new JoystickButton(controlStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+//        intakeCommand = new OperatorIntakeCommand();
+//        new JoystickButton(controlStick, XboxController.Button.kBumperLeft.value).whenHeld(intakeCommand);
+//
+//        reverseFeeder = new ReverseFeeder();
+//        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(reverseFeeder);
+//
+//        runFeeder = new RunFeederCommand(-0.3);
+//        new JoystickButton(controlStick, XboxController.Button.kY.value).whenHeld(runFeeder);
+//
+//        incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
+//        new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
+//
+//        rampShooterCommand = new SpinUpShooter(Config.RPM.get());
+//        new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
+//
+//        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
+//        DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
+//
+//        positionPowercell = new PositionPowercellCommand();
+//        new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
+//
+//        moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+//        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveToOuterPort, true);
 
-        reverseFeeder = new ReverseFeeder();
-        new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(reverseFeeder);
-
-        runFeeder = new RunFeederCommand(-0.3);
-        new JoystickButton(controlStick, XboxController.Button.kY.value).whenHeld(runFeeder);
-
-        incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
-        new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
-      
-        rampShooterCommand = new SpinUpShooter(Config.RPM);
-        new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
-
-        driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
-        DriveBaseHolder.getInstance().setDefaultCommand(driveCommand);
-
-        positionPowercell = new PositionPowercellCommand();
-        new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
-
-        moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveToOuterPort, true);
-
-        reverseArmManually = new DrivetrainPIDTurnDelta(10, 0, 5, 3.0);
+        reverseArmManually = new MoveArmManuallyCommand(-0.35);
         new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(reverseArmManually);
+
+        moveArm = new MoveArmManuallyCommand(0.5);
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveArm);
+
+//        sensitiveDriving = new SensitiveDriverControl(driverStick);
+//        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriving);
+
     }
 
     /**
@@ -128,7 +136,7 @@ public class RobotContainer {
             // This is our 'do nothing' selector
             return null;
         } else if (selectorOne == 1) {
-            return new SpinUpShooterWithTime(Config.RPM, 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DrivetrainPIDTurnDelta(45, 0, 5, 3.0));
+            return new SpinUpShooterWithTime(Config.RPM.get(), 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DrivetrainPIDTurnDelta(45, 0, 5, 3.0));
            // return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
         } else if(selectorOne == 2) {
             return new DrivetrainPIDTurnDelta(45, 0, 5, 3.0);

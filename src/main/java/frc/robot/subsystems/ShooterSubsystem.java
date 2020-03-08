@@ -132,7 +132,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public boolean isAtTargetRPM() {
         double encoderRPM = m_encoder.getVelocity();
-        return (Math.abs(Config.RPM - encoderRPM) < RPM_TOLERANCE);
+        return (Math.abs(Config.RPM.get() - encoderRPM) < RPM_TOLERANCE);
     }
 
     @Override

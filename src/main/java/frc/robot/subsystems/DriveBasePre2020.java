@@ -20,6 +20,8 @@ public class DriveBasePre2020 extends DriveBase {
     private final WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
     
     public DriveBasePre2020() {
+
+        resetMotors();
         
         // Initialize the talons
         leftFrontTalon = new WPI_TalonSRX(Config.LEFT_FRONT_MOTOR);
