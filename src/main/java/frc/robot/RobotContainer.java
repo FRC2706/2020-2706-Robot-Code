@@ -94,7 +94,7 @@ public class RobotContainer {
 
         incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
         new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
-
+      
         rampShooterCommand = new SpinUpShooter(Config.RPM);
         new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
 

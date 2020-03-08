@@ -25,16 +25,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // PID values (currently set for protobot's shooter)
     public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>
-            ("P_ShooterSubsystem", 0.002).registerToTable(Config.constantsTable);
+            ("P_ShooterSubsystem", 0.0025).registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> I_SHOOTERSUBSYSTEM = new FluidConstant<>
             ("I_ShooterSubsystem", 0.0).registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> D_SHOOTERSUBSYSTEM = new FluidConstant<>
-            ("D_ShooterSubsystem", 0.0002).registerToTable(Config.constantsTable);
+            ("D_ShooterSubsystem", 0.004).registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> F_SHOOTERSUBSYSTEM = new FluidConstant<>
-            ("F_ShooterSubsystem", 0.00027).registerToTable(Config.constantsTable);
+            ("F_ShooterSubsystem", 0.0002).registerToTable(Config.constantsTable);
 
     public static FluidConstant<Integer> SETPOINT_RPM = new FluidConstant<>
             ("setpointRPM", 0).registerToTable(Config.constantsTable);
