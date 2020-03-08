@@ -156,7 +156,7 @@ public class DriveWithDistance extends CommandBase {
     SmartDashboard.putNumber("Left Error", desiredLeftDistance - currentLeftDistance);
     SmartDashboard.putNumber("Right Error", desiredRightDistance - currentRightDistance);
 
-    //Code for figuring out when the robot is finished driving and handeling user input validation
+    //Code for figuring out when the robot is finished driving and handling user input validation
 
     // Update to the current right/left distance that the robot has driven
     currentRightDistance = DriveBaseHolder.getInstance().getRightDistance();
