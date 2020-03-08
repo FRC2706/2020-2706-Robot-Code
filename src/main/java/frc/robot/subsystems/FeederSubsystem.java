@@ -34,21 +34,21 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
     private static AnalogInput indexerIrSensor;
 
     //How much to shift the feeder wheel when incrementing
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 19_000.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 12_000.0)
                 .registerToTable(Config.constantsTable);
     //Max distance at which the robot knows a ball is at the indexer
     public static FluidConstant<Integer> FEEDERSUBSYSTEM_IR_MAX_DISTANCE = new FluidConstant<>("IrMaxDistance", 0)
                 .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.005)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_P = new FluidConstant<>("FeederSubsystemP", 0.15)
                 .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_I = new FluidConstant<>("FeederSubsystemI", 0.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_I = new FluidConstant<>("FeederSubsystemI", 0.001)
                 .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 0.0)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_D = new FluidConstant<>("FeederSubsystemD", 16.5)
                 .registerToTable(Config.constantsTable);
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.01)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_F = new FluidConstant<>("FeederSubsystemF", 0.1)
                 .registerToTable(Config.constantsTable);
     //Highest speed the motor could reach
-    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.5)
+    public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 1.0)
                 .registerToTable(Config.constantsTable);
 
     private final int kTimeoutMs = 1000;
@@ -94,6 +94,11 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
         if (currentInstance == null) {
             currentInstance = new FeederSubsystem();
         }
+    }
+
+    public void runAtRPM() {
+        double targetVelocity = -1600;
+        feederTalon.set(ControlMode.Velocity, targetVelocity);
     }
 
     public static FeederSubsystem getInstance() {
@@ -163,6 +168,7 @@ public class FeederSubsystem extends ConditionalSubsystemBase {
 
     public void periodic() {
         SmartDashboard.putNumber("Feeder encoder ticks", feederTalon.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Feeder RPM", (feederTalon.getSelectedSensorPosition() * 600.0) / 4096);
     }
 
     public void stopFeeder() {

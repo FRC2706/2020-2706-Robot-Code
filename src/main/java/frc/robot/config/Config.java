@@ -134,21 +134,22 @@ public class Config {
     public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.0);
 
-    public static final int RPM = 1200;
+    public static final int RPM = 2100;
     
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
     // Vision Table Constants
-    public static String VISION_TABLE_NAME      = "MergeVision";
+    public static String VISION_TABLE_NAME_POWERCELL = "MergeVisionPi20";
+    public static String VISION_TABLE_NAME_OUTERPORT = "MergeVisionPipelinePi21";
     public static String DISTANCE_POWERCELL     = "DistanceToPowerCell";
     public static String DISTANCE_OUTER_PORT    = "DistanceToOuterPort";
     public static String YAW_POWERCELL          = "YawToPowerCell";
     public static String YAW_OUTER_PORT         = "YawToTarget";
 
     // Drivetrain PID values
-    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.022, 0.0, 0.0, 0.018d, 0.0, 0.25);
-    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0028, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.037, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0023, 0.0, 0.0, 0.0016d, 0.0, 0.03);
 
     public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
             .registerToTable(Config.constantsTable);

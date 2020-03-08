@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
@@ -19,7 +18,6 @@ import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
-import frc.robot.commands.DriveWithTime;
 
 import java.util.logging.Logger;
 
@@ -47,7 +45,7 @@ public class RobotContainer {
   private Command driveCommand;
   private Command intakeCommand;
   private Command reverseFeeder;
-  private Command moveArmToSetpoint;
+  private Command moveToOuterPort;
     private Command reverseArmManually;
   private Command positionPowercell;
   private Command rampShooterCommand;
@@ -91,7 +89,7 @@ public class RobotContainer {
         reverseFeeder = new ReverseFeeder();
         new JoystickButton(controlStick, XboxController.Button.kB.value).whenHeld(reverseFeeder);
 
-        runFeeder = new RunFeederCommand(-0.7);
+        runFeeder = new RunFeederCommand(-0.3);
         new JoystickButton(controlStick, XboxController.Button.kY.value).whenHeld(runFeeder);
 
         incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
@@ -106,10 +104,10 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
-        moveArmToSetpoint = new MoveArmManuallyCommand(0.3);
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveArmToSetpoint);
+        moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveToOuterPort, true);
 
-        reverseArmManually = new DrivetrainPIDTurnDelta(45, 0, 5, 3.0);
+        reverseArmManually = new DrivetrainPIDTurnDelta(10, 0, 5, 3.0);
         new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(reverseArmManually);
     }
 

@@ -36,7 +36,7 @@ public class VisionCtrlNetTable {
         VisionShutDownEntry.setBoolean(false);
         VisionStartUpEntry.setBoolean(false);
 
-        mergeVisionTable = inst.getTable(Config.VISION_TABLE_NAME);
+        mergeVisionTable = inst.getTable(Config.VISION_TABLE_NAME_OUTERPORT);
         distanceToPowerCell = () -> mergeVisionTable.getEntry(Config.DISTANCE_POWERCELL).getDouble(-1);
         distanceToOuterPort = () -> mergeVisionTable.getEntry(Config.DISTANCE_OUTER_PORT).getDouble(-1);
         yawToPowerCell = () -> mergeVisionTable.getEntry(Config.YAW_POWERCELL).getDouble(-1);

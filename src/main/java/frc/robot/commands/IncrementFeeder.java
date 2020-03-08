@@ -15,6 +15,8 @@ public class IncrementFeeder extends CommandBase {
     FeederSubsystem feeder;
     private Double incrementTicks;
 
+    private int currentPosition;
+
     /**
      * Creates a new FeederSubsystem.
      */
@@ -27,7 +29,8 @@ public class IncrementFeeder extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        FeederSubsystem.zeroTalon();
+     //   FeederSubsystem.zeroTalon();
+        currentPosition = FeederSubsystem.getInstance().getCurrentPosition();
     }
 
     @Override
@@ -43,7 +46,7 @@ public class IncrementFeeder extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return feeder.doneIncrementing(incrementTicks);
+        return feeder.doneIncrementing(currentPosition + incrementTicks);
     }
 
 }
