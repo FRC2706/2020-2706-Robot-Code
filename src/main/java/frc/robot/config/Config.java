@@ -86,7 +86,7 @@ public class Config {
 
     // Current limiter Constants
     public static int PEAK_CURRENT_AMPS = 80;           //Peak current threshold to trigger the current limit
-    public static int PEAK_TIME_MS = 1000;              //Time after current exceeds peak current to trigger current limit
+    public static int PEAK_TIME_MS = 250;               //Time after current exceeds peak current to trigger current limit
     public static int CONTIN_CURRENT_AMPS = 40;         //Current to mantain once current limit is triggered 
     public static boolean MOTOR_CURRENT_LIMIT = true;   //Enable or disable motor current limiting.
 
