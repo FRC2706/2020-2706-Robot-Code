@@ -93,8 +93,7 @@ public class Config {
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
-    public static int ANALOG_SELECTOR_ONE = robotSpecific(-1, 0, -1, -1, -1, 0);
-    public static int ANALOG_SELECTOR_TWO = robotSpecific(-1, -1, 3);
+    public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
     
     public static int ARM_TALON = robotSpecific(7, 7, 12);
 
@@ -130,7 +129,7 @@ public class Config {
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
     
     // PIDF values for the arm
-    public static double ARM_PID_P = robotSpecific(0.0);
+    public static double ARM_PID_P = robotSpecific(0.02);
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.0);
@@ -140,6 +139,8 @@ public class Config {
     public static final double AUTO_DISTANCE = 1;
     public static final double AUTO_DRIVE_TIME = 1.0;
     public static final DriveBase.DistanceType DEFAULT_UNIT= DriveBase.DistanceType.METERS;
+     
+    public static final int RPM = 1200;
 
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
@@ -152,8 +153,8 @@ public class Config {
     public static String YAW_OUTER_PORT         = "YawToTarget";
 
     // Drivetrain PID values
-    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.018d, 0.0, 0.25);
-    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.022, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0028, 0.0, 0.0, 0.0016d, 0.0, 0.03);
 
     public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
             .registerToTable(Config.constantsTable);
