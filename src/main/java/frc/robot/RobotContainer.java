@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
@@ -41,7 +42,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...    
   private Joystick driverStick;
   private Joystick controlStick;
-  private AnalogSelector analogSelectorOne;
+  public AnalogSelector analogSelectorOne;
   private AnalogSelector analogSelectorTwo;
   private Command driveCommand;
   private Command intakeCommand;
@@ -66,9 +67,6 @@ public class RobotContainer {
         logger.addHandler(Config.logFileHandler);
         if (Config.ANALOG_SELECTOR_ONE != -1) {
             analogSelectorOne = new AnalogSelector(Config.ANALOG_SELECTOR_ONE);
-        }
-        if (Config.ANALOG_SELECTOR_TWO != -1) {
-            analogSelectorTwo = new AnalogSelector(Config.ANALOG_SELECTOR_TWO);
         }
 
         ArmSubsystem armSubsystem = ArmSubsystem.getInstance();
@@ -98,8 +96,8 @@ public class RobotContainer {
 
         incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
         new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
-
-        rampShooterCommand = new SpinUpShooter(1300);
+      
+        rampShooterCommand = new SpinUpShooter(Config.RPM);
         new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
@@ -108,7 +106,11 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
+        moveArmToSetpoint = new MoveArmManuallyCommand(0.3);
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveArmToSetpoint);
 
+        reverseArmManually = new DrivetrainPIDTurnDelta(45, 0, 5, 3.0);
+        new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(reverseArmManually);
     }
 
     /**
@@ -118,23 +120,25 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         int selectorOne = 1, selectorTwo = 1;
+
         if (analogSelectorOne != null){
             selectorOne = analogSelectorOne.getIndex();
         }
-        if (analogSelectorTwo != null){
-            selectorTwo = analogSelectorTwo.getIndex();
-        }
         logger.info("Selectors: " + selectorOne + " " + selectorTwo);
 
-        if (selectorOne == 0 && selectorTwo == 0) {
+        if (selectorOne == 0) {
             // This is our 'do nothing' selector
             return null;
+        } else if (selectorOne == 1) {
+            return new SpinUpShooterWithTime(Config.RPM, 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DrivetrainPIDTurnDelta(45, 0, 5, 3.0));
+           // return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
+        } else if(selectorOne == 2) {
+            return new DrivetrainPIDTurnDelta(45, 0, 5, 3.0);
         }
 
-        else if (selectorOne == 1 || selectorTwo == 1) {
 
-            return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
-        }
+
+
         // Also return null if this ever gets to here because safety
         return null;
     }

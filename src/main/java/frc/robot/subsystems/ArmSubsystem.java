@@ -14,7 +14,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
     // TODO Change placeholder values to actual limits
     private static final int FORWARD_LIMIT_TICKS = 2000;
-    private static final int REVERSE_LIMIT_TICKS = 1300;
+    private static final int REVERSE_LIMIT_TICKS = 570;
 
     private static final int acceptableError = 50;
 
@@ -65,20 +65,24 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
         // Set up the close loop period
         armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
-        armTalon.setSensorPhase(false);
+        armTalon.setSensorPhase(true);
         armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
         armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
         //    Enable forward soft limit and set the value in encoder ticks
         armTalon.configForwardSoftLimitEnable(true);
         armTalon.configForwardSoftLimitThreshold(FORWARD_LIMIT_TICKS, Config.CAN_TIMEOUT_LONG);
+
+        armTalon.configReverseSoftLimitEnable(true);
+        armTalon.configReverseSoftLimitThreshold(REVERSE_LIMIT_TICKS, Config.CAN_TIMEOUT_SHORT);
         
         // Max voltage to apply with the talon. 12 is the maximum
         armTalon.configVoltageCompSaturation(12, Config.CAN_TIMEOUT_LONG);
         armTalon.enableVoltageCompensation(true);
 
         // Number of seconds from 0 to full throttle
-        armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
+     //   armTalon.configOpenloopRamp(0.6, Config.CAN_TIMEOUT_LONG);
+
 
         createCondition("talonFunctional", SubsystemConditionStates.ALWAYS);
 
@@ -107,7 +111,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
     public void setpoint(int setpointIndex) {
         if(setpointIndex < setpoints.length) {
-            armTalon.set(ControlMode.Position, setpointIndex);
+            armTalon.set(ControlMode.Position, setpoints[setpointIndex]);
         } else {
             DriverStation.reportError("Invalid arm position [Array index out of bounds]", false);
         }
