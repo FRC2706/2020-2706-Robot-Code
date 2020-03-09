@@ -8,24 +8,28 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ReverseFeeder;
 import frc.robot.config.Config;
 
 public class ArmSubsystem extends ConditionalSubsystemBase {
 
     // TODO Change placeholder values to actual limits
-    private static final int FORWARD_LIMIT_TICKS = 4150;
-    private static final int REVERSE_LIMIT_TICKS = 3420;
+    private static final int FORWARD_LIMIT_TICKS = Config.robotSpecific(4150, 2200);
+    private static final int REVERSE_LIMIT_TICKS = Config.robotSpecific(3500, 1300);
 
     private static final int acceptableError = 50;
 
     private static ArmSubsystem INSTANCE = new ArmSubsystem();
+
+
+    private int currentPosition = REVERSE_LIMIT_TICKS;
 
     // TODO Change placeholder value to robotSpecific
     WPI_TalonSRX armTalon;
     ErrorCode errorCode;
 
     private static final int[] setpoints = {
-            1500,
+            3850,
             3000,
         };
 
@@ -61,11 +65,12 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.config_kP(0, Config.ARM_PID_P, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kI(0, Config.ARM_PID_I, Config.CAN_TIMEOUT_SHORT);
         armTalon.config_kD(0, Config.ARM_PID_D, Config.CAN_TIMEOUT_SHORT);
+        armTalon.config_kF(0, Config.ARM_PID_F, Config.CAN_TIMEOUT_SHORT);
 
 
         // Set up the close loop period
         armTalon.configClosedLoopPeriod(0, Config.CAN_TIMEOUT_LONG);
-        armTalon.setSensorPhase(true);
+        armTalon.setSensorPhase(Config.ARM_PHASE);
         armTalon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Config.CAN_TIMEOUT_LONG);
         armTalon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Config.CAN_TIMEOUT_LONG);
 
@@ -93,6 +98,17 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         }
     }
 
+    public void addToCurrentPosition(int increment) {
+        if(this.currentPosition + increment >= FORWARD_LIMIT_TICKS) {
+            currentPosition = FORWARD_LIMIT_TICKS;
+        } else if(this.currentPosition + increment <= REVERSE_LIMIT_TICKS) {
+            currentPosition = REVERSE_LIMIT_TICKS;
+        } else {
+            this.currentPosition += increment;
+        }
+    }
+
+
     /**
      * Return the singleton arm instance
      *
@@ -111,7 +127,8 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
     public void setpoint(int setpointIndex) {
         if(setpointIndex < setpoints.length) {
-            armTalon.set(ControlMode.Position, setpoints[setpointIndex]);
+            currentPosition = setpoints[setpointIndex];
+           // armTalon.set(ControlMode.Position, setpoints[setpointIndex]);
         } else {
             DriverStation.reportError("Invalid arm position [Array index out of bounds]", false);
         }
@@ -125,8 +142,18 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     public void periodic() {
         super.periodic();
 
+        SmartDashboard.putNumber("Lower Limit", REVERSE_LIMIT_TICKS);
+        SmartDashboard.putNumber("Upper Limit", FORWARD_LIMIT_TICKS);
         SmartDashboard.putNumber("Arm Motor Ticks", armTalon.getSelectedSensorPosition());
         SmartDashboard.putNumber("Arm Angle", toDeg(armTalon.getSelectedSensorPosition()));
+        SmartDashboard.putNumber("Desired Position", currentPosition);
+
+
+        armTalon.set(ControlMode.Position, currentPosition);
+
+        if(armTalon.getSelectedSensorPosition() <= REVERSE_LIMIT_TICKS + 25) {
+            armTalon.set(0.0);
+        }
     }
 
     public boolean reachedSetpoint(int index) {
@@ -134,7 +161,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     }
 
     public boolean reachedPosition(int position) {
-        return position - acceptableError <= armTalon.getSelectedSensorPosition() && position + acceptableError >= armTalon.getSelectedSensorPosition();
+        return Math.abs(armTalon.getSelectedSensorPosition() - position) < acceptableError;
     }
 
     /**
