@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.config.Config;
-
-//import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.nettables.VisionCtrlNetTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,8 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * NOTE: this command should be run after command TurnToOuterPortCommand
  */
 public class VisionAssistedTargetRPM implements Runnable {
-  
-  //subsystem
     
   //todo: can be configured in config file as well
   private final double SHOOTER_ANGLE_IN_DEGREES  = 46.88;

@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.config.Config;
-
-import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.nettables.VisionCtrlNetTable;
@@ -106,7 +104,6 @@ public class VisionAssistedShooter extends CommandBase {
     public void end(boolean interrupted) {
         
     }
-
 
   double initVelocity(double distanceToTargetInMeters) {
     double dTemp;
