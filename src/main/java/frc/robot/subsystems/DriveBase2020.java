@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -37,10 +38,16 @@ public class DriveBase2020 extends DriveBase {
         climberTalon = new WPI_TalonSRX(Config.CLIMBER_TALON);
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
+        setCoastMode();
+
+     //   leftMaster.
+
         if (Config.PIGEON_ID != -1) {
             pigeon = new PigeonIMU(new WPI_TalonSRX(Config.PIGEON_ID));
             pigeon.setFusedHeading(0d, Config.CAN_TIMEOUT_LONG);
         }
+
+
     }
 
     public double getMotorCurrent() {
@@ -94,7 +101,22 @@ public class DriveBase2020 extends DriveBase {
         leftSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
 
+        leftMaster.configPeakCurrentLimit(0);
+        leftMaster.configPeakCurrentDuration(0);
+        leftMaster.configContinuousCurrentLimit(0);
+        rightMaster.configPeakCurrentLimit(0);
+        rightMaster.configPeakCurrentDuration(0);
+        rightMaster.configContinuousCurrentLimit(0);
+
+
         this.followMotors();
+    }
+
+    public void setCoastMode() {
+        leftMaster.setNeutralMode(NeutralMode.Coast);
+        rightMaster.setNeutralMode(NeutralMode.Coast);
+        leftSlave.setNeutralMode(NeutralMode.Coast);
+        rightSlave.setNeutralMode(NeutralMode.Coast);
     }
     
     @Override

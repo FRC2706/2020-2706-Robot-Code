@@ -55,7 +55,7 @@ public class TurnToOuterPortCommand extends CommandBase {
         DrivetrainPIDTurnDelta drivetrainPIDTurnDelta;
         if (currentTarget != -99) {
             // Filter out outlying values
-            if(currentTarget >= 30 && currentTarget <= -30) {
+            if(currentTarget <= 30 && currentTarget >= -30) {
                 // Check if the yaw should be inverted (Shooter is on the back so we may need to)
                 if (invert) {
                     drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(-currentTarget, 0, acceptableError, maxTime);
@@ -64,10 +64,15 @@ public class TurnToOuterPortCommand extends CommandBase {
                 }
                 drivetrainPIDTurnDelta.schedule();
             }
+            else {
+                // Ensure no movement on faulty values
+                drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(0, 0, 0d, 0d);
+                logger.log(Level.WARNING, "Invalid Current Target: " + VisionCtrlNetTable.yawToOuterPort.get());
+            }
         } else {
             // Ensure no movement on faulty values
             drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(0, 0, 0d, 0d);
-            logger.log(Level.WARNING, "Invalid Current Target: " + VisionCtrlNetTable.yawToOuterPort.get());
+            logger.log(Level.WARNING, "Invalid Current Target (Value Not Read): " + VisionCtrlNetTable.yawToOuterPort.get());
         }
 
     }

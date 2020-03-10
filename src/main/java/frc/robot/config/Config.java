@@ -91,7 +91,7 @@ public class Config {
     public static boolean MOTOR_CURRENT_LIMIT = true; //Enable or disable motor current limiting.
 
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
-    public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, -1, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
+    public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, CLIMBER_TALON, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
     
     public static int ANALOG_SELECTOR_ONE = robotSpecific(0, 0, -1, -1, -1, 0);
     
@@ -115,8 +115,10 @@ public class Config {
     public static double CONTROLLER_DEADBAND = 0.05;
     
     public static double CURVATURE_OVERRIDE = 0.25;
+
+    public static boolean ARM_PHASE = robotSpecific(true, true);
     
-    public static boolean INVERT_ARM_TALON = robotSpecific(true, false, false);
+    public static boolean INVERT_ARM_TALON = robotSpecific(true, true, false);
     
     public static int ARM_ALLOWABLE_CLOSED_LOOP_ERROR_TICKS = 4096;
     
@@ -129,26 +131,29 @@ public class Config {
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
     
     // PIDF values for the arm
-    public static double ARM_PID_P = robotSpecific(0.02);
+    public static double ARM_PID_P = robotSpecific(5);
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.0);
-    public static double ARM_PID_F = robotSpecific(0.0);
+    public static double ARM_PID_F = robotSpecific(0.05);
 
-    public static final int RPM = 1200;
-    
+
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");
 
     // Vision Table Constants
-    public static String VISION_TABLE_NAME      = "MergeVision";
+    public static String VISION_TABLE_NAME_POWERCELL = "MergeVisionPi20";
+    public static String VISION_TABLE_NAME_OUTERPORT = "MergeVisionPipelinePi21";
     public static String DISTANCE_POWERCELL     = "DistanceToPowerCell";
     public static String DISTANCE_OUTER_PORT    = "DistanceToOuterPort";
     public static String YAW_POWERCELL          = "YawToPowerCell";
     public static String YAW_OUTER_PORT         = "YawToTarget";
 
     // Drivetrain PID values
-    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.022, 0.0, 0.0, 0.018d, 0.0, 0.25);
-    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0028, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.037, 0.0, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0023, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+
+    public static final FluidConstant<Integer> RPM = new FluidConstant<>("Shooter RPM", 1700)
+            .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> DRIVETRAIN_P = new FluidConstant<>("DrivetrainP", DRIVETRAIN_P_SPECIFIC)
             .registerToTable(Config.constantsTable);
@@ -170,7 +175,7 @@ public class Config {
     public static FluidConstant<Double> DRIVETRAIN_SENSITIVE_MAX_SPEED = new FluidConstant<>("DrivetrainSensitiveMaxSpeed", 0.2)
             .registerToTable(Config.constantsTable);
 
-    public static int shooterAnalogSensor = robotSpecific(8, 8);
+    public static int shooterAnalogSensor = robotSpecific(8, 9);
 
     public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 0.8)
             .registerToTable(Config.constantsTable);
