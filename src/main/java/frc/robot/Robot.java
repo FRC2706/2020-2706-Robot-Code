@@ -19,6 +19,7 @@ import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.subsystems.DriveBase2020;
 import frc.robot.subsystems.DriveBaseHolder;
 import frc.robot.sensors.AnalogSelector;
+import frc.robot.subsystems.ShooterSubsystem;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -145,8 +146,13 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Outer Port Yaw", VisionCtrlNetTable.yawToOuterPort.get());
         SmartDashboard.putNumber("PowerCell Distance", VisionCtrlNetTable.distanceToPowerCell.get());
         SmartDashboard.putNumber("Pigeon Yaw", DriveBaseHolder.getInstance().getCurrentAngle());
+        SmartDashboard.putBoolean("Limit Switch", !ShooterSubsystem.getInstance().shooterDigitalInput.get());
+
         CommandScheduler.getInstance().run();
 
+        //The following 2 lines run Drivebase methods that tell shuffleboard what the motor current draw is and if motor current limiting is active.
+        DriveBase2020.getInstance().getMotorCurrent();
+        DriveBase2020.getInstance().isMotorLimitActive();
     }
 
     /**
@@ -200,7 +206,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-
     }
 
     @Override

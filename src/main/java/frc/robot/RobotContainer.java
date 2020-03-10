@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
@@ -21,6 +20,7 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 import frc.robot.commands.DriveWithDistance;
 import frc.robot.commands.DriveWithTime;
+
 
 import java.util.logging.Logger;
 
@@ -48,12 +48,14 @@ public class RobotContainer {
   private Command driveCommand;
   private Command intakeCommand;
   private Command reverseFeeder;
-  private Command moveArmToSetpoint;
+  private Command moveToOuterPort;
   private Command reverseArmManually;
+
   private Command positionPowercell;
   private Command rampShooterCommand;
   private Command incrementFeeder;
-  private Command perfectPosition;
+  private Command moveArm;
+  private Command sensitiveDriving;
   private Logger logger = Logger.getLogger("RobotContainer");
   private Command runFeeder;
 
@@ -94,8 +96,8 @@ public class RobotContainer {
 
         incrementFeeder = new IncrementFeeder(-FeederSubsystem.FEEDERSUBSYSTEM_INCREMENT_TICKS.get());
         new JoystickButton(controlStick, XboxController.Button.kX.value).whenHeld(incrementFeeder);
-      
-        rampShooterCommand = new SpinUpShooter(Config.RPM);
+
+        rampShooterCommand = new SpinUpShooter();
         new JoystickButton(controlStick, XboxController.Button.kA.value).toggleWhenActive(rampShooterCommand);
 
         driveCommand = new ArcadeDriveWithJoystick(driverStick, Config.LEFT_CONTROL_STICK_Y, Config.INVERT_FIRST_AXIS, Config.RIGHT_CONTROL_STICK_X, Config.INVERT_SECOND_AXIS, true);
@@ -104,11 +106,18 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
-        moveArmToSetpoint = new MoveArmManuallyCommand(0.3);
-        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveArmToSetpoint);
+        moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+        new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveToOuterPort, true);
 
-        reverseArmManually = new DrivetrainPIDTurnDelta(45, 0, 5, 3.0);
-        new JoystickButton(driverStick, XboxController.Button.kB.value).whenHeld(reverseArmManually);
+        reverseArmManually = new MoveArmManuallyCommand(-0.35);
+        new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(reverseArmManually);
+
+        moveArm = new MoveArmManuallyCommand(10);
+        new JoystickButton(driverStick, XboxController.Button.kY.value).whenHeld(moveArm);
+
+        sensitiveDriving = new SensitiveDriverControl(driverStick);
+        new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriving);
+
     }
 
     /**
@@ -122,33 +131,28 @@ public class RobotContainer {
         int selectorOne = 0;
         if (analogSelectorOne != null)
             selectorOne = analogSelectorOne.getIndex();
+        }
+
         logger.info("Selectors: " + selectorOne);
 
         if (selectorOne == 0) {
             // This is our 'do nothing' selector
             return null;
         } else if (selectorOne == 1) {
-            return new SpinUpShooterWithTime(Config.RPM, 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DrivetrainPIDTurnDelta(45, 0, 5, 3.0));
-           
+            return new SpinUpShooterWithTime(Config.RPM.get(), 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DriveWithTime(0.5, 0.5, 0.5));
         } else if(selectorOne == 2) {
-            return new DrivetrainPIDTurnDelta(45, 0, 5, 3.0);
-          
+            return new DriveWithTime(0.5, 0.5, 0.5);
         } else if (selectorOne == 3) {
          /*
           * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
           */
-              
               return new DriveWithTime(Config.AUTO_DRIVE_TIME, Config.AUTO_LEFT_MOTOR_SPEED, Config.AUTO_RIGHT_MOTOR_SPEED);
-         }
-
-        else if(selectorOne == 4){
+         } else if(selectorOne == 4){
 
           //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
           //Robot drives one meter forward  
           return new DriveWithDistance(Config.AUTO_DISTANCE, Config.DEFAULT_UNIT, Config.AUTO_RIGHT_MOTOR_SPEED, Config.AUTO_LEFT_MOTOR_SPEED);
-          
         }
-
         // Also return null if this ever gets to here because safety
         return null;
     }
