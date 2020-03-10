@@ -23,6 +23,7 @@ public class RunFeederCommand extends CommandBase {
     public void execute() {
         if(ShooterSubsystem.getInstance().isAtTargetRPM()) {
             FeederSubsystem.getInstance().runFeeder(speed);
+          //  FeederSubsystem.getInstance().runAtRPM();
         } else {
             FeederSubsystem.getInstance().stopFeeder();
         }

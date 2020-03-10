@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.DriveBase2020;
 import frc.robot.subsystems.DriveBaseHolder;
 
 public class DriveWithTime extends CommandBase {
@@ -23,8 +24,8 @@ public class DriveWithTime extends CommandBase {
  * This command will take in speeds (left and right) and time, for which is will set the motors to the x speed for y seconds.
  * 
  * @param seconds        amount of seconds the robot motors will be activated for  
- * @param leftSpeeds     when the motor is activated, this is the speed at which the LEFT motors will be. speed can be inbetween -1 to 1.
- * @param rightSpeeds    when the motor is activated, this is the speed at which the RIGHT motors will be. speed can be inbetween -1 to 1.
+ * @param leftSpeed     when the motor is activated, this is the speed at which the LEFT motors will be. speed can be inbetween -1 to 1.
+ * @param rightSpeed    when the motor is activated, this is the speed at which the RIGHT motors will be. speed can be inbetween -1 to 1.
  */
 
   public DriveWithTime(double seconds, double leftSpeed, double rightSpeed) {
@@ -63,7 +64,7 @@ public class DriveWithTime extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // If using the withTimeout(double seconds); as the timer, return here.
-    
+    DriveBase2020.getInstance().stopMotors();
   }
 
 

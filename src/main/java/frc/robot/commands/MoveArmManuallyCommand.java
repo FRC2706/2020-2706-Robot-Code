@@ -30,6 +30,7 @@ public class MoveArmManuallyCommand extends CommandBase {
     @Override
     public void execute() {
         armSubsystem.moveArm(speed);
+      //  armSubsystem.addToCurrentPosition(increment);
     }
 
     /**
