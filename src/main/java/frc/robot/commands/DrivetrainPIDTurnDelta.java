@@ -52,6 +52,9 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     // A timer to ensure the command doesn't get stuck and the robot cannot drive
     private Timer timer;
 
+    private double volatileP;
+    private double volatileD;
+
 
     /**
      * Allows the robot to turn and move forward or back by itself
@@ -117,6 +120,14 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
 
             if (Math.abs(targetAngle - currentAngle) < acceptableError) {
                 isDone = true;
+            }
+
+            if(Math.abs(deltaDegree) > 5 ) {
+                volatileP = 0.022;
+                volatileD = 0.0035;
+            } else {
+                volatileP = 0.037;
+                volatileD = 0.0023;
             }
 
             //Do PD

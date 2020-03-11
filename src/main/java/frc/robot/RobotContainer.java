@@ -105,13 +105,14 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
-        moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+      //  moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+        moveToOuterPort = new DrivetrainPIDTurnDelta(15, 0, 1, 2.0);
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveToOuterPort, true);
 
-        reverseArmManually = new MoveArmManuallyCommand(-0.35);
+        reverseArmManually = new MoveArmManuallyCommand(-0.15);
         new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(reverseArmManually);
 
-        moveArm = new MoveArmManuallyCommand(10);
+        moveArm = new MoveArmManuallyCommand(0.5);
         new JoystickButton(driverStick, XboxController.Button.kY.value).whenHeld(moveArm);
 
         sensitiveDriving = new SensitiveDriverControl(driverStick);

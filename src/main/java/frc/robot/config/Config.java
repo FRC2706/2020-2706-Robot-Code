@@ -131,10 +131,10 @@ public class Config {
     public static final boolean TELEOP_SQUARE_JOYSTICK_INPUTS = true;
     
     // PIDF values for the arm
-    public static double ARM_PID_P = robotSpecific(5);
+    public static double ARM_PID_P = robotSpecific(10);
     public static double ARM_PID_I = robotSpecific(0.0);
     public static double ARM_PID_D = robotSpecific(0.0);
-    public static double ARM_PID_F = robotSpecific(0.05);
+    public static double ARM_PID_F = robotSpecific(0.07);
 
 
     // Define a global constants table for subsystems to use
@@ -149,8 +149,8 @@ public class Config {
     public static String YAW_OUTER_PORT         = "YawToTarget";
 
     // Drivetrain PID values
-    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.037, 0.0, 0.0, 0.018d, 0.0, 0.25);
-    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0023, 0.0, 0.0, 0.0016d, 0.0, 0.03);
+    public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.037, 0.037, 0.0, 0.018d, 0.0, 0.25);
+    public static double DRIVETRAIN_D_SPECIFIC = robotSpecific(0.0023, 0.0023, 0.0, 0.0016d, 0.0, 0.03);
 
     public static final FluidConstant<Integer> RPM = new FluidConstant<>("Shooter RPM", 1700)
             .registerToTable(Config.constantsTable);

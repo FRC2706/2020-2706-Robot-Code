@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
 import frc.robot.nettables.VisionCtrlNetTable;
@@ -43,6 +44,8 @@ public class TurnToOuterPortCommand extends CommandBase {
 
         // Get the target angle from NetworkTables
         currentTarget = VisionCtrlNetTable.yawToOuterPort.get();
+
+        System.out.println("Running turn to outer port command");
     }
 
     /**
@@ -73,6 +76,7 @@ public class TurnToOuterPortCommand extends CommandBase {
             // Ensure no movement on faulty values
             drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(0, 0, 0d, 0d);
             logger.log(Level.WARNING, "Invalid Current Target (Value Not Read): " + VisionCtrlNetTable.yawToOuterPort.get());
+            System.out.println("Invalid Current Target (Value Not Read): ");
         }
 
     }

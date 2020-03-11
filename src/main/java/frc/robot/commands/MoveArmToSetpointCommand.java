@@ -20,7 +20,8 @@ public class MoveArmToSetpointCommand extends CommandBase {
 
     @Override
     public void execute() {
-        ArmSubsystem.getInstance().setpoint(setPointIndex);
+      //  ArmSubsystem.getInstance().setpoint(setPointIndex);
+        ArmSubsystem.getInstance().setEncoderTicks(3850);
     }
 
     @Override
