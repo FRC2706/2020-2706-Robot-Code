@@ -25,7 +25,6 @@ public class VisionAssistedShooter extends CommandBase {
   private VisionCtrlNetTable visionControlNetTable = new VisionCtrlNetTable ();
 
   //calculated for the shooter
-  double targetDistance = 0;
   double targetRPM = 0;
 
 
@@ -65,7 +64,7 @@ public class VisionAssistedShooter extends CommandBase {
 
       //Calculate the RPM of the shooter wheel.
       double targetV  = VisionAssistedTargetRPM.initVelocity( adjustedDistanceToOutPortInMeters);
-      targetRPM       = VisionAssistedTargetRPM .velocityToRPM (targetV);
+      targetRPM       = VisionAssistedTargetRPM.velocityToRPM (targetV);
     }
   }
 

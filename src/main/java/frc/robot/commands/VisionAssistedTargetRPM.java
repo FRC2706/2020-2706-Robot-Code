@@ -22,8 +22,7 @@ public class VisionAssistedTargetRPM implements Runnable {
   private VisionCtrlNetTable visionControlNetTable = new VisionCtrlNetTable ();
 
   //calculated RPM
-  double targetDistance = 0;
-  double targetRPM = 0;
+   double targetRPM = 0;
 
   /**
    * Creates a new VisionAssistedTargetRPM Command.
@@ -32,9 +31,7 @@ public class VisionAssistedTargetRPM implements Runnable {
    */
   public VisionAssistedTargetRPM() {
 
-    // Ensure the vision is running in tape mode
-    //don't need this any more
-    //VisionCtrlNetTable.setTapeMode();    
+  
   }
    
   public void run() {
