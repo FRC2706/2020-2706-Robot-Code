@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -37,24 +38,46 @@ public class DriveBase2020 extends DriveBase {
         climberTalon = new WPI_TalonSRX(Config.CLIMBER_TALON);
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
+        //Current limiting for drivetrain master motors.
+        if (Config.MOTOR_CURRENT_LIMIT == true) {
+            leftMaster.configPeakCurrentLimit(Config.PEAK_CURRENT_AMPS);
+            leftMaster.configPeakCurrentDuration(Config.PEAK_TIME_MS);
+            leftMaster.configContinuousCurrentLimit(Config.CONTIN_CURRENT_AMPS);
+            rightMaster.configPeakCurrentLimit(Config.PEAK_CURRENT_AMPS);
+            rightMaster.configPeakCurrentDuration(Config.PEAK_TIME_MS);
+            rightMaster.configContinuousCurrentLimit(Config.CONTIN_CURRENT_AMPS);
+        } else { 
+            //If MOTOR_CURRENT_LIMIT is not true, remove talon current limits, just to be safe.
+            leftMaster.configPeakCurrentLimit(0);
+            leftMaster.configPeakCurrentDuration(0);
+            leftMaster.configContinuousCurrentLimit(0);
+            rightMaster.configPeakCurrentLimit(0);
+            rightMaster.configPeakCurrentDuration(0);
+            rightMaster.configContinuousCurrentLimit(0);
+        }
+  
+        setCoastMode();
+
         if (Config.PIGEON_ID != -1) {
             pigeon = new PigeonIMU(new WPI_TalonSRX(Config.PIGEON_ID));
             pigeon.setFusedHeading(0d, Config.CAN_TIMEOUT_LONG);
         }
+
+
     }
 
     public double getMotorCurrent() {
-        motorCurrent = leftMaster.getSupplyCurrent();
-
-        //Send motor current to shuffleboard and return it
-        SmartDashboard.putNumber("MotorCurrent (FrontLeft)", motorCurrent);
-        return(motorCurrent);
+        //Get motor supply current, send it to shuffleboard, and return it.
+        motorCurrent = (leftMaster.getSupplyCurrent() + rightMaster.getSupplyCurrent())/2;
+        SmartDashboard.putNumber("Avg Motor Current", motorCurrent);
+        return(motorCurrent); //Returns average motor current draw.
     }
 
     public boolean isMotorLimitActive() {
-        //Check if motor current limiting is active (is current draw over or at current limit)
-        if (motorCurrent >= Config.CONTIN_CURRENT_AMPS) {
-            motorLimitActive = true; //For driver feedback purposes only.
+        //Checks if motor currents are at or above the continuous limit (checks if current limiting is imminent or ongoing)
+        //This method does not limit motor current. It monitors current for driver feedback purposes.
+        if (((leftMaster.getSupplyCurrent() >= Config.CONTIN_CURRENT_AMPS) == true) || ((rightMaster.getSupplyCurrent() >= Config.CONTIN_CURRENT_AMPS) == true)) {
+            motorLimitActive = true;
         }
         else {
             motorLimitActive = false;
@@ -94,7 +117,22 @@ public class DriveBase2020 extends DriveBase {
         leftSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
         rightSlave.configFactoryDefault(Config.CAN_TIMEOUT_LONG);
 
+        leftMaster.configPeakCurrentLimit(0);
+        leftMaster.configPeakCurrentDuration(0);
+        leftMaster.configContinuousCurrentLimit(0);
+        rightMaster.configPeakCurrentLimit(0);
+        rightMaster.configPeakCurrentDuration(0);
+        rightMaster.configContinuousCurrentLimit(0);
+
+
         this.followMotors();
+    }
+
+    public void setCoastMode() {
+        leftMaster.setNeutralMode(NeutralMode.Coast);
+        rightMaster.setNeutralMode(NeutralMode.Coast);
+        leftSlave.setNeutralMode(NeutralMode.Coast);
+        rightSlave.setNeutralMode(NeutralMode.Coast);
     }
     
     @Override

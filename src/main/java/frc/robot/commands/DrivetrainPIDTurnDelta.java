@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.lang.Math;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.Config;
@@ -96,31 +97,35 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
         if(maxTime != null) {
             timer.start();
         }
+
     }
 
     @Override
     public void execute() {
-        // Set starting throttle
-        double turnThrottle = 0;
+        if(pigeonIMU != null) {
+            // Set starting throttle
+            double turnThrottle = 0;
 
-        // Get current angular rate
-        double[] xyz_dps = new double[3];
-        pigeonIMU.getRawGyro(xyz_dps);
-        //Get z axis angular rate
-        double currentAngularRate = xyz_dps[2];
+            // Get current angular rate
+            double[] xyz_dps = new double[3];
+            pigeonIMU.getRawGyro(xyz_dps);
+            //Get z axis angular rate
+            double currentAngularRate = xyz_dps[2];
 
-        //Get current angle
-        currentAngle = drivebase.getCurrentAngle();
+            //Get current angle
+            currentAngle = drivebase.getCurrentAngle();
 
-        if(Math.abs(targetAngle - currentAngle) < acceptableError){
-            isDone = true;
+            if (Math.abs(targetAngle - currentAngle) < acceptableError) {
+                isDone = true;
+            }
+
+            //Do PD
+            turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();
+
+            //Run motors according to the output of PD
+            drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);
+        } else {
+            DriverStation.reportError("Pigeon IMU is null", false);
         }
-
-        //Do PD
-        turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();
-
-        //Run motors according to the output of PD
-        drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);
-
     }
 }

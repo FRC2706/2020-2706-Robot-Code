@@ -45,7 +45,7 @@ public abstract class DriveBase extends SubsystemBase {
      */
     public final void arcadeDrive(double forwardVal, double rotateVal, boolean squareInputs) {
         this.setDriveMode(DriveMode.OpenLoopVoltage);
-        differentialDrive.arcadeDrive(forwardVal*Config.DRIVETRAIN_DEFAULT_MAX_SPEED.get(), rotateVal*Config.DRIVETRAIN_DEFAULT_MAX_SPEED.get(), squareInputs);
+        differentialDrive.arcadeDrive(forwardVal, rotateVal*Config.DRIVETRAIN_DEFAULT_MAX_SPEED.get(), squareInputs);
         this.followMotors();
     }
     
