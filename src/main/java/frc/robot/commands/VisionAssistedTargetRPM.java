@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.config.Config;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.nettables.VisionCtrlNetTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -11,16 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class VisionAssistedTargetRPM implements Runnable {
     
-  //todo: can be configured in config file as well
-  private final double SHOOTER_ANGLE_IN_DEGREES  = 46.88;
-  private final double TARGET_HEIGHT_IN_METERS = 2.02;
-  private final double SHOOTER_WHEEL_RADIUS_IN_CM = 5.5;
-  private final double D_CAMERA_SHOOTER_IN_METERS = 0.26;
-
-  private final double HALF_OF_GRAVITY = 4.91;
-  private final double CONVERSION_NUMBER = 3000;
-  private final double METER_PER_FOOT = 0.3048;
-  
+ 
   // values from Vision Network Table
   private double distanceToOuterPortInMeters;
   
@@ -28,7 +19,7 @@ public class VisionAssistedTargetRPM implements Runnable {
   private double adjustedDistanceToOutPortInMeters;
    
   //network table for vision control
-  private VisionCtrlNetTable visionControlNetTable;
+  private VisionCtrlNetTable visionControlNetTable = new VisionCtrlNetTable ();
 
   //calculated RPM
   double targetDistance = 0;
@@ -42,8 +33,8 @@ public class VisionAssistedTargetRPM implements Runnable {
   public VisionAssistedTargetRPM() {
 
     // Ensure the vision is running in tape mode
-    visionControlNetTable.setTapeMode();
-    
+    //don't need this any more
+    //VisionCtrlNetTable.setTapeMode();    
   }
    
   public void run() {
@@ -59,19 +50,21 @@ public class VisionAssistedTargetRPM implements Runnable {
     else
     {
       // NOTE: unit in the vision network table is feet. Convert it to meters.
-      distanceToOuterPortInMeters = distanceToOuterPortInMeters * METER_PER_FOOT ;
+      distanceToOuterPortInMeters = distanceToOuterPortInMeters * Config.METER_PER_FOOT ;
   
       // adjuste the distance for the shooter 
-      adjustedDistanceToOutPortInMeters = distanceToOuterPortInMeters + D_CAMERA_SHOOTER_IN_METERS;
+      adjustedDistanceToOutPortInMeters = distanceToOuterPortInMeters + Config.D_CAMERA_SHOOTER_IN_METERS;
             
       //Calculate the RPM of the shooter wheel.
       double targetV  = initVelocity( adjustedDistanceToOutPortInMeters);
       targetRPM       = velocityToRPM (targetV);
     }
 
+    System.out.println("Vision RPM");
+    System.out.println( targetRPM);
     // provide feedback to the shuffleboard for Driver Team
     // vision assisted calculated RPM
-    SmartDashboard.putNumber("Info: Vision Assisted Calculated Target RPM", targetRPM);
+    SmartDashboard.putNumber("Vision RPM", targetRPM);
   }
 
  private double initVelocity(double distanceToTargetInMeters) {
@@ -79,11 +72,11 @@ public class VisionAssistedTargetRPM implements Runnable {
     //unit: m/s
     double dInitVelocity;
 
-    double dCheck = Math.tan(SHOOTER_ANGLE_IN_DEGREES)*distanceToTargetInMeters - TARGET_HEIGHT_IN_METERS;
+    double dCheck = Math.tan(Config.SHOOTER_ANGLE_IN_DEGREES)*distanceToTargetInMeters - Config.TARGET_HEIGHT_IN_METERS;
     if (dCheck > 0)
     {
-        dTemp = Math.sqrt(HALF_OF_GRAVITY/dCheck);
-        dInitVelocity = distanceToTargetInMeters/Math.cos(SHOOTER_ANGLE_IN_DEGREES) * dTemp;
+        dTemp = Math.sqrt(Config.HALF_OF_GRAVITY/dCheck);
+        dInitVelocity = distanceToTargetInMeters/Math.cos(Config.SHOOTER_ANGLE_IN_DEGREES) * dTemp;
     }
     else
     {
@@ -100,7 +93,7 @@ public class VisionAssistedTargetRPM implements Runnable {
  // return: unit revolutions per minute
 private double velocityToRPM( double velocity)
  {     
-     double rpm = velocity*CONVERSION_NUMBER/(Math.PI*SHOOTER_WHEEL_RADIUS_IN_CM);
+     double rpm = velocity*Config.CONVERSION_NUMBER/(Math.PI*Config.SHOOTER_WHEEL_RADIUS_IN_CM);
      return rpm;
  }
 
