@@ -30,6 +30,10 @@ public class ClimberSubsystem extends SubsystemBase {
         climberTalon.configPeakOutputReverse(0);
     }
 
+    public boolean isActive() {
+        return climberTalon != null;
+    }
+
     private static class ClimberHolder {
         private static final ClimberSubsystem INSTANCE_CLIMBER = new ClimberSubsystem();
     }
@@ -38,10 +42,8 @@ public class ClimberSubsystem extends SubsystemBase {
         return ClimberHolder.INSTANCE_CLIMBER;
     }
 
-    // Add setting output to periodic?
-    public void runClimber(){
-        // Change this output probably
-        climberTalon.set(0.5);
+    public void runClimber(double climbSpeed){
+        climberTalon.set(climbSpeed);
     }
 
     public void stopClimber(){

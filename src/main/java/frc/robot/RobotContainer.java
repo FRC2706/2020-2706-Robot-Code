@@ -52,6 +52,7 @@ public class RobotContainer {
   private Command incrementFeeder;
   private Command moveArm;
   private Command sensitiveDriving;
+  private Command climb;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
@@ -116,6 +117,9 @@ public class RobotContainer {
 
         sensitiveDriving = new SensitiveDriverControl(driverStick);
         new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriving);
+
+        climb = new ClimbCommand(0.3);
+        new JoystickButton(driverStick, XboxController.Button.kBumperRight.value).whenHeld(climb);
 
     }
 

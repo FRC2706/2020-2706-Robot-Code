@@ -23,7 +23,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANPIDController m_pidController;
     private CANEncoder m_encoder;
 
-    // PID values (currently set for protobot's shooter)
     public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>
             ("P_ShooterSubsystem", 0.0025).registerToTable(Config.constantsTable);
 
