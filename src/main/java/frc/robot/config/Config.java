@@ -141,8 +141,6 @@ public class Config {
     public static final double AUTO_DISTANCE = 1;
     public static final double AUTO_DRIVE_TIME = 1.0;
     public static final DriveBase.DistanceType DEFAULT_UNIT= DriveBase.DistanceType.METERS;
-     
-    public static final int RPM = 1200;
 
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");

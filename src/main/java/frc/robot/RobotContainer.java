@@ -129,7 +129,7 @@ public class RobotContainer {
 
         //Robot has only one selector
         int selectorOne = 0;
-        if (analogSelectorOne != null)
+        if (analogSelectorOne != null){
             selectorOne = analogSelectorOne.getIndex();
         }
 
@@ -156,6 +156,8 @@ public class RobotContainer {
         // Also return null if this ever gets to here because safety
         return null;
     }
+    
+    
 
     public void joystickRumble(double leftValue, double rightValue) {
         //Joystick rumble (driver feedback). leftValue/rightValue sets vibration force.
