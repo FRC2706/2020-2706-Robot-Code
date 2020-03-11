@@ -64,8 +64,8 @@ public class VisionAssistedShooter extends CommandBase {
       adjustedDistanceToOutPortInMeters = distanceToOuterPortInMeters + Config.D_CAMERA_SHOOTER_IN_METERS;
 
       //Calculate the RPM of the shooter wheel.
-      double targetV  = initVelocity( adjustedDistanceToOutPortInMeters);
-      targetRPM       = velocityToRPM (targetV);
+      double targetV  = VisionAssistedTargetRPM.initVelocity( adjustedDistanceToOutPortInMeters);
+      targetRPM       = VisionAssistedTargetRPM .velocityToRPM (targetV);
     }
   }
 
@@ -75,9 +75,8 @@ public class VisionAssistedShooter extends CommandBase {
     //Set the shooter to the target RPM.
     shooter.setTargetRPM((int) targetRPM);
 
-    //todo: provide feedback to the shuffleboard for Driver Team
-    //vision assisted RPM
-
+    // provide feedback to the shuffleboard for Driver Team
+    // vision assisted RPM
     SmartDashboard.putNumber("Vision Assisted Shooter RPM", targetRPM);
   }
 
@@ -92,33 +91,5 @@ public class VisionAssistedShooter extends CommandBase {
         
     }
 
-  double initVelocity(double distanceToTargetInMeters) {
-    double dTemp;
-    //unit: m/s
-    double dInitVelocity;
-
-    double dCheck = Math.tan(Config.SHOOTER_ANGLE_IN_DEGREES)*distanceToTargetInMeters - Config.TARGET_HEIGHT_IN_METERS;
-    if (dCheck > 0)
-    {
-        dTemp = Math.sqrt(Config.HALF_OF_GRAVITY/dCheck);
-        dInitVelocity = distanceToTargetInMeters/Math.cos(Config.SHOOTER_ANGLE_IN_DEGREES) * dTemp;
-    }
-    else
-    {
-        dInitVelocity = 0.0;
-    }
   
-    return dInitVelocity;
-  
- }
-
- // convert velocity to RPM
- // velocity: unit m/s
- // return: unit revolutions per minute
-double velocityToRPM( double velocity)
- {     
-     double rpm = velocity*Config.CONVERSION_NUMBER/(Math.PI*Config.SHOOTER_WHEEL_RADIUS_IN_CM);
-     return rpm;
- }
-
 }

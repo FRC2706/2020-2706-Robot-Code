@@ -53,6 +53,7 @@ public class RobotContainer {
   private Command incrementFeeder;
   private Command moveArm;
   private Command sensitiveDriving;
+  private Runnable targetRPM;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;

@@ -60,14 +60,12 @@ public class VisionAssistedTargetRPM implements Runnable {
       targetRPM       = velocityToRPM (targetV);
     }
 
-    System.out.println("Vision RPM");
-    System.out.println( targetRPM);
     // provide feedback to the shuffleboard for Driver Team
     // vision assisted calculated RPM
     SmartDashboard.putNumber("Vision RPM", targetRPM);
   }
 
- private double initVelocity(double distanceToTargetInMeters) {
+ public static double initVelocity(double distanceToTargetInMeters) {
     double dTemp;
     //unit: m/s
     double dInitVelocity;
@@ -80,8 +78,7 @@ public class VisionAssistedTargetRPM implements Runnable {
     }
     else
     {
-        dInitVelocity = 0.0;
-        System.out.println("WARNING! Not suitable for shooting!");      
+        dInitVelocity = 0.0;    
     }
   
     return dInitVelocity;
@@ -91,7 +88,7 @@ public class VisionAssistedTargetRPM implements Runnable {
  // convert velocity to RPM
  // velocity: unit m/s
  // return: unit revolutions per minute
-private double velocityToRPM( double velocity)
+public static double velocityToRPM( double velocity)
  {     
      double rpm = velocity*Config.CONVERSION_NUMBER/(Math.PI*Config.SHOOTER_WHEEL_RADIUS_IN_CM);
      return rpm;
