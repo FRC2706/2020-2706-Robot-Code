@@ -85,10 +85,10 @@ public class Config {
     public static int AGITATOR_MOTOR = robotSpecific(9, 9);
 
     // Current limiter Constants
-    public static int PEAK_CURRENT_AMPS = 60; //Peak current threshold to trigger the current limit
-    public static double PEAK_TIME_SEC = 1.0; //Time after current exceeds peak current to trigger current limit
-    public static int CONTIN_CURRENT_AMPS = 40; //Current to mantain once current limit has been triggered 
-    public static boolean MOTOR_CURRENT_LIMIT = true; //Enable or disable motor current limiting.
+    public static int PEAK_CURRENT_AMPS = 80;           //Peak current threshold to trigger the current limit
+    public static int PEAK_TIME_MS = 250;               //Time after current exceeds peak current to trigger current limit
+    public static int CONTIN_CURRENT_AMPS = 40;         //Current to mantain once current limit is triggered 
+    public static boolean MOTOR_CURRENT_LIMIT = true;   //Enable or disable motor current limiting.
 
     public static int TALON_5_PLYBOY = robotSpecific(-1, -1, -1, -1, -1, 5);
     public static int PIGEON_ID = robotSpecific(CLIMBER_TALON, CLIMBER_TALON, RIGHT_REAR_MOTOR, LEFT_FRONT_MOTOR, LEFT_REAR_MOTOR, TALON_5_PLYBOY);
@@ -177,7 +177,7 @@ public class Config {
 
     public static int shooterAnalogSensor = robotSpecific(8, 9);
 
-    public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 0.8)
+    public static FluidConstant<Double> DRIVETRAIN_DEFAULT_MAX_SPEED = new FluidConstant<>("DrivetrainDefaultMaxSpeed", 1.0)
             .registerToTable(Config.constantsTable);
 
     public static FluidConstant<Double> FEEDERSUBSYSTEM_INCREMENT_TICKS = new FluidConstant<>("IncrementTicks", 1200.0)
