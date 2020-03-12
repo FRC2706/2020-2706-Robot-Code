@@ -119,7 +119,7 @@ public class RobotContainer {
         new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriving);
 
         climb = new ClimbCommand(0.3);
-        new JoystickButton(driverStick, XboxController.Button.kBumperRight.value).whenHeld(climb);
+        new JoystickButton(driverStick, XboxController.Button.kStart.value).whenHeld(climb);
 
     }
 
