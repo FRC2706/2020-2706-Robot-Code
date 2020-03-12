@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class IncrementFeeder extends CommandBase {
 
@@ -45,7 +46,7 @@ public class IncrementFeeder extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return feeder.doneIncrementing(currentPosition + incrementTicks);
+        return feeder.doneIncrementing(currentPosition + incrementTicks) || !ShooterSubsystem.getInstance().shooterDigitalInput.get();
     }
 
 }
