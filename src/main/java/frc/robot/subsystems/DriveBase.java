@@ -21,7 +21,15 @@ public abstract class DriveBase extends SubsystemBase {
     
     // This is used to get the pigeon heading.
     private PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
-    
+
+    public abstract void setBrakeMode();
+
+    public abstract void setCoastMode();
+
+    public abstract double getMotorCurrent();
+
+    public abstract boolean isMotorLimitActive();
+
     // The possible drive modes
     public enum DriveMode {
         // There is no control mode active
@@ -48,6 +56,8 @@ public abstract class DriveBase extends SubsystemBase {
         differentialDrive.arcadeDrive(forwardVal, rotateVal*Config.DRIVETRAIN_DEFAULT_MAX_SPEED.get(), squareInputs);
         this.followMotors();
     }
+
+
     
     /**
      * Motor control method for tank drive.
@@ -163,4 +173,6 @@ public abstract class DriveBase extends SubsystemBase {
     protected void neutralModeUpdated(NeutralMode neutralMode) {
     
     }
+
+
 }

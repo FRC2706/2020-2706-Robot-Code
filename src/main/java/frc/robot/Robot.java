@@ -151,8 +151,8 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
 
         //The following 2 lines run Drivebase methods that tell shuffleboard what the motor current draw is and if motor current limiting is active.
-        DriveBase2020.getInstance().getMotorCurrent();
-        DriveBase2020.getInstance().isMotorLimitActive();
+        DriveBaseHolder.getInstance().getMotorCurrent();
+        DriveBaseHolder.getInstance().isMotorLimitActive();
     }
 
     /**

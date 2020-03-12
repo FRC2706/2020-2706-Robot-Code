@@ -18,7 +18,27 @@ import frc.robot.config.Config;
 public class DriveBasePre2020 extends DriveBase {
     // The drivebase talons
     private final WPI_TalonSRX leftFrontTalon, leftRearTalon, rightFrontTalon, rightRearTalon, talon5plyboy;
-    
+
+
+    @Override
+    public void setCoastMode() {
+    }
+
+    @Override
+    public double getMotorCurrent() {
+        return 0;
+    }
+
+    @Override
+    public boolean isMotorLimitActive() {
+        return false;
+    }
+
+    @Override
+    public void setBrakeMode() {
+
+    }
+
     public DriveBasePre2020() {
 
         resetMotors();
