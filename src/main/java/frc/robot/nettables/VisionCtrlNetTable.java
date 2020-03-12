@@ -19,7 +19,7 @@ public class VisionCtrlNetTable {
     private NetworkTable visionControlTable;
     private NetworkTableEntry VisionShutDownEntry;
     private NetworkTableEntry VisionStartUpEntry;
-    private static NetworkTable mergeVisionTable;
+    public static NetworkTable mergeVisionTable;
 
     public static Supplier<Double> distanceToPowerCell;
     public static Supplier<Double> distanceToOuterPort;
