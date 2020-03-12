@@ -90,6 +90,11 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        drivebase.setCoastMode();
+    }
+
+    @Override
     public void initialize() {
 
         //Get the target angle
@@ -121,17 +126,28 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
             if (Math.abs(targetAngle - currentAngle) < acceptableError) {
                 isDone = true;
             }
+            if(Math.abs(deltaDegree) > 10 ) {
+                // Works for 20 degrees, less good for 45
+                volatileP = 0.0182;
+                volatileD = 0.001;
 
-            if(Math.abs(deltaDegree) > 5 ) {
-                volatileP = 0.022;
-                volatileD = 0.0035;
             } else {
-                volatileP = 0.037;
-                volatileD = 0.0023;
+                volatileP = 0.04382;
+                volatileD = 0.001;
+
+//                volatileP = 0.037;
+//                volatileD = 0.0023;
+
+                //Do PD
+
+                //Run motors according to the output of PD
             }
 
-            //Do PD
-            turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();
+            turnThrottle = (targetAngle - currentAngle) * volatileP - (currentAngularRate) * volatileD;
+            drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);
+
+            drivebase.setBrakeMode();
+
 
             //Run motors according to the output of PD
             drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);

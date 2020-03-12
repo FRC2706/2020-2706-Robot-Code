@@ -61,9 +61,9 @@ public class TurnToOuterPortCommand extends CommandBase {
             if(currentTarget <= 30 && currentTarget >= -30) {
                 // Check if the yaw should be inverted (Shooter is on the back so we may need to)
                 if (invert) {
-                    drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(-currentTarget, 0, acceptableError, maxTime);
+                    drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(-currentTarget, -0.2, acceptableError, maxTime);
                 } else {
-                    drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0, acceptableError, maxTime);
+                    drivetrainPIDTurnDelta = new DrivetrainPIDTurnDelta(currentTarget, 0.2, acceptableError, maxTime);
                 }
                 drivetrainPIDTurnDelta.schedule();
             }
