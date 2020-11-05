@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
     }
 
     /**
-     * Halts the robot in every way
+     * Halts the robot in every way, add a demo comment
      */
     public static void haltRobot(String s) {
         /*
