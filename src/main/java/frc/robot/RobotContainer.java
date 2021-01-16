@@ -11,7 +11,15 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.config.Config;
@@ -19,6 +27,7 @@ import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -58,6 +67,9 @@ public class RobotContainer {
   private final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
     private Command runFeeder;
 
+    private TrajectoryConfig tConfig;
+    private final DriveBase drivebase; 
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -69,8 +81,16 @@ public class RobotContainer {
         }
 
         ArmSubsystem armSubsystem = ArmSubsystem.getInstance();
+        drivebase = DriveBaseHolder.getInstance();
 
         configureButtonBindings();
+        
+        // Set up config for ramsete
+        var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Config.ksVolts,
+                Config.kvVoltSecondsPerMeter, Config.kaVoltSecondsSquaredPerMeter), Config.kDriveKinematics, 10);
+
+        tConfig = new TrajectoryConfig(Config.kMaxSpeedMetersPerSecond, Config.kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(Config.kDriveKinematics).addConstraint(autoVoltageConstraint);
     }
 
     /**
@@ -140,6 +160,14 @@ public class RobotContainer {
            // return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
         } else if(selectorOne == 2) {
             return new DriveWithTime(0.5, 0.5, 0.5);
+        } else if (selectorOne == 3) {
+        
+            // Run a example ramsete command, drive forward by 1 meter
+            Command resetOdometry = new InstantCommand(() -> drivebase.resetPose(new Pose2d()), drivebase);
+
+            Trajectory trajectory = TrajectoryGenerator
+                    .generateTrajectory(List.of(new Pose2d(), new Pose2d(1, 0, Rotation2d.fromDegrees(0))), tConfig);
+            return resetOdometry.andThen(new RamseteCommandMerge(trajectory));
         }
 
 

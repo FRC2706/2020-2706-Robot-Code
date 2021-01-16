@@ -2,6 +2,7 @@ package frc.robot.config;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveBase2020;
 import frc.robot.subsystems.DriveBasePre2020;
@@ -196,6 +197,19 @@ public class Config {
     //Highest speed the motor could reach
     public static FluidConstant<Double> FEEDERSUBSYSTEM_PEAK_OUTPUT = new FluidConstant<>("FeederSubsystemPeakOutput", 0.35)
                 .registerToTable(Config.constantsTable);
+
+
+    public static double kRamseteB = 2.0; 
+    public static double kRamseteZeta = 0.7;
+    public static double kTrackwidthMeters; // Unknown
+    public static DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    public static double ksVolts; // Unknown
+    public static double kvVoltSecondsPerMeter; // Unknown
+    public static double kaVoltSecondsSquaredPerMeter; // Unknown
+
+    public static double kMaxSpeedMetersPerSecond = 2.5;
+    public static double kMaxAccelerationMetersPerSecondSquared = 2.5;
     
     /**
      * Returns one of the values passed based on the robot ID

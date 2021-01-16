@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -10,6 +12,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import frc.robot.config.Config;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +41,8 @@ public class DriveBase2020 extends DriveBase {
         leftSlave = new WPI_VictorSPX(Config.LEFT_REAR_MOTOR);
         rightSlave = new WPI_VictorSPX(Config.RIGHT_REAR_MOTOR);
         climberTalon = new WPI_TalonSRX(Config.CLIMBER_TALON);
-        differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
+        differentialDrive = new DifferentialDrive(leftMaster, rightMaster); 
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getCurrentAngle()));
 
         //Current limiting for drivetrain master motors.
         if (Config.MOTOR_CURRENT_LIMIT == true) {
@@ -162,4 +168,73 @@ public class DriveBase2020 extends DriveBase {
         }
     }
     
+    @Override
+    public void periodic() {
+        odometry.update(Rotation2d.fromDegrees(super.getCurrentAngle()), getLeftPosition(), getRightPosition());
+    }
+
+    @Override
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    @Override
+    public void resetPose(Pose2d pose) {
+        pigeon.setFusedHeading(0d, Config.CAN_TIMEOUT_LONG);
+        leftMaster.setSelectedSensorPosition(0);
+        rightMaster.setSelectedSensorPosition(0);
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getCurrentAngle()));
+    }
+
+    @Override
+    public void tankDriveVelocities(double leftVel, double rightVel, double leftFF, double rightFF) {
+        leftMaster.set(ControlMode.Velocity, metersPerSecondToTalonVelocity(leftVel), DemandType.ArbitraryFeedForward,
+                leftFF / 12.0);
+        rightMaster.set(ControlMode.Velocity, metersPerSecondToTalonVelocity(rightVel), DemandType.ArbitraryFeedForward,
+                rightFF / 12.0); 
+
+    }
+
+    /**
+     * Converting Talon ticks to meters
+     * 
+     * Unit Conversion Method
+     */
+    private double talonPositionToMeters(double talonPosisiton) {
+        double result = talonPosisiton;
+        double circumference = Math.PI * 0.1524;
+        double metersPerTick = circumference / 4096;
+        result *= metersPerTick;
+        return result;
+    }
+
+    private double getLeftPosition() {
+        return talonPositionToMeters(leftMaster.getSelectedSensorPosition());
+    }
+
+    private double getRightPosition() {
+        return talonPositionToMeters(rightMaster.getSelectedSensorPosition());
+    }
+
+    /**
+     * Converting m/s to talon ticks/100ms
+     * 
+     * Unit Conversion Method
+     */
+    private double metersPerSecondToTalonVelocity(double metersPerSecond) {
+        return metersToTalonPosistion(metersPerSecond * 0.1); // Converting meters per second to meters per 100ms
+    }
+
+    /**
+     * Converting meters to talon ticks
+     * 
+     * Unit Conversion Method
+     */
+    private double metersToTalonPosistion(double meters) {
+        double result = meters;
+        double circumference = Math.PI * (0.1524); // Pi*Diameter
+        double ticksPerMeter = 4096 / circumference; // Ticks per revolution / circumference
+        result = result * ticksPerMeter; // Meter * ticks per 1 meter
+        return result;
+    }
 }
