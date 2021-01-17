@@ -7,26 +7,18 @@
 
 package frc.robot.commands;
 
-import java.util.List;
-
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.VisionPose;
-import frc.robot.config.Config;
-import frc.robot.nettables.VisionCtrlNetTable;
 import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.DriveBaseHolder;
 
 public class VisionRamseteAuto extends CommandBase {
 
-    DriveBase drivebase; 
-    VisionPose visionPose; 
+    DriveBase drivebase;
+    VisionPose visionPose;
 
     RamseteCommandMerge ramseteCommand;
-    TrajectoryConfig tConfig;
 
     int visionType;
     double visionStartTime;
@@ -43,7 +35,6 @@ public class VisionRamseteAuto extends CommandBase {
         this.visionType = visionType;
         visionStartTime = startVisionAfterTimeElasped;
 
-        tConfig = new TrajectoryConfig(Config.kMaxSpeedMetersPerSecond, Config.kMaxAccelerationMetersPerSecondSquared);
         prevPose = ramseteCommand.getTargetPose();
 
         visionPose = new VisionPose(); // <- make a singleton class?
@@ -52,11 +43,7 @@ public class VisionRamseteAuto extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
-        switch (visionType) {
-            case 0:
-                VisionCtrlNetTable.setTapeMode();
-        }
+        visionPose.initVision(visionType);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -66,7 +53,7 @@ public class VisionRamseteAuto extends CommandBase {
             Pose2d targetPose = averageTargetPose(visionPose.getTargetPose(visionType));
             if (targetPose != null) {
                 if (shouldGenerateTrajectory() && prevPose != targetPose) {
-                    Trajectory trajectory = visionPose.generateTrajectory(targetPose, tConfig);
+                    Trajectory trajectory = visionPose.generateTrajectory(targetPose, visionType);
                     if (trajectory != null) {
                         ramseteCommand.setNewTrajectory(trajectory);
                         cooldown = 0;
@@ -104,8 +91,10 @@ public class VisionRamseteAuto extends CommandBase {
         return pose;
 
         // take the average of all the poses generated from vision.
-        // eventually todo
-    }
-    
-}
+        //
+        // todo: put some intelligence behind the average, like a
+        // weighted average based on distance or age, remove outliers
 
+    }
+
+}
