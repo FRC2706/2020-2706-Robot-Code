@@ -178,4 +178,8 @@ public abstract class DriveBase extends SubsystemBase {
     public void tankDriveVelocities(double leftVel, double rightVel, double leftFF, double rightFF) {
 
     }
+
+    public double getAverageSpeed() {
+        return 0;
+    }
 }

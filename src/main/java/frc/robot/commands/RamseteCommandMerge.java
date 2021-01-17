@@ -165,4 +165,8 @@ public class RamseteCommandMerge extends CommandBase {
         targetPose = m_trajectory.sample(m_trajectory.getTotalTimeSeconds()).poseMeters;
     }
 
+    public Pose2d getTargetPose() {
+        return m_trajectory.sample(m_trajectory.getTotalTimeSeconds()).poseMeters;
+    }
+
 }

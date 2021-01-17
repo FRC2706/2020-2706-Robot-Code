@@ -195,6 +195,13 @@ public class DriveBase2020 extends DriveBase {
 
     }
 
+    @Override
+    public double getAverageSpeed() {
+        double leftVel = leftMaster.getSelectedSensorVelocity();
+        double rightVel = rightMaster.getSelectedSensorVelocity();
+        return (leftVel + rightVel);
+    }
+
     /**
      * Converting Talon ticks to meters
      * 
