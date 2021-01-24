@@ -11,7 +11,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.config.Config;
@@ -19,6 +24,7 @@ import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -140,6 +146,11 @@ public class RobotContainer {
            // return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
         } else if(selectorOne == 2) {
             return new DriveWithTime(0.5, 0.5, 0.5);
+        } else if (selectorOne == 3){
+            // Drive forward 1 meter
+            Trajectory trajectory = TrajectoryGenerator.generateTrajectory(List.of(new Pose2d(), new Pose2d(1, 0, Rotation2d.fromDegrees(0))),
+                                            Config.tConfig.setStartVelocity(0).setEndVelocity(0).setReversed(false));
+            return new InstantCommand(() -> DriveBaseHolder.getInstance().resetPose(new Pose2d())).andThen(new RamseteCommandMerge(trajectory));
         }
 
 

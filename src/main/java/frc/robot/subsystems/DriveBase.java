@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.Config;
@@ -162,5 +163,21 @@ public abstract class DriveBase extends SubsystemBase {
      */
     protected void neutralModeUpdated(NeutralMode neutralMode) {
     
+    }
+    
+    public Pose2d getPose() {
+        return null;
+    }
+
+    public void resetPose(Pose2d pose) {
+
+    }
+
+    public void tankDriveVelocities(double leftVel, double rightVel, double leftFF, double rightFF) {
+
+    }
+
+    public double getAverageSpeed() {
+        return Double.NaN;
     }
 }
