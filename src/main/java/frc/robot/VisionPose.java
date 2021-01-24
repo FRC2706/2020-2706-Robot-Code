@@ -23,7 +23,7 @@ public class VisionPose {
 
     private Transform2d outerGoalCamera;
     private Transform2d offsetShooter;
-    private final double OUTER_GOAL_OFFSET_FROM_WALL = 2.5;
+    private final double OUTER_GOAL_OFFSET_FROM_WALL = 5.0; // 5m or 16ft from target
 
     public VisionPose() {
         drivebase = DriveBaseHolder.getInstance();
@@ -66,19 +66,20 @@ public class VisionPose {
 
         if ((int) distanceToTarget == -99 || (int) robotAngleToTarget == -99 || (int) perpendicularAngleAtTarget == -99)
             return null;
-        if (distanceToTarget <= 0.8 || distanceToTarget > 4.0)
+        if (distanceToTarget <= 0.5 || distanceToTarget > 6.0)
             return null;
-        if (Math.abs(robotAngleToTarget) > 25)
+        if (Math.abs(robotAngleToTarget) > 30)
             return null;
 
         Rotation2d angle = Rotation2d.fromDegrees(robotAngleToTarget);
         double x = distanceToTarget * angle.getCos();
         double y = distanceToTarget * angle.getSin();
-        Pose2d relativePose = new Pose2d(x, y, Rotation2d.fromDegrees(0)); // Need to add perpendicularAngle to this
+        Pose2d relativePose = new Pose2d(x, y, Rotation2d.fromDegrees(perpendicularAngleAtTarget)); 
+        // Might need to flip on the sign, +/-, on perpendicularAngleAtTarget
 
         // Rotation2d angle = Rotation2d.fromDegrees(robotAngleToTarget);
         // Translation2d translation = new Translation2d(distanceToTarget, angle)
-        // Pose2d relativePose = translation, Rotation2d.fromDegrees(0)):
+        // Pose2d relativePose = translation, Rotation2d.fromDegrees(perpendicularAngleAtTarget)):
 
         // Offset the the relative pose so the origin is center of robot
         relativePose = relativePose.transformBy(outerGoalCamera);
