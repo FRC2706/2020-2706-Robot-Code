@@ -5,7 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+// Spreadsheet record of the index of each logging column:
+// https://docs.google.com/spreadsheets/d/1wX1cwLKulJhgrL0wivAJ1hezfs7Bp6M6NHVlwM9hJ3g/edit?usp=sharing
+
+package frc.robot.ramseteAuto.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -26,6 +29,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import frc.robot.ramseteAuto.SimpleCsvLogger;
 
 /**
  * This command was copied and modified from RamseteCommand on WpiLib.
@@ -56,7 +61,14 @@ public class RamseteCommandMerge extends CommandBase {
     private double m_totalTimeElapsed = 0;
     private double m_timeBeforeTrajectory = 0;
     private double m_prevTime;
+    private Pose2d targetPose;
     private final DriveBase m_driveSubsystem;
+
+    // NetworkTable Values
+    private NetworkTableEntry xError, yError, rotError;
+
+    // USB Logger
+    private SimpleCsvLogger usbLogger;
 
     /**
      * Constructs a new RamseteCommand that, when executed, will follow the provided
@@ -79,6 +91,11 @@ public class RamseteCommandMerge extends CommandBase {
 
         addRequirements(m_driveSubsystem);
 
+        var table = NetworkTableInstance.getDefault().getTable("RamseteAuto");
+        xError = table.getEntry("xError");
+        yError = table.getEntry("yError");
+        rotError = table.getEntry("rotError");
+
     }
 
     @Override
@@ -89,6 +106,9 @@ public class RamseteCommandMerge extends CommandBase {
                 initialState.curvatureRadPerMeter * initialState.velocityMetersPerSecond));
         m_timer.reset();
         m_timer.start();
+
+        startLogging();
+        targetPose = m_trajectory.sample(m_trajectory.getTotalTimeSeconds()).poseMeters;
     }
 
     @Override
@@ -99,6 +119,12 @@ public class RamseteCommandMerge extends CommandBase {
 
         Pose2d currentPose = m_driveSubsystem.getPose();
         Trajectory.State desiredState = m_trajectory.sample(curTime);
+
+        // Exclusively used for logging
+        Pose2d poseError = desiredState.poseMeters.relativeTo(currentPose);
+        xError.setNumber(poseError.getTranslation().getX());
+        yError.setNumber(poseError.getTranslation().getY());
+        rotError.setNumber(poseError.getRotation().getDegrees());
 
         var targetWheelSpeeds = m_kinematics.toWheelSpeeds(m_follower.calculate(currentPose, desiredState));
 
@@ -111,16 +137,31 @@ public class RamseteCommandMerge extends CommandBase {
         double leftFeedforward = m_feedforward.calculate(leftSpeedSetpoint, leftAcceleration);
         double rightFeedforward = m_feedforward.calculate(rightSpeedSetpoint, rightAcceleration);
 
-        m_driveSubsystem.tankDriveVelocities(leftSpeedSetpoint, rightSpeedSetpoint, leftFeedforward, rightFeedforward);
+        m_driveSubsystem.tankDriveVelocities(leftSpeedSetpoint, rightSpeedSetpoint,
+                leftFeedforward, rightFeedforward);
 
         m_prevTime = m_totalTimeElapsed;
         m_prevSpeeds = targetWheelSpeeds;
+
+        // Get measure velocities for logging
+        double measuredVelocities[] = m_driveSubsystem.getMeasuredVelocities();
+
+        // Log Data - See Spreadsheet link at top
+        logData(m_totalTimeElapsed, desiredState.poseMeters.getTranslation().getX(),
+                desiredState.poseMeters.getTranslation().getY(), desiredState.poseMeters.getRotation().getDegrees(),
+                desiredState.velocityMetersPerSecond, desiredState.accelerationMetersPerSecondSq,
+                desiredState.curvatureRadPerMeter, currentPose.getTranslation().getX(),
+                currentPose.getTranslation().getY(), currentPose.getRotation().getDegrees(),
+                poseError.getTranslation().getX(), poseError.getTranslation().getY(),
+                poseError.getRotation().getDegrees(), leftSpeedSetpoint, rightSpeedSetpoint, measuredVelocities[0],
+                measuredVelocities[1], leftAcceleration, rightAcceleration, targetPose.getTranslation().getX(),
+                targetPose.getTranslation().getY(), targetPose.getRotation().getDegrees());
     }
 
     @Override
     public void end(boolean interrupted) {
-
         m_timer.stop();
+        stopLogging();
     }
 
     @Override
@@ -139,10 +180,42 @@ public class RamseteCommandMerge extends CommandBase {
     public void setNewTrajectory(Trajectory newTrajectory) {
         m_trajectory = newTrajectory;
         m_timeBeforeTrajectory = m_timer.get();
+        targetPose = m_trajectory.sample(m_trajectory.getTotalTimeSeconds()).poseMeters;
     }
 
     public Pose2d getTargetPose() {
         return m_trajectory.sample(m_trajectory.getTotalTimeSeconds()).poseMeters;
+    }
+
+    /**
+     * All Methods used for USB logging startLogging() logData(data) stopLogging()
+     */
+    public void startLogging() {
+        // See Spreadsheet link at top
+        usbLogger.init(new String[] { "TrajectoryTime", "stateX", "stateY", "stateRot", //
+                "stateVel", "stateAccel", "stateCurv", //
+                "currentX", "currentY", "currentRot", //
+                "errorX", "errorY", "errorRot", //
+                "cmdLeftVel", "cmdRightVel", "measLeftVel", "measRightVel", //
+                "leftFF", "rightFF", "leftMotorOutput", "rightMotorOutput", //
+                "leftSetpointAccel", "rightSetpointAccel", //
+                "targetX", "targetY", "targetRot" },
+                new String[] { "s", "m", "m", "deg", //
+                        "m/s", "m/s/s", "rad/s", //
+                        "m", "m", "deg", //
+                        "m", "m", "deg", //
+                        "m/s", "m/s", "m/s", "m/s", //
+                        "%", "%", "volts", "volts", //
+                        "m/s/s", "m/s/s", //
+                        "m", "m", "deg" });
+    }
+
+    public void logData(double... data) {
+        usbLogger.writeData(data);
+    }
+
+    public void stopLogging() {
+        usbLogger.close();
     }
 
 }

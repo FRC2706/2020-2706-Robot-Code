@@ -177,7 +177,7 @@ public abstract class DriveBase extends SubsystemBase {
 
     }
 
-    public double getAverageSpeed() {
-        return Double.NaN;
+    public double[] getMeasuredVelocities() {
+        return new double[1];
     }
 }

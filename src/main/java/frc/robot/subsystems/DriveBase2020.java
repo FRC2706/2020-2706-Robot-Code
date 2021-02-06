@@ -196,11 +196,16 @@ public class DriveBase2020 extends DriveBase {
         
     } 
 
+    /**
+     * Returns an array with the left and right measured velocities
+     * Index 0: left measured velocity.
+     * Index 1: right measured velocity.
+     */
     @Override
-    public double getAverageSpeed() {
+    public double[] getMeasuredVelocities() {
         double leftVel = leftMaster.getSelectedSensorVelocity();
         double rightVel = rightMaster.getSelectedSensorVelocity();
-        return (leftVel + rightVel) / 2;
+        return new double[]{leftVel, rightVel};
     }
 
     /**
@@ -244,6 +249,31 @@ public class DriveBase2020 extends DriveBase {
         double ticksPerMeter = 4096 / circumference; // Ticks per revolution / circumference
         result = result * ticksPerMeter; // Meter * ticks in 1 meter
         return result;
+    }
+
+    /**
+     * Converting Talon ticks to m/s
+     * 
+     * Unit Conversion Method
+     */
+    private double talonPosistionToMeters(double talonPosisiton) {
+        // (rightMaster.getSelectedSensorPosition() / 4096.0d) * (0.1524*Math.PI);
+
+        double result = talonPosisiton;
+        double circumference = Math.PI * 0.1524;
+        double metersPerTick = circumference / 4096;
+        result *= metersPerTick;
+        return result;
+
+    }
+
+    /**
+     * Converting talon ticks/100ms to m/s
+     * 
+     * Unit Conversion Method
+     */
+    private double talonVelocityToMetersPerSecond(double talonVelocity) {
+        return talonPosistionToMeters(talonVelocity * 10); // Convert ticks/100ms to ticks/sec
     }
 }
 

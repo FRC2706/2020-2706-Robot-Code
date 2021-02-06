@@ -23,6 +23,7 @@ import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.ramseteAuto.commands.*;
 
 import java.util.List;
 import java.util.logging.Logger;
