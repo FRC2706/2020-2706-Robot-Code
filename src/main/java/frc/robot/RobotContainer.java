@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.config.Config;
@@ -105,13 +107,14 @@ public class RobotContainer {
         positionPowercell = new PositionPowercellCommand();
         new JoystickButton(controlStick, XboxController.Button.kBumperRight.value).toggleWhenActive(positionPowercell, true);
 
-        moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+      //  moveToOuterPort = new TurnToOuterPortCommand(true, 3.0, 2.0);
+        moveToOuterPort = new TurnToOuterPortCommand(true, 1.0, 2.0);
         new JoystickButton(driverStick, XboxController.Button.kA.value).whenHeld(moveToOuterPort, true);
 
-        reverseArmManually = new MoveArmManuallyCommand(-0.35);
+        reverseArmManually = new MoveArmManuallyCommand(-0.15);
         new JoystickButton(driverStick, XboxController.Button.kX.value).whenHeld(reverseArmManually);
 
-        moveArm = new MoveArmManuallyCommand(10);
+        moveArm = new MoveArmManuallyCommand(0.5);
         new JoystickButton(driverStick, XboxController.Button.kY.value).whenHeld(moveArm);
 
         sensitiveDriving = new SensitiveDriverControl(driverStick);
@@ -136,10 +139,20 @@ public class RobotContainer {
             // This is our 'do nothing' selector
             return null;
         } else if (selectorOne == 1) {
-            return new SpinUpShooterWithTime(Config.RPM.get(), 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DriveWithTime(0.5, 0.5, 0.5));
+            int time = 7;
+
+            Command spinUpAndShoot = new SpinUpShooterWithTime(Config.RPM.get(), time)
+                    .alongWith(new RunFeederCommandWithTime(-0.4, time));
+
+
+            Command driveWithTime = new ArcadeDriveWithTime(0.5, 0.5, 0, true);
+
+            SequentialCommandGroup sequentialCommandGroup = new SequentialCommandGroup(spinUpAndShoot, new PrintCommand("Hello!!"), driveWithTime);
+
+            return sequentialCommandGroup;
            // return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
         } else if(selectorOne == 2) {
-            return new DriveWithTime(0.5, 0.5, 0.5);
+            return new ArcadeDriveWithTime(0.5, 0.5, 0, true);
         }
 
 

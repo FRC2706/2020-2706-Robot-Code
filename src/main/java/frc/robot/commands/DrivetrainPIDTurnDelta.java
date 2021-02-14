@@ -52,6 +52,9 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     // A timer to ensure the command doesn't get stuck and the robot cannot drive
     private Timer timer;
 
+    private double volatileP;
+    private double volatileD;
+
 
     /**
      * Allows the robot to turn and move forward or back by itself
@@ -87,6 +90,11 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        drivebase.setCoastMode();
+    }
+
+    @Override
     public void initialize() {
 
         //Get the target angle
@@ -118,9 +126,28 @@ public class DrivetrainPIDTurnDelta extends CommandBase {
             if (Math.abs(targetAngle - currentAngle) < acceptableError) {
                 isDone = true;
             }
+            if(Math.abs(deltaDegree) > 10 ) {
+                // Works for 20 degrees, less good for 45
+                volatileP = 0.0182;
+                volatileD = 0.001;
 
-            //Do PD
-            turnThrottle = (targetAngle - currentAngle) * pGain.get() - (currentAngularRate) * dGain.get();
+            } else {
+                volatileP = 0.04382;
+                volatileD = 0.001;
+
+//                volatileP = 0.037;
+//                volatileD = 0.0023;
+
+                //Do PD
+
+                //Run motors according to the output of PD
+            }
+
+            turnThrottle = (targetAngle - currentAngle) * volatileP - (currentAngularRate) * volatileD;
+            drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);
+
+            drivebase.setBrakeMode();
+
 
             //Run motors according to the output of PD
             drivebase.tankDrive(-turnThrottle + forwardSpeed, turnThrottle + forwardSpeed, false);

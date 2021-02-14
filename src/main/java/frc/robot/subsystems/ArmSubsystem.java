@@ -14,8 +14,8 @@ import frc.robot.config.Config;
 public class ArmSubsystem extends ConditionalSubsystemBase {
 
     // TODO Change placeholder values to actual limits
-    private static final int FORWARD_LIMIT_TICKS = Config.robotSpecific(4150, 2200);
-    private static final int REVERSE_LIMIT_TICKS = Config.robotSpecific(3500, 1300);
+    private static final int FORWARD_LIMIT_TICKS = Config.robotSpecific(4300, 2100);
+    private static final int REVERSE_LIMIT_TICKS = Config.robotSpecific(3490, 1300);
 
     private static final int acceptableError = 50;
 
@@ -125,6 +125,10 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
         armTalon.setSelectedSensorPosition(0);
     }
 
+    public void setEncoderTicks(int ticks) {
+        currentPosition = ticks;
+    }
+
     public void setpoint(int setpointIndex) {
         if(setpointIndex < setpoints.length) {
             currentPosition = setpoints[setpointIndex];
@@ -137,6 +141,8 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
     public void moveArm(double speed) {
         armTalon.set(speed);
     }
+
+    public boolean armLowerLimitOverride = false;
     
     @Override
     public void periodic() {
@@ -151,7 +157,7 @@ public class ArmSubsystem extends ConditionalSubsystemBase {
 
         armTalon.set(ControlMode.Position, currentPosition);
 
-        if(armTalon.getSelectedSensorPosition() <= REVERSE_LIMIT_TICKS + 25) {
+        if(armTalon.getSelectedSensorPosition() <= REVERSE_LIMIT_TICKS + 15 ) {
             armTalon.set(0.0);
         }
     }

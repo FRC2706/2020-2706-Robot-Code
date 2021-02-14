@@ -38,12 +38,14 @@ public class DriveWithTime extends CommandBase {
   }
 
   //Initializes a timer
-  private Timer timer = new Timer();
+  private Timer timer;
 
 
   // Called  one when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    timer = new Timer();
 
     // Timer is started and will start counting UP from 0
     timer.start();
@@ -56,7 +58,8 @@ public class DriveWithTime extends CommandBase {
   public void execute() {
    
     // Sets the motor speeds to those of which the user inputed
-    DriveBaseHolder.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
+   // DriveBaseHolder.getInstance().tankDrive(leftSpeeds,rightSpeeds,false);
+    DriveBaseHolder.getInstance().tankDrive(leftSpeeds, rightSpeeds,false);
     
   }
     
@@ -64,7 +67,7 @@ public class DriveWithTime extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // If using the withTimeout(double seconds); as the timer, return here.
-    DriveBase2020.getInstance().stopMotors();
+    DriveBaseHolder.getInstance().stopMotors();
   }
 
 
