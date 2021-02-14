@@ -144,9 +144,18 @@ public class Config {
     public static String VISION_TABLE_NAME_POWERCELL = "MergeVisionPi20";
     public static String VISION_TABLE_NAME_OUTERPORT = "MergeVisionPipelinePi21";
     public static String DISTANCE_POWERCELL     = "DistanceToPowerCell";
-    public static String DISTANCE_OUTER_PORT    = "DistanceToOuterPort";
+    public static String DISTANCE_OUTER_PORT    = "DistanceToTarget";
     public static String YAW_POWERCELL          = "YawToPowerCell";
     public static String YAW_OUTER_PORT         = "YawToTarget";
+
+    // Vision Assisted RPM
+    public static double SHOOTER_ANGLE_IN_DEGREES   = 46.88;
+    public static double TARGET_HEIGHT_IN_METERS    = 2.02;
+    public static double SHOOTER_WHEEL_RADIUS_IN_CM = 5.5;
+    public static double D_CAMERA_SHOOTER_IN_METERS = 0.26;
+    public static double HALF_OF_GRAVITY            = 4.91;
+    public static double CONVERSION_NUMBER          = 3000;
+    public static double METER_PER_FOOT             = 0.3048;
 
     // Drivetrain PID values
     public static double DRIVETRAIN_P_SPECIFIC = robotSpecific(0.037, 0.0, 0.0, 0.018d, 0.0, 0.25);

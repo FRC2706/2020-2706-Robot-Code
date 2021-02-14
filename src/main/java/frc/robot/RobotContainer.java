@@ -18,6 +18,7 @@ import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.logging.Logger;
 
@@ -52,6 +53,7 @@ public class RobotContainer {
   private Command incrementFeeder;
   private Command moveArm;
   private Command sensitiveDriving;
+  private Runnable targetRPM;
   private Logger logger = Logger.getLogger("RobotContainer");
   private final double AUTO_DRIVE_TIME = 1.0;
   private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
@@ -117,6 +119,8 @@ public class RobotContainer {
         sensitiveDriving = new SensitiveDriverControl(driverStick);
         new JoystickButton(driverStick, XboxController.Button.kBumperLeft.value).whenHeld(sensitiveDriving);
 
+        targetRPM = new VisionAssistedTargetRPM();
+        new RunCommand(targetRPM);
     }
 
     /**
