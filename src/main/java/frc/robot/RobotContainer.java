@@ -18,6 +18,9 @@ import frc.robot.config.Config;
 import frc.robot.sensors.AnalogSelector;
 import frc.robot.subsystems.*;
 import frc.robot.commands.ArcadeDriveWithJoystick;
+import frc.robot.commands.DriveWithDistance;
+import frc.robot.commands.DriveWithTime;
+
 
 import java.util.logging.Logger;
 
@@ -34,8 +37,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
     
-    // RobotContainer is a singleton class
-    private static RobotContainer currentInstance;
+  // RobotContainer is a singleton class
+  private static RobotContainer currentInstance;
 
   // The robot's subsystems and commands are defined here...    
   private Joystick driverStick;
@@ -46,17 +49,15 @@ public class RobotContainer {
   private Command intakeCommand;
   private Command reverseFeeder;
   private Command moveToOuterPort;
-    private Command reverseArmManually;
+  private Command reverseArmManually;
+
   private Command positionPowercell;
   private Command rampShooterCommand;
   private Command incrementFeeder;
   private Command moveArm;
   private Command sensitiveDriving;
   private Logger logger = Logger.getLogger("RobotContainer");
-  private final double AUTO_DRIVE_TIME = 1.0;
-  private final double AUTO_LEFT_MOTOR_SPEED = 0.2;
-  private final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
-    private Command runFeeder;
+  private Command runFeeder;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -125,11 +126,13 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        int selectorOne = 1;
 
+        //Robot has only one selector
+        int selectorOne = 0;
         if (analogSelectorOne != null){
             selectorOne = analogSelectorOne.getIndex();
         }
+
         logger.info("Selectors: " + selectorOne);
 
         if (selectorOne == 0) {
@@ -137,17 +140,24 @@ public class RobotContainer {
             return null;
         } else if (selectorOne == 1) {
             return new SpinUpShooterWithTime(Config.RPM.get(), 7).alongWith(new RunFeederCommandWithTime(-0.7, 7)).andThen(new DriveWithTime(0.5, 0.5, 0.5));
-           // return new DriveWithTime(AUTO_DRIVE_TIME,  AUTO_LEFT_MOTOR_SPEED,  AUTO_RIGHT_MOTOR_SPEED);
         } else if(selectorOne == 2) {
             return new DriveWithTime(0.5, 0.5, 0.5);
+        } else if (selectorOne == 3) {
+         /*
+          * When the selector is set to one, the robot will run for x seconds at y left motor speed and z right motor speed
+          */
+              return new DriveWithTime(Config.AUTO_DRIVE_TIME, Config.AUTO_LEFT_MOTOR_SPEED, Config.AUTO_RIGHT_MOTOR_SPEED);
+         } else if(selectorOne == 4){
+
+          //List distance, then the drive unit (in option of meters, cm, inches or feet), and then the right and left speed (if not specified, it is 0.5)
+          //Robot drives one meter forward  
+          return new DriveWithDistance(Config.AUTO_DISTANCE, Config.DEFAULT_UNIT, Config.AUTO_RIGHT_MOTOR_SPEED, Config.AUTO_LEFT_MOTOR_SPEED);
         }
-
-
-
-
         // Also return null if this ever gets to here because safety
         return null;
     }
+    
+    
 
     public void joystickRumble(double leftValue, double rightValue) {
         //Joystick rumble (driver feedback). leftValue/rightValue sets vibration force.

@@ -136,6 +136,11 @@ public class Config {
     public static double ARM_PID_D = robotSpecific(0.0);
     public static double ARM_PID_F = robotSpecific(0.05);
 
+    public static final double AUTO_LEFT_MOTOR_SPEED = 0.2;
+    public static final double AUTO_RIGHT_MOTOR_SPEED = 0.2;
+    public static final double AUTO_DISTANCE = 1;
+    public static final double AUTO_DRIVE_TIME = 1.0;
+    public static final DriveBase.DistanceType DEFAULT_UNIT= DriveBase.DistanceType.METERS;
 
     // Define a global constants table for subsystems to use
     public static NetworkTable constantsTable = NetworkTableInstance.getDefault().getTable("constants");

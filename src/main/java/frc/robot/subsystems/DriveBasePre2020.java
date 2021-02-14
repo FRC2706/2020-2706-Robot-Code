@@ -82,6 +82,48 @@ public class DriveBasePre2020 extends DriveBase {
     }
     
     /**
+     * Get the distance travelled by the left encoder in encoder ticks
+     *
+     * @return The distance of the left encoder
+     */
+    public double getLeftDistance() {
+        return (-leftFrontTalon.getSensorCollection().getQuadraturePosition());
+    }
+
+    /**
+     * Get the distance travelled by the right encoder in encoder ticks
+     *
+     * @return The distance of the right encoder
+     */
+    public double getRightDistance() {
+        return rightFrontTalon.getSensorCollection().getQuadraturePosition();
+    }
+
+    /**
+     * Get the speed of the left encoder in encoder ticks per second
+     *
+     * @return The speed of the left encoder
+     */
+    public double getLeftSpeed() {
+        return (-leftFrontTalon.getSensorCollection().getQuadratureVelocity());
+    }
+
+    /**
+     * Get the speed of the right encoder in encoder ticks per second
+     *
+     * @return The speed of the right encoder
+     */
+    public double getRightSpeed() {
+        return rightFrontTalon.getSensorCollection().getQuadratureVelocity();
+    }
+
+    //Reset encoder values
+    public void resetEncoders() {
+        leftFrontTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
+        rightFrontTalon.getSensorCollection().setQuadraturePosition(0, Config.CAN_TIMEOUT_SHORT);
+    }
+
+    /**
      * Reset the talons to factory default
      */
     @Override
