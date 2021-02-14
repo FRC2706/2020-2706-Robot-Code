@@ -1,16 +1,18 @@
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.config.Config;
 import frc.robot.config.FluidConstant;
+import frc.robot.nettables.VisionCtrlNetTable;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,7 +25,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANPIDController m_pidController;
     private CANEncoder m_encoder;
 
-    // PID values (currently set for protobot's shooter)
     public static FluidConstant<Double> P_SHOOTERSUBSYSTEM = new FluidConstant<>
             ("P_ShooterSubsystem", 0.0025).registerToTable(Config.constantsTable);
 
@@ -46,6 +47,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public DigitalInput shooterDigitalInput;
 
+    NetworkTableEntry RPM_entry = VisionCtrlNetTable.mergeVisionTable.getEntry("RPM");
+    
     private ShooterSubsystem() {
 
         // Initialize the subsystem if the shooter exists
@@ -77,7 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
         m_pidController.setI(I_SHOOTERSUBSYSTEM.get());
         m_pidController.setD(D_SHOOTERSUBSYSTEM.get());
 
-        m_shooter.setSmartCurrentLimit(60);
+        m_shooter.setSmartCurrentLimit(80);
 
         shooterDigitalInput = new DigitalInput(Config.shooterAnalogSensor);
 
@@ -146,16 +149,11 @@ public class ShooterSubsystem extends SubsystemBase {
             m_pidController.setReference(SETPOINT_RPM.get(), ControlType.kVelocity);
         }
 
-        SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
+        RPM_entry.setNumber(m_encoder.getVelocity());
+
         SmartDashboard.putNumber("shooter RPM", m_encoder.getVelocity());
         SmartDashboard.putNumber("shooter temp", getTemperature());
         SmartDashboard.putNumber("shooter current", getCurrentDraw());
         SmartDashboard.putBoolean("Is at target RPM", isAtTargetRPM());
     }
-
-
-    /**
-     * Initialization process for the shooter to be run on robots with
-     * this mechanism.
-     */
 }
